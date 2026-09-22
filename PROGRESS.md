@@ -9,7 +9,7 @@
 - 로컬 프로젝트 자료 정리는 실습 진도와 별도로 수행했다.
 - GitHub 저장소: [https://github.com/shanis345/Deploy_Practice](https://github.com/shanis345/Deploy_Practice)
 - 초기 구성 PR #1은 GitHub `main`에 병합된 상태를 확인했다(2026-09-23, `3c8a290`). 초기 연결 직후 로컬 파일과 `origin/main`의 Git 기준 차이가 없었다.
-- Day 0 세션은 사용자 요청으로 종료한다. 완료 기록·환경 차이·증거 파일은 `codex/day00-completion` 브랜치에서 `main` 대상 PR로 제출하며, 병합은 별도 단계다.
+- Day 0 세션은 사용자 요청으로 종료했다. 완료 기록·환경 차이·증거 파일을 `codex/day00-completion` → `main`의 [PR #2](https://github.com/shanis345/Deploy_Practice/pull/2)로 제출했다. 병합은 아직 하지 않았다.
 - Codex 프로젝트 등록과 Day별 작업 생성은 아직 하지 않았다.
 
 | Day | 주제 | 상태 | 기록 |

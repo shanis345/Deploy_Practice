@@ -274,12 +274,13 @@ Codex 프로젝트 등록과 Day별 작업 생성은 아직 하지 않았다.
 
 사용자 요청으로 기존 날짜별 실행 기록을 보존하면서 실습 결과 요약, 오류·해결 표, 재진단 순서, 핵심 Lessons와 후속 질문의 답을 보강했다. Docker Desktop에서의 이미지 확인과 학습용 에이전트의 역할을 추가했다. 이 정리는 Windows 프로젝트의 기록 파일 수정이며 실습 재실행·새 설치·Ubuntu 파일 동기화는 수행하지 않았다.
 
-## 2026-09-23 — 세션 종료 및 PR 제출 준비
+## 2026-09-23 — 세션 종료 및 PR 제출
 
 - 사용자 요청으로 Day 0 세션을 종료하고 기록을 GitHub PR로 제출한다. 실습 범위는 0-1~0-5 완료이며 Day 1은 미진행이다.
 - 제출 브랜치: `codex/day00-completion`, 대상: `main`, 저장소: `shanis345/Deploy_Practice`.
 - 제출 범위: PROGRESS.md, 이 SESSION.md, docs/environment.md, evidence의 직접 재점검 1개 및 사용자 실습 결과 4개. 소스·가이드·bootstrap.sh·원본 ZIP은 변경하지 않았다.
 - 문서의 실행 증거 기준과 미검증 항목을 확인했다. 문서 정리 중 실습 명령을 재실행하지 않았다. GitHub 병합과 Ubuntu 사본 동기화는 이번 종료 작업 범위에 포함하지 않는다.
+- `git diff --cached --check` 통과 후 8개 파일을 커밋(`da07e28`)하고 원격 브랜치에 푸시했다. [PR #2](https://github.com/shanis345/Deploy_Practice/pull/2)를 일반 PR로 생성했다. 이 제출 결과를 후속 기록 커밋으로 반영하며 병합은 하지 않는다.
 
 ## 다음에 이어 할 지점
 **Day 0 실습 완료.** 다음 시작 후보는 Day 1이며 사용자 요청 전까지 진행하지 않는다. 시작 시 이 기록과 docs/environment.md의 환경 차이를 읽는다.
