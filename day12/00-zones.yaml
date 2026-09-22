@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zone-dmz
+  labels: { zone: dmz }
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zone-biz
+  labels: { zone: biz }
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zone-db
+  labels: { zone: db }

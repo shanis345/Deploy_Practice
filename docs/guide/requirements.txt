@@ -1,0 +1,4 @@
+markdown
+pygments
+pyyaml
+pymdown-extensions

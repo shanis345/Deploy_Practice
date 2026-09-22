@@ -1,0 +1,61 @@
+name: day05
+
+x-log: &logopt
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "127.0.0.1:8080:80"          # 호스트 내부에서만. 고객사에서는 여기에 사내 LB가 붙는다
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      agent:
+        condition: service_healthy   # 에이전트가 healthy 될 때까지 기다린다
+    restart: unless-stopped
+    logging: *logopt
+
+  agent:
+    image: ${AGENT_IMAGE:-agent:0.2.0}
+    environment:
+      DB_DSN: "postgresql://appuser:${POSTGRES_PASSWORD:-apppass}@postgres:5432/appdb"
+      PROMPT_PATH: /app/config/prompt.txt
+      RUBRIC_PATH: /app/config/rubric.yaml
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - ./config:/app/config:ro       # 프롬프트·rubric은 이미지 밖에
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits: { cpus: "1.0", memory: 512M }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    logging: *logopt
+
+  postgres:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-apppass}
+      POSTGRES_DB: appdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    logging: *logopt
+
+volumes:
+  pgdata:

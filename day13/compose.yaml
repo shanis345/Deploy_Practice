@@ -1,0 +1,101 @@
+name: day13
+
+x-log: &logopt
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+services:
+  # ── 업무망: 에이전트 (외부로 나가는 길은 llm-gateway 뿐) ────────────────
+  agent:
+    image: agent:0.2.0
+    networks: [biz]
+    environment:
+      LLM_BASE_URL: "http://llm-gateway:4000/v1"
+      LLM_API_KEY: "sk-pilot-local-key"          # 게이트웨이의 master key (실습용)
+      LLM_MODEL: "gpt-4o-mini"
+      PROMPT_PATH: /app/config/prompt.txt
+      NO_PROXY: "llm-gateway,localhost,127.0.0.1"
+      no_proxy: "llm-gateway,localhost,127.0.0.1"
+    volumes:
+      - ./config:/app/config:ro
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 업무망: LLM 게이트웨이 — 유일한 아웃바운드 지점 ────────────────────
+  llm-gateway:
+    image: ghcr.io/berriai/litellm:main-v1.55.8
+    networks: [biz, egress]
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    volumes:
+      - ./gateway/config.yaml:/app/config.yaml:ro
+    environment:
+      LITELLM_MASTER_KEY: "sk-pilot-local-key"
+      DATABASE_URL: "postgresql://audit:audit_pass@audit-db:5432/auditdb"
+      OPENAI_API_KEY: "sk-dummy-replace-me"
+      UI_USERNAME: "admin"
+      UI_PASSWORD: "admin-lab"
+      # 실제 외부 호출은 사내 프록시를 거친다 (Day 7)
+      HTTPS_PROXY: "http://proxy:3128"
+      https_proxy: "http://proxy:3128"
+      HTTP_PROXY:  "http://proxy:3128"
+      http_proxy:  "http://proxy:3128"
+      NO_PROXY: "localhost,127.0.0.1,audit-db,proxy"
+      no_proxy: "localhost,127.0.0.1,audit-db,proxy"
+    # ports: 없음 — internal 네트워크에만 있으므로 게시 불가. 호스트에서는 admin-proxy 를 통해 본다
+    depends_on:
+      audit-db:
+        condition: service_healthy
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 관리망: 감사 로그 저장소 ──────────────────────────────────────────
+  audit-db:
+    image: postgres:16.4-alpine
+    networks: [biz]
+    environment:
+      POSTGRES_USER: audit
+      POSTGRES_PASSWORD: audit_pass
+      POSTGRES_DB: auditdb
+    volumes:
+      - auditdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U audit -d auditdb"]
+      interval: 10s
+      retries: 5
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 사내 프록시 (화이트리스트) — Day 7의 squid 재사용 ───────────────────
+  proxy:
+    image: ubuntu/squid:5.2-22.04_beta
+    networks: [egress, internet]
+    volumes:
+      - ../day07/squid.conf:/etc/squid/squid.conf:ro
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 관리망 진입: 대시보드(/ui)와 API를 호스트 브라우저에서 보기 위한 리버스 프록시 ──
+  admin-proxy:
+    image: nginx:1.27-alpine
+    networks: [admin, biz]
+    ports:
+      - "127.0.0.1:4000:80"
+    volumes:
+      - ./gateway/admin-proxy.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [llm-gateway]
+    restart: unless-stopped
+    logging: *logopt
+
+  probe:
+    image: nicolaka/netshoot:v0.13
+    networks: [biz]
+    command: sleep infinity
+
+networks:
+  biz:      { driver: bridge, internal: true }
+  egress:   { driver: bridge, internal: true }
+  internet: { driver: bridge }
+  admin:    { driver: bridge }                   # 관리망 흉내 (호스트 브라우저 → 대시보드)
+
+volumes:
+  auditdata:

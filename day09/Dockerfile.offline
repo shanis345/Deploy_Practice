@@ -1,0 +1,23 @@
+# 폐쇄망 빌드 서버용: 네트워크를 전혀 쓰지 않는다. wheels/ 는 인터넷 되는 곳에서 미리 받아 온다.
+ARG BASE=python:3.12.14-slim
+ARG APP_VERSION=0.2.0
+
+FROM ${BASE} AS builder
+WORKDIR /build
+COPY wheels /tmp/wheels
+COPY requirements.txt .
+RUN pip install --no-index --find-links=/tmp/wheels --no-cache-dir --target=/build/deps -r requirements.txt
+
+FROM ${BASE}
+ARG APP_VERSION
+RUN useradd --create-home --uid 10001 --gid 0 appuser \
+ && mkdir -p /app/config /app/tmp && chgrp -R 0 /app && chmod -R g=u /app
+WORKDIR /app
+COPY --from=builder /build/deps /app/deps
+COPY app.py .
+ENV PYTHONPATH=/app/deps PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 HOME=/app APP_VERSION=${APP_VERSION}
+USER 10001
+EXPOSE 8000
+HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
+  CMD python -c "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/healthz')"
+CMD ["python", "app.py"]

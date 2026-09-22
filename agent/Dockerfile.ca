@@ -1,0 +1,21 @@
+# 사내 CA를 OS 신뢰 저장소에 병합한 이미지. 빌드 컨텍스트에 corp-ca.crt 가 있어야 한다.
+#   docker build -f Dockerfile.ca --build-arg BASE_IMAGE=agent:0.2.0 -t agent:0.2.0-ca .
+ARG BASE_IMAGE=agent:0.2.0
+FROM ${BASE_IMAGE}
+USER 0
+COPY corp-ca.crt /usr/local/share/ca-certificates/corp-ca.crt
+# Debian/Ubuntu 계열: update-ca-certificates 가 /etc/ssl/certs/ca-certificates.crt 를 재생성 (공인 CA + 사내 CA)
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
+ && update-ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+# 파이썬 requests(certifi)·Node·curl 이 OS 번들을 보도록 지정. 병합된 번들이므로 공인 CA도 그대로 유효.
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
+    REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
+    CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
+    NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/corp-ca.crt
+USER 10001
+
+# ── RHEL / UBI 계열이라면 위 COPY/RUN/ENV 대신 ──────────────────────────
+# COPY corp-ca.crt /etc/pki/ca-trust/source/anchors/corp-ca.crt
+# RUN update-ca-trust extract
+# ENV SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt REQUESTS_CA_BUNDLE=/etc/pki/tls/certs/ca-bundle.crt

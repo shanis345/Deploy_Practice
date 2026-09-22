@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: b-imagepull, namespace: ax-pilot }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: b-imagepull } }
+  template:
+    metadata: { labels: { app: b-imagepull } }
+    spec:
+      containers:
+        - name: agent
+          image: onprem-registry:5000/ax/agent:9.9.9        # 존재하지 않는 태그

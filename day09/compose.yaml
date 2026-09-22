@@ -1,0 +1,34 @@
+name: day09
+
+services:
+  registry:                            # 사내 레지스트리 (Harbor 대역)
+    image: registry:2.8.3
+    ports:
+      - "127.0.0.1:5000:5000"
+    environment:
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      # UI가 브라우저에서 API를 직접 부르므로 CORS 허용
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Origin: "[http://localhost:8082]"
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods: "[HEAD,GET,OPTIONS,DELETE]"
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers: "[Authorization,Accept,Cache-Control]"
+      REGISTRY_HTTP_HEADERS_Access-Control-Expose-Headers: "[Docker-Content-Digest]"
+    volumes:
+      - regdata:/var/lib/registry
+    restart: unless-stopped
+
+  registry-ui:                         # 레지스트리를 눈으로
+    image: joxit/docker-registry-ui:2.5.7
+    ports:
+      - "127.0.0.1:8082:80"
+    environment:
+      REGISTRY_TITLE: "사내 레지스트리 (실습)"
+      REGISTRY_URL: "http://localhost:5000"
+      SINGLE_REGISTRY: "true"
+      DELETE_IMAGES: "true"
+      SHOW_CONTENT_DIGEST: "true"
+      CATALOG_ELEMENTS_LIMIT: "100"
+    depends_on: [registry]
+    restart: unless-stopped
+
+volumes:
+  regdata:

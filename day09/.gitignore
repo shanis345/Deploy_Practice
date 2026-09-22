@@ -1,0 +1,6 @@
+wheels/
+trivy-cache/
+*.tar
+*.tar.gz
+*.sha256
+sbom-*.json

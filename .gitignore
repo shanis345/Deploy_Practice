@@ -1,0 +1,36 @@
+# Local credentials and generated secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+kubeconfig
+kubeconfig.*
+.kube/
+certs/
+
+# Runtime outputs and caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.cache/
+node_modules/
+wheels/
+trivy-cache/
+*.tar
+*.tar.gz
+sbom-*.json
+*.log
+*.bak
+
+# Local UI/editor files and generated guide output
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+docs/guide/dist/

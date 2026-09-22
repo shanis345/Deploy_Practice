@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: b-pending, namespace: ax-pilot }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: b-pending } }
+  template:
+    metadata: { labels: { app: b-pending } }
+    spec:
+      containers:
+        - name: agent
+          image: onprem-registry:5000/ax/agent:0.2.0
+          resources:
+            requests: { cpu: "64", memory: "512Gi" }         # 어떤 노드에도 없는 자원

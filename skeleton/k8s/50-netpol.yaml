@@ -1,0 +1,38 @@
+# ax-pilot 네임스페이스: 인바운드는 Ingress 컨트롤러만, 아웃바운드는 DNS·DB·LLM 게이트웨이만
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny-ingress, namespace: ax-pilot }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-ingress-controller, namespace: ax-pilot }
+spec:
+  podSelector: { matchLabels: { app: agent } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }      # k3d/k3s Traefik
+        # - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: ingress-nginx } }   # 고객사 nginx
+        # - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: openshift-ingress } } # OpenShift Router
+      ports:
+        - { protocol: TCP, port: 8000 }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: agent-egress, namespace: ax-pilot }
+spec:
+  podSelector: { matchLabels: { app: agent } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+    - to:
+        - ipBlock: { cidr: 10.30.1.5/32 }        # DB존 DB 서버 (고객사 값으로 교체). 클러스터 밖 목적지는 ipBlock
+      ports: [{ protocol: TCP, port: 5432 }]
+    - to:
+        - podSelector: { matchLabels: { app: llm-gateway } }   # 같은 네임스페이스의 LLM 게이트웨이
+      ports: [{ protocol: TCP, port: 4000 }]

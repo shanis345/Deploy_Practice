@@ -1,0 +1,35 @@
+# 사용자 제공 최종 출력, 2026-09-22
+# 채팅의 HTML 이스케이프와 줄바꿈 표기를 정규화함. 독립 재실행 결과가 아님.
+
+==> Linux/WSL2 설치 경로
+==> 실습 디렉터리 생성: /home/user/onprem-lab
+  ✓ 생성 완료
+==> 실습 이미지 미리 받기 (12개, 수 GB — 시간이 걸립니다)
+  ✓ 있음 alpine:3.20
+  ✓ 있음 nginx:1.27-alpine
+  ✓ 있음 traefik/whoami:v1.10
+  ✓ 있음 hashicorp/http-echo:1.0
+  ✓ 있음 nicolaka/netshoot:v0.13
+  ✓ 있음 postgres:16.4-alpine
+  ✓ 있음 python:3.12.7-slim
+  ✓ 있음 ubuntu/squid:5.2-22.04_beta
+  ✓ 있음 mitmproxy/mitmproxy:11.0.0
+  ✓ 있음 registry:2.8.3
+  ✓ 있음 joxit/docker-registry-ui:2.5.7
+  ✓ 있음 aquasec/trivy:0.56.2
+
+==> 도구 점검 (OS=Linux ARCH=amd64 WSL=1)
+  ✓ docker Docker version 29.7.2, build a7dcaa6
+  ✓ kubectl Client Version: v1.36.1
+  ✓ k3d k3d version v5.7.4
+  ✓ helm v3.16.2+g13654a5
+  ✓ k9s Version              v0.32.5
+  ✓ lazydocker Version: 0.23.3
+  ✓ dive dive 0.13.1
+  ✓ jq jq-1.7
+  ✓ curl curl 8.5.0 (x86_64-pc-linux-gnu) libcurl/8.5.0 OpenSSL/3.0.1
+  ✓ git git version 2.43.0
+  ✓ python3 Python 3.12.3
+  ✓ docker 데몬 응답
+  ✓ docker compose v2
+  ✓ iproute2 (ip)

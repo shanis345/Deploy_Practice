@@ -1,0 +1,39 @@
+name: day07
+
+services:
+  proxy:
+    image: ubuntu/squid:5.2-22.04_beta
+    networks: [closed, outside]        # 양쪽에 걸침 — 폐쇄망에서 밖으로 나가는 유일한 출구
+    volumes:
+      - ./squid.conf:/etc/squid/squid.conf:ro
+    restart: unless-stopped
+
+  agent:
+    image: agent:0.2.0
+    networks: [closed]                 # 인터넷 직접 접근 불가
+    environment:
+      HTTP_PROXY:  "http://proxy:3128"
+      HTTPS_PROXY: "http://proxy:3128"
+      http_proxy:  "http://proxy:3128"
+      https_proxy: "http://proxy:3128"
+      NO_PROXY:    "localhost,127.0.0.1,proxy,internal-api,.corp.local"
+      no_proxy:    "localhost,127.0.0.1,proxy,internal-api,.corp.local"
+    restart: unless-stopped
+    # ports: 를 쓰지 않는다 — internal 네트워크에만 붙은 컨테이너는 포트 게시가 되지 않는다.
+    #         호출은 같은 폐쇄망의 probe 컨테이너에서 한다.
+
+  probe:                               # 폐쇄망 안의 진단 단말
+    image: nicolaka/netshoot:v0.13
+    networks: [closed]
+    command: sleep infinity
+
+  internal-api:                        # 사내 API 흉내 (폐쇄망 안)
+    image: traefik/whoami:v1.10
+    networks: [closed]
+    command: ["--port", "80", "--name", "internal-api"]
+
+networks:
+  closed:
+    internal: true                     # 폐쇄망
+  outside:
+    driver: bridge                     # 인터넷 연결됨

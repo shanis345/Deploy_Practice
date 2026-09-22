@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent
+  namespace: ax-pilot
+  labels: { app: agent }
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: agent }
+  template:
+    metadata:
+      labels: { app: agent, zone: biz }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 0
+        fsGroup: 0
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: agent
+          image: onprem-registry:5000/ax/agent:0.2.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - { containerPort: 8000, name: http }
+          env:
+            - { name: PROMPT_PATH, value: /app/config/prompt.txt }
+            - { name: RUBRIC_PATH, value: /app/config/rubric.yaml }
+            - name: LOG_LEVEL                              # ConfigMap의 키를 환경변수로
+              valueFrom: { configMapKeyRef: { name: agent-config, key: LOG_LEVEL } }
+            - name: LLM_MODEL
+              valueFrom: { configMapKeyRef: { name: agent-config, key: LLM_MODEL } }
+            - name: LLM_API_KEY                            # Secret의 키를 환경변수로
+              valueFrom: { secretKeyRef: { name: agent-secret, key: LLM_API_KEY } }
+            - name: DB_DSN
+              valueFrom: { secretKeyRef: { name: agent-secret, key: DB_DSN } }
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits:   { cpu: "1",  memory: 512Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: tmp, mountPath: /app/tmp }
+            - { name: config, mountPath: /app/config, readOnly: true }   # ConfigMap을 파일로
+          readinessProbe:
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+      volumes:
+        - { name: tmp, emptyDir: {} }
+        - name: config
+          configMap:
+            name: agent-config
+            items:                                          # 파일로 낼 키만 고른다 (환경변수용 키는 제외)
+              - { key: prompt.txt, path: prompt.txt }
+              - { key: rubric.yaml, path: rubric.yaml }

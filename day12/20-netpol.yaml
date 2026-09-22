@@ -1,0 +1,55 @@
+# ── DB존: 기본 전부 차단 (인바운드) ─────────────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny-ingress, namespace: zone-db }
+spec:
+  podSelector: {}                    # 네임스페이스의 모든 Pod에 적용
+  policyTypes: [Ingress]             # 인바운드만. 명시된 허용이 없으므로 전부 차단
+---
+# ── DB존: 업무망(zone=biz)에서 5432만 허용 ──────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-biz-to-db, namespace: zone-db }
+spec:
+  podSelector: { matchLabels: { app: postgres } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { zone: biz } }
+      ports:
+        - { protocol: TCP, port: 5432 }
+---
+# ── 업무망: 기본 전부 차단 (인바운드) ────────────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny-ingress, namespace: zone-biz }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+---
+# ── 업무망: 에이전트는 DMZ(zone=dmz)와 Ingress 컨트롤러에서 8000만 허용 ──
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-dmz-to-agent, namespace: zone-biz }
+spec:
+  podSelector: { matchLabels: { app: agent } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { zone: dmz } }
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }   # Ingress 컨트롤러(traefik/nginx)
+      ports:
+        - { protocol: TCP, port: 8000 }
+---
+# ── 업무망: LLM 게이트웨이는 같은 네임스페이스의 에이전트에서만 4000 허용 ──
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-agent-to-gateway, namespace: zone-biz }
+spec:
+  podSelector: { matchLabels: { app: llm-gateway } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { app: agent } }
+      ports:
+        - { protocol: TCP, port: 4000 }

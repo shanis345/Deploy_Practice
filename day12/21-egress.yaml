@@ -1,0 +1,24 @@
+# 에이전트의 아웃바운드를 DNS · DB존 · LLM 게이트웨이로만 제한
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: agent-egress, namespace: zone-biz }
+spec:
+  podSelector: { matchLabels: { app: agent } }
+  policyTypes: [Egress]
+  egress:
+    # DNS는 반드시 허용 — 빼먹으면 이름 해석이 전부 실패한다
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
+    # DB존
+    - to:
+        - namespaceSelector: { matchLabels: { zone: db } }
+      ports:
+        - { protocol: TCP, port: 5432 }
+    # LLM 게이트웨이 (같은 네임스페이스의 특정 Pod)
+    - to:
+        - podSelector: { matchLabels: { app: llm-gateway } }
+      ports:
+        - { protocol: TCP, port: 4000 }
