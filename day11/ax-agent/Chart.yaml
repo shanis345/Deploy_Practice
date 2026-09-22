@@ -1,0 +1,6 @@
+apiVersion: v2
+name: ax-agent
+description: 파일럿 에이전트 배포 차트 (Day 9~11의 매니페스트를 템플릿으로)
+type: application
+version: 0.1.0          # 차트 버전
+appVersion: "0.2.0"     # 애플리케이션(이미지) 버전

@@ -1,0 +1,39 @@
+- name: 에이전트 VM 기본 준비
+  hosts: agent_vms
+  gather_facts: true
+  vars:
+    app_user: appuser
+    app_uid: 10001
+    proxy_url: "http://proxy.corp.example:3128"
+    no_proxy: "localhost,127.0.0.1,.corp.example,10.0.0.0/8"
+  tasks:
+    - name: 서비스 계정 생성
+      ansible.builtin.user:
+        name: "{{ app_user }}"
+        uid: "{{ app_uid }}"
+        shell: /usr/sbin/nologin
+        create_home: true
+    - name: 애플리케이션 디렉터리
+      ansible.builtin.file:
+        path: /opt/agent/{{ item }}
+        state: directory
+        owner: "{{ app_user }}"
+        mode: "0750"
+      loop: [config, data, logs]
+    - name: 도커 데몬 설정 (로그 로테이션 + 프록시)
+      ansible.builtin.copy:
+        dest: /etc/docker-daemon.json
+        mode: "0644"
+        content: |
+          {
+            "log-driver": "json-file",
+            "log-opts": { "max-size": "10m", "max-file": "3" },
+            "proxies": {
+              "http-proxy": "{{ proxy_url }}",
+              "https-proxy": "{{ proxy_url }}",
+              "no-proxy": "{{ no_proxy }}"
+            }
+          }
+    - name: 사실 확인 — OS와 메모리
+      ansible.builtin.debug:
+        msg: "{{ ansible_distribution }} {{ ansible_distribution_version }}, mem {{ ansible_memtotal_mb }}MB, cpu {{ ansible_processor_vcpus }}"

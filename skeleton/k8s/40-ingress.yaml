@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agent
+  namespace: ax-pilot
+  annotations:
+    # ── nginx ingress controller (국내 고객사에서 가장 흔함) ─────────────────
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"     # 에이전트 응답은 길다 (기본 60초 → 504)
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"        # SSE 스트리밍이면 필수
+    # ── Traefik (k3d/k3s 기본) 은 어노테이션 대신 아래 ServersTransport/Middleware 를 쓴다 ──
+spec:
+  ingressClassName: traefik          # 고객사에서는 nginx 등, `kubectl get ingressclass` 로 확인
+  rules:
+    - host: agent.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: agent
+                port:
+                  number: 8000

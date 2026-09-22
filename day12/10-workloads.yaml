@@ -1,0 +1,87 @@
+# ── DMZ: 게이트웨이 ──────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: gateway, namespace: zone-dmz }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: gateway } }
+  template:
+    metadata: { labels: { app: gateway } }
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports: [{ containerPort: 80 }]
+---
+# ── 업무망: 에이전트 ─────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: agent, namespace: zone-biz }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: agent } }
+  template:
+    metadata: { labels: { app: agent } }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 10001, runAsGroup: 0 }
+      containers:
+        - name: agent
+          image: onprem-registry:5000/ax/agent:0.2.0
+          imagePullPolicy: IfNotPresent
+          ports: [{ containerPort: 8000 }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: agent, namespace: zone-biz }
+spec:
+  selector: { app: agent }
+  ports: [{ port: 8000, targetPort: 8000 }]
+---
+# ── 업무망: LLM 게이트웨이 자리 (Day 13에서 실제 LiteLLM으로 교체) ────
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: llm-gateway, namespace: zone-biz }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: llm-gateway } }
+  template:
+    metadata: { labels: { app: llm-gateway } }
+    spec:
+      containers:
+        - name: echo
+          image: hashicorp/http-echo:1.0
+          args: ["-listen=:4000", "-text={\"gateway\":\"ok\"}"]
+          ports: [{ containerPort: 4000 }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: llm-gateway, namespace: zone-biz }
+spec:
+  selector: { app: llm-gateway }
+  ports: [{ port: 4000, targetPort: 4000 }]
+---
+# ── DB존 ────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: postgres, namespace: zone-db }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: postgres } }
+  template:
+    metadata: { labels: { app: postgres } }
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16.4-alpine
+          env:
+            - { name: POSTGRES_USER, value: appuser }
+            - { name: POSTGRES_PASSWORD, value: apppass }
+            - { name: POSTGRES_DB, value: appdb }
+          ports: [{ containerPort: 5432 }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: postgres, namespace: zone-db }
+spec:
+  selector: { app: postgres }
+  ports: [{ port: 5432, targetPort: 5432 }]

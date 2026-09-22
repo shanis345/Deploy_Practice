@@ -1,0 +1,144 @@
+# Walking skeleton — 첫 케이스 1주 차에 그대로 올리는 최소 구성.
+# 존: dmz(사용자 진입) / biz(에이전트·게이트웨이·감사DB) / dbzone(업무 DB) / egress(프록시 경유 아웃바운드) / admin(대시보드)
+name: skeleton
+
+x-log: &logopt
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+services:
+  # ── DMZ: 사용자 진입 (실제로는 사내 LB/게이트웨이 뒤) ─────────────────────
+  nginx:
+    image: ${NGINX_IMAGE:-nginx:1.27-alpine}
+    networks: [dmz, biz]
+    ports:
+      - "127.0.0.1:${PUBLIC_PORT:-8080}:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      agent: { condition: service_healthy }
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 업무망: 에이전트 (인터넷 경로 없음, LLM은 게이트웨이로만) ───────────────
+  agent:
+    image: ${AGENT_IMAGE:-agent:0.2.0}
+    networks: [biz, dbzone]
+    environment:
+      LLM_BASE_URL: "http://llm-gateway:4000/v1"
+      LLM_API_KEY: ${GATEWAY_KEY:-sk-pilot-local-key}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
+      DB_DSN: "postgresql://ro_user:${RO_DB_PASSWORD:-ro_pass}@postgres:5432/appdb"
+      PROMPT_PATH: /app/config/prompt.txt
+      RUBRIC_PATH: /app/config/rubric.yaml
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      NO_PROXY: "llm-gateway,postgres,localhost,127.0.0.1"
+      no_proxy: "llm-gateway,postgres,localhost,127.0.0.1"
+    volumes:
+      - ./config:/app/config:ro
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits: { cpus: "1.0", memory: 512M }
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 업무망: LLM 게이트웨이 — 유일한 아웃바운드 지점 ─────────────────────
+  llm-gateway:
+    image: ${LITELLM_IMAGE:-ghcr.io/berriai/litellm:main-v1.55.8}
+    networks: [biz, egress]
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    volumes:
+      - ./gateway/config.yaml:/app/config.yaml:ro
+    environment:
+      LITELLM_MASTER_KEY: ${GATEWAY_KEY:-sk-pilot-local-key}
+      DATABASE_URL: "postgresql://audit:${AUDIT_DB_PASSWORD:-audit_pass}@audit-db:5432/auditdb"
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-dummy-replace-me}
+      UI_USERNAME: ${UI_USERNAME:-admin}
+      UI_PASSWORD: ${UI_PASSWORD:-admin-lab}
+      HTTPS_PROXY: "http://proxy:3128"
+      https_proxy: "http://proxy:3128"
+      HTTP_PROXY:  "http://proxy:3128"
+      http_proxy:  "http://proxy:3128"
+      NO_PROXY: "localhost,127.0.0.1,audit-db,proxy"
+      no_proxy: "localhost,127.0.0.1,audit-db,proxy"
+    depends_on:
+      audit-db: { condition: service_healthy }
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 관리망: 감사 로그 DB ──────────────────────────────────────────────
+  audit-db:
+    image: ${POSTGRES_IMAGE:-postgres:16.4-alpine}
+    networks: [biz]
+    environment:
+      POSTGRES_USER: audit
+      POSTGRES_PASSWORD: ${AUDIT_DB_PASSWORD:-audit_pass}
+      POSTGRES_DB: auditdb
+    volumes:
+      - auditdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U audit -d auditdb"]
+      interval: 10s
+      retries: 5
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── DB존: 업무 DB (조회 전용 계정으로만 접근) ───────────────────────────
+  postgres:
+    image: ${POSTGRES_IMAGE:-postgres:16.4-alpine}
+    networks: [dbzone]
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-apppass}
+      POSTGRES_DB: appdb
+      RO_DB_PASSWORD: ${RO_DB_PASSWORD:-ro_pass}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./config/init-ro.sh:/docker-entrypoint-initdb.d/init-ro.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      interval: 10s
+      retries: 5
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 사내 프록시 (화이트리스트) ────────────────────────────────────────
+  proxy:
+    image: ${SQUID_IMAGE:-ubuntu/squid:5.2-22.04_beta}
+    networks: [egress, internet]
+    volumes:
+      - ./gateway/squid.conf:/etc/squid/squid.conf:ro
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 관리망 진입: 게이트웨이 대시보드 ─────────────────────────────────
+  admin-proxy:
+    image: ${NGINX_IMAGE:-nginx:1.27-alpine}
+    networks: [admin, biz]
+    ports:
+      - "127.0.0.1:${ADMIN_PORT:-4000}:80"
+    volumes:
+      - ./nginx/admin.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [llm-gateway]
+    restart: unless-stopped
+    logging: *logopt
+
+networks:
+  dmz:      { driver: bridge }
+  biz:      { driver: bridge, internal: true }
+  dbzone:   { driver: bridge, internal: true }
+  egress:   { driver: bridge, internal: true }
+  internet: { driver: bridge }
+  admin:    { driver: bridge }
+
+volumes:
+  pgdata:
+  auditdata:

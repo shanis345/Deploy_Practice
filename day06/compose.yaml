@@ -1,0 +1,73 @@
+name: day06
+
+x-log: &logopt
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+services:
+  # ── DMZ: 외부 사용자 진입점 ─────────────────────────────────────────
+  gateway:
+    image: nginx:1.27-alpine
+    networks: [dmz, biz]             # DMZ와 업무망 양쪽에 발을 걸침 (리버스 프록시의 정상 위치)
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./gateway.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 업무망: 에이전트 본체 ───────────────────────────────────────────
+  agent:
+    image: agent:0.2.0
+    networks: [biz, dbzone]          # 업무망 + DB존. 인터넷 경로 없음
+    environment:
+      DB_DSN: "postgresql://appuser:apppass@postgres:5432/appdb"
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 업무망: 사내 기간계 시스템 흉내 (ERP API) ─────────────────────────
+  erp:
+    image: traefik/whoami:v1.10
+    networks: [biz]
+    command: ["--port", "8080", "--name", "erp-api"]
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── DB존 ───────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16.4-alpine
+    networks: [dbzone]
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppass
+      POSTGRES_DB: appdb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      interval: 10s
+      retries: 5
+    restart: unless-stopped
+    logging: *logopt
+
+  # ── 진단용 단말 (각 존에 하나씩) ─────────────────────────────────────
+  probe-dmz:
+    image: nicolaka/netshoot:v0.13
+    networks: [dmz]
+    command: sleep infinity
+  probe-biz:
+    image: nicolaka/netshoot:v0.13
+    networks: [biz]
+    command: sleep infinity
+  probe-db:
+    image: nicolaka/netshoot:v0.13
+    networks: [dbzone]
+    command: sleep infinity
+
+networks:
+  dmz:
+    driver: bridge                   # 인터넷과 연결됨 (NAT)
+  biz:
+    driver: bridge
+    internal: true                   # 인터넷 아웃바운드 차단
+  dbzone:
+    driver: bridge
+    internal: true

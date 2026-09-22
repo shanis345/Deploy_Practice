@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: b-notready, namespace: ax-pilot }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: b-notready } }
+  template:
+    metadata: { labels: { app: b-notready } }
+    spec:
+      containers:
+        - name: agent
+          image: onprem-registry:5000/ax/agent:0.2.0
+          readinessProbe:
+            httpGet: { path: /health, port: 8000 }           # 경로 오타 (/healthz)
+            periodSeconds: 5

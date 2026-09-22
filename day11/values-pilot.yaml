@@ -1,0 +1,17 @@
+# 고객사 파일럿 환경 — 이 파일만 바꿔서 같은 차트를 배포한다
+replicaCount: 2
+image:
+  repository: onprem-registry:5000/ax/agent     # 실제: harbor.corp.local/ax/agent
+  tag: "0.3.0"
+imagePullSecrets: []                            # 실제: [{ name: harbor-cred }]
+config:
+  logLevel: INFO
+  prompt: |
+    당신은 사내 업무 지원 에이전트입니다.
+    반드시 출처를 함께 제시하십시오.
+ingress:
+  className: traefik                            # 실제: nginx
+  host: agent-pilot.corp.local
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"

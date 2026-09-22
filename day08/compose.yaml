@@ -1,0 +1,52 @@
+name: day08
+
+services:
+  # 사내 TLS 검사 프록시 역할. 처음 실행 시 자체 CA를 만들어 ./certs 에 둔다.
+  tls-proxy:
+    image: mitmproxy/mitmproxy:11.0.0
+    command: >
+      mitmweb --web-host 0.0.0.0 --web-port 8081
+      --set block_global=false --set web_password=lab
+    networks: [closed, outside]
+    ports:
+      - "127.0.0.1:8081:8081"          # 웹 UI (검사된 요청을 눈으로)
+    volumes:
+      - ./certs:/home/mitmproxy/.mitmproxy
+    restart: unless-stopped
+
+  agent:                               # CA를 심지 않은 이미지
+    image: agent:0.2.0
+    networks: [closed]
+    environment: &proxyenv
+      HTTPS_PROXY: "http://tls-proxy:8080"
+      https_proxy: "http://tls-proxy:8080"
+      HTTP_PROXY:  "http://tls-proxy:8080"
+      http_proxy:  "http://tls-proxy:8080"
+      NO_PROXY:    "localhost,127.0.0.1,tls-proxy"
+      no_proxy:    "localhost,127.0.0.1,tls-proxy"
+
+  agent-envca:                         # 해결 1: 환경변수로 CA 파일 지정
+    image: agent:0.2.0
+    networks: [closed]
+    environment:
+      <<: *proxyenv
+      SSL_CERT_FILE: /certs/mitmproxy-ca-cert.pem
+      REQUESTS_CA_BUNDLE: /certs/mitmproxy-ca-cert.pem
+    volumes:
+      - ./certs:/certs:ro
+
+  agent-ca:                            # 해결 2: 이미지에 CA 병합 (권장)
+    image: agent:0.2.0-ca
+    networks: [closed]
+    environment: *proxyenv
+
+  probe:
+    image: nicolaka/netshoot:v0.13
+    networks: [closed]
+    command: sleep infinity
+
+networks:
+  closed:
+    internal: true
+  outside:
+    driver: bridge

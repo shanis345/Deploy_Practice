@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agent-config
+  namespace: ax-pilot
+data:
+  # 자주 바뀌는 것: 파일로 마운트 → Pod 재시작 없이 반영
+  prompt.txt: |
+    당신은 사내 업무 지원 에이전트입니다.
+    근거가 없는 내용은 추측하지 말고 모른다고 답하십시오.
+    답변은 5문장 이내로 작성하십시오.
+  rubric.yaml: |
+    thresholds:
+      min_confidence: 0.7
+      max_retries: 3
+    weights:
+      grounding: 0.5
+      completeness: 0.3
+      format: 0.2
+  # 잘 안 바뀌는 것: 환경변수로 → 바꾸면 rollout restart 필요
+  LOG_LEVEL: "INFO"
+  LLM_MODEL: "gpt-4o-mini"

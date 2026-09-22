@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ax-agent.name" . }}
+  labels: {{- include "ax-agent.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: { app: {{ include "ax-agent.name" . }} }
+  template:
+    metadata:
+      labels: {{- include "ax-agent.labels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}   # 설정이 바뀌면 Pod 재생성
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 0
+        fsGroup: 0
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: agent
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports: [{ containerPort: 8000, name: http }]
+          env:
+            - { name: PROMPT_PATH, value: /app/config/prompt.txt }
+            - name: LOG_LEVEL
+              valueFrom: { configMapKeyRef: { name: {{ include "ax-agent.name" . }}-config, key: LOG_LEVEL } }
+            - name: LLM_MODEL
+              valueFrom: { configMapKeyRef: { name: {{ include "ax-agent.name" . }}-config, key: LLM_MODEL } }
+            - name: LLM_API_KEY
+              valueFrom: { secretKeyRef: { name: {{ .Values.secretName }}, key: LLM_API_KEY } }
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: tmp, mountPath: /app/tmp }
+            - { name: config, mountPath: /app/config, readOnly: true }
+          readinessProbe:
+            httpGet: { path: /healthz, port: http }
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+      volumes:
+        - { name: tmp, emptyDir: {} }
+        - name: config
+          configMap:
+            name: {{ include "ax-agent.name" . }}-config
+            items: [{ key: prompt.txt, path: prompt.txt }]

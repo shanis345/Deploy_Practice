@@ -1,0 +1,7 @@
+thresholds:
+  min_confidence: 0.7
+  max_retries: 3
+weights:
+  grounding: 0.5
+  completeness: 0.3
+  format: 0.2

@@ -1,0 +1,10 @@
+# Traefik 전용: 백엔드 응답 대기 시간을 늘린다. nginx 컨트롤러라면 40-ingress.yaml 의 어노테이션으로 충분.
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: agent-slow
+  namespace: ax-pilot
+spec:
+  forwardingTimeouts:
+    responseHeaderTimeout: 300s
+    dialTimeout: 10s

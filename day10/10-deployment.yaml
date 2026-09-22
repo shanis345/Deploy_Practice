@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent
+  namespace: ax-pilot
+  labels: { app: agent }
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: agent }
+  template:
+    metadata:
+      labels: { app: agent, zone: biz }
+    spec:
+      securityContext:                      # Pod 수준
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 0
+        fsGroup: 0
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: agent
+          image: onprem-registry:5000/ax/agent:0.2.0     # 클러스터 안에서 보이는 사내 레지스트리 주소
+          imagePullPolicy: IfNotPresent
+          ports:
+            - { containerPort: 8000, name: http }
+          env:
+            - { name: LOG_LEVEL, value: "INFO" }
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits:   { cpu: "1",  memory: 512Mi }
+          securityContext:                  # 컨테이너 수준
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: tmp, mountPath: /app/tmp }
+          readinessProbe:                   # 트래픽을 받아도 되는가
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:                    # 살아 있는가 (아니면 재시작)
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+      volumes:
+        - { name: tmp, emptyDir: {} }

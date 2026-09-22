@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: b-configerror, namespace: ax-pilot }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: b-configerror } }
+  template:
+    metadata: { labels: { app: b-configerror } }
+    spec:
+      containers:
+        - name: agent
+          image: onprem-registry:5000/ax/agent:0.2.0
+          env:
+            - name: LLM_API_KEY
+              valueFrom:
+                secretKeyRef: { name: agent-secret-typo, key: LLM_API_KEY }   # 없는 Secret
