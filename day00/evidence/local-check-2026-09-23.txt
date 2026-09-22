@@ -1,0 +1,125 @@
+2026-09-23 / Codex 직접 조회 / 주요 출력 발췌 (ANSI 색상 제거)
+
+Windows PowerShell:
+wsl --list --verbose
+Ubuntu          Stopped  2
+docker-desktop  Stopped  2
+
+Get-CimInstance Win32_OperatingSystem
+Microsoft Windows 11 Pro / 10.0.26200
+Get-CimInstance Win32_ComputerSystem (TotalPhysicalMemory / 1GB)
+RAM_GiB: 31.18
+Get-PSDrive -Name C (Free / 1GB)
+Free_GiB: 454.53
+Get-Process -Name 'Docker Desktop','com.docker.backend' -ErrorAction SilentlyContinue
+일치하는 프로세스 출력 없음.
+
+Ubuntu WSL2:
+id
+uid=1000(user) gid=1000(user) groups=1000(user),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users),1001(docker)
+cat /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
+uname -r
+5.15.167.4-microsoft-standard-WSL2
+free -h
+Mem: total 15Gi / available 14Gi
+df -h /home/user/onprem-lab
+/dev/sdc 1007G 2.1G 954G 1% /
+
+직접 실행 명령 (PowerShell):
+wsl -d Ubuntu --cd /home/user/onprem-lab --exec ./bootstrap.sh check
+도구 점검 (OS=Linux ARCH=amd64 WSL=1)
+  ✓ docker [버전 출력 없음]
+  ✗ kubectl 없음
+  ✓ k3d k3d version v5.7.4
+  ✓ helm v3.16.2+g13654a5
+  ✓ k9s Version v0.32.5
+  ✓ lazydocker Version: 0.23.3
+  ✓ dive dive 0.13.1
+  ✓ jq jq-1.7
+  ✓ curl curl 8.5.0
+  ✓ git git version 2.43.0
+  ✓ python3 Python 3.12.3
+  ✗ docker 데몬에 연결 안 됨 (Docker Desktop 실행 여부 / 사용자 그룹 확인)
+  ✗ docker compose v2 없음
+  ✓ iproute2 (ip)
+명령 종료 코드: 1
+
+docker version / docker compose version:
+The command 'docker' could not be found in this WSL 2 distro.
+We recommend to activate the WSL integration in Docker Desktop settings.
+
+ip -Version
+ip utility, iproute2-6.1.0, libbpf 1.3.0
+ls -l /usr/bin/docker /usr/local/bin/kubectl
+/usr/bin/docker -> /mnt/wsl/docker-desktop/cli-tools/usr/bin/docker
+/usr/local/bin/kubectl -> /mnt/wsl/docker-desktop/cli-tools/usr/local/bin/kubectl
+/mnt/wsl/docker-desktop 및 /var/run/docker.sock: 없음
+type -a kubectl docker
+kubectl: not found
+docker is /mnt/c/Users/user/AppData/Local/Programs/DockerDesktop/resources/bin/docker
+
+stat /home/user/onprem-lab/bootstrap.sh
+-rwxr-xr-x 755 user:docker
+sha256sum /home/user/onprem-lab/bootstrap.sh
+533485848d188d59c523c7937452fd0a0a0d25292c33391d29ceab6752bcf0c3
+Windows bootstrap.sh의 Get-FileHash도 동일.
+bootstrap.sh CRLF 개수: 0
+agent, day01~day13, skeleton 디렉터리 존재 확인.
+
+이미지 상태는 엔진 연결 실패로 재확인하지 못함.
+설치, 다운로드, 컨테이너 실행 및 버전 변경은 수행하지 않음.
+
+2026-09-23 / 후속 점검 — 사용자가 Docker Desktop을 실행한 뒤
+
+wsl -d Ubuntu --cd /home/user/onprem-lab --exec ./bootstrap.sh check
+도구 점검 (OS=Linux ARCH=amd64 WSL=1)
+  ✓ docker Docker version 29.8.0, build 88096ef
+  ✓ kubectl Client Version: v1.36.1
+  ✓ k3d k3d version v5.7.4
+  ✓ helm v3.16.2+g13654a5
+  ✓ k9s Version v0.32.5
+  ✓ lazydocker Version: 0.23.3
+  ✓ dive dive 0.13.1
+  ✓ jq jq-1.7
+  ✓ curl curl 8.5.0
+  ✓ git git version 2.43.0
+  ✓ python3 Python 3.12.3
+  ✓ docker 데몬 응답
+  ✓ docker compose v2
+  ✓ iproute2 (ip)
+명령 종료 코드: 0
+
+Ubuntu에서 직접 조회:
+docker version --format 'Client={{.Client.Version}} Server={{.Server.Version}}'
+Client=29.8.0 Server=29.8.0
+docker compose version
+Docker Compose version v5.5.1
+kubectl version --client
+Client Version: v1.36.1
+Kustomize Version: v5.8.1
+docker info --format 'OS={{.OperatingSystem}} Architecture={{.Architecture}}'
+OS=Docker Desktop Architecture=x86_64
+stat /var/run/docker.sock
+srw-rw---- root:docker /var/run/docker.sock
+id
+uid=1000(user) gid=1000(user) groups=1000(user),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),100(users),1001(docker)
+
+PowerShell에서 12개를 명시한 직접 조회:
+wsl -d Ubuntu --exec docker image inspect alpine:3.20 nginx:1.27-alpine traefik/whoami:v1.10 hashicorp/http-echo:1.0 nicolaka/netshoot:v0.13 postgres:16.4-alpine python:3.12.7-slim ubuntu/squid:5.2-22.04_beta mitmproxy/mitmproxy:11.0.0 registry:2.8.3 joxit/docker-registry-ui:2.5.7 aquasec/trivy:0.56.2 --format '{{json .RepoTags}}'
+["alpine:3.20"]
+["nginx:1.27-alpine"]
+["traefik/whoami:v1.10"]
+["hashicorp/http-echo:1.0"]
+["nicolaka/netshoot:v0.13"]
+["postgres:16.4-alpine"]
+["python:3.12.7-slim"]
+["ubuntu/squid:5.2-22.04_beta"]
+["mitmproxy/mitmproxy:11.0.0"]
+["registry:2.8.3"]
+["joxit/docker-registry-ui:2.5.7"]
+["aquasec/trivy:0.56.2"]
+명령 종료 코드: 0
+
+최초 이미지 반복 조회는 셸 변수 전달 실패로 빈 이름을 조회했으며 증거에서 제외했다.
+위 직접 조회에서 실습 이미지 12개 존재를 확인했다.

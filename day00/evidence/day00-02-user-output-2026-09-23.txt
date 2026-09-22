@@ -1,0 +1,27 @@
+2026-09-23 / Day 0, 0-2 / 사용자가 대화에 제공한 실행 결과
+실행 위치: Ubuntu WSL2, 사용자 홈(~)
+Codex 직접 실행 결과가 아님. 메시지 전송 과정의 이스케이프와 중복 출력은 제거함.
+
+$ docker run --rm hashicorp/http-echo:1.0 -version
+http-echo v1.0.0 (866d8f8313e92d96f940c2f0cf807abe934ab145)
+Built: 2023-10-10T20:43:58Z
+
+$ docker run --rm -d --name hello -p 127.0.0.1:8081:8080 traefik/whoami:v1.10 --port 8080
+0b247fc16c3ab5ed74ee4f97d67cfdea167c5929fd48e6383e807646258db4bd
+
+$ sleep 1
+$ curl -s localhost:8081
+Hostname: 0b247fc16c3a
+IP: 127.0.0.1
+IP: ::1
+IP: 172.17.0.2
+RemoteAddr: 172.17.0.1:60770
+GET / HTTP/1.1
+Host: localhost:8081
+User-Agent: curl/8.5.0
+Accept: */*
+
+$ docker rm -f hello
+hello
+
+각 단계에서 Ubuntu 셸 프롬프트로 돌아옴.
