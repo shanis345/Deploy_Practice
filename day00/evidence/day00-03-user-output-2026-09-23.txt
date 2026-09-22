@@ -1,0 +1,56 @@
+2026-09-23 / Day 0, 0-3 / 사용자 제공 출력 발췌
+실행 위치: Ubuntu WSL2, /home/user/onprem-lab/agent
+Codex 직접 실행 결과가 아님. 메시지의 이스케이프·HTML 공백 표기를 정리함.
+
+ls -la 결과에 존재한 파일:
+.dockerignore, Dockerfile, Dockerfile.ca, app.py, requirements.txt
+
+$ docker build -t agent:0.1.0 .
+[+] Building 3.1s (13/13) FINISHED docker:default
+=> [builder 4/4] RUN pip install --no-cache-dir --target=/build/deps -r require 2.2s
+=> => naming to docker.io/library/agent:0.1.0 0.0s
+=> => unpacking to docker.io/library/agent:0.1.0 0.1s
+빌드 로그는 주요 행만 발췌. 원래 출력의 긴 해시도 일부 잘려 있어 전체 해시는 기록하지 않음.
+
+$ docker run -d --rm --name agent -p 127.0.0.1:8000:8000 agent:0.1.0
+88a08d0a5b632b4f81be7dc41b9ba973bbfa7fe17096fe6b139e37713f961338
+
+$ sleep 2
+$ curl -s localhost:8000/healthz
+{
+  "status": "ok",
+  "version": "0.1.0",
+  "host": "88a08d0a5b63"
+}
+
+/diag 조회 및 jq 필터 결과:
+{
+  "uid": 10001,
+  "gid": 0,
+  "llm_base_url": "(unset)",
+  "proxy": {
+    "HTTP_PROXY": "(unset)",
+    "HTTPS_PROXY": "(unset)",
+    "NO_PROXY": "(unset)",
+    "http_proxy": "(unset)",
+    "https_proxy": "(unset)",
+    "no_proxy": "(unset)"
+  }
+}
+사용자 붙여넣기에서는 jq 식 뒤의 따옴표가 중복됨. 정확한 실행 문자열은 별도 확인하지 않음.
+
+$ curl -s -X POST localhost:8000/ask -H 'Content-Type: application/json' -d '{"question":"안녕"}'
+{
+  "answer": "(echo) 안녕",
+  "mode": "offline",
+  "prompt_sha": "e3b0c44298fc"
+}
+
+실행 사용자 확인 출력:
+uid=10001(appuser) gid=0(root) groups=0(root)
+사용자 붙여넣기 명령은 docker exec agent idd로 표기됨.
+가이드의 정상 명령은 docker exec agent id이며 제공 출력은 그 예상 결과와 일치함.
+
+$ docker rm -f agent
+agent
+이후 Ubuntu 셸 프롬프트로 복귀.

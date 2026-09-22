@@ -1,18 +1,40 @@
 # 실습 환경
 
-기준일: 2026-09-22. 사용자가 공유한 실행 출력에 근거하며 이 프로젝트 정리 작업에서 환경을 재검사하지 않았다.
+기준일: 2026-09-23. 환경 재점검은 Codex 직접 조회, 후속 lazydocker 업데이트·화면 확인은 사용자 제공 출력과 스크린샷에 근거한다. 이전 결과는 별도 이력으로 구분한다.
+
+## 현재 상태 — Docker Desktop 실행 후 (2026-09-23)
+- 후속 0-4 실습에서 lazydocker 0.23.3의 API 1.25 고정 사용과 Docker 최소 API 1.40 사이의 호환 오류를 확인했다. 사용자가 `/usr/local/bin/lazydocker`를 공식 바이너리 0.25.2(linux/amd64)로 교체한 뒤 오류 없이 이미지·네트워크 목록이 표시되는 화면을 제공했다. `agent:0.1.0`은 화면상 189.09MB이며 기본 네트워크 bridge·host·none이 모두 보인다.
+- lazydocker의 실제 설치 버전은 이제 0.25.2다. 가이드와 bootstrap.sh의 0.23.3 고정값은 수정하지 않았으므로 새 환경 설치 시 동일한 호환 오류가 재발할 수 있다. `check`의 버전 출력 성공만으로 TUI 동작을 보장할 수 없다.
+- 사용자가 Docker Desktop 실행을 알린 뒤 Codex가 Ubuntu에서 직접 재점검했다. `./bootstrap.sh check` 전 항목 통과, 종료 코드 0이다.
+- Docker Client / Server 모두 29.8.0, Docker Compose v5.5.1, kubectl Client v1.36.1. Docker Engine은 가이드의 27 이상 조건을 충족한다.
+- 가이드 고정값과의 차이는 kubectl 1.36.1 대 1.31.0, dive 0.13.1 대 본문 0.12.0, Compose 5.5.1 대 v2 표기다. check는 실제 Compose 버전에 상관없이 성공 문구를 `docker compose v2`로 출력한다. 향후 실습 호환성을 검증한 것은 아니다.
+- Docker 소켓은 root:docker, 660이고 현재 사용자 그룹에 docker가 포함돼 있다. 추가 권한 변경 없이 Docker 엔진이 응답한다.
+- bootstrap.sh에 지정된 이미지 12개 모두 `docker image inspect`로 직접 존재를 확인했다. 다운로드나 컨테이너 실행은 하지 않았다.
+- 이전 Docker·kubectl 미검출은 Desktop 실행 후 해소됐다. 아래 초기 점검 실패는 이력으로 보존한다.
+
+## 초기 재점검 결과 — Docker Desktop 실행 전 (2026-09-23)
+- Windows 11 Pro 10.0.26200, 물리 RAM 약 31.18GiB, C: 여유 약 454.53GiB. 가이드의 PC 자원 권장치 이상이다.
+- Ubuntu 24.04.1 LTS, WSL2, 커널 `5.15.167.4-microsoft-standard-WSL2`. WSL 메모리는 약 15GiB, `/`의 가상 디스크 여유 표시는 954GiB다. 실제 호스트 여유와 구분한다.
+- 초기 `wsl --list --verbose`에서 Ubuntu와 docker-desktop은 모두 Stopped, VERSION 2였다. 조회를 위해 Ubuntu를 실행했다. Windows에서 Docker Desktop과 com.docker.backend 프로세스는 검출되지 않았다.
+- Ubuntu의 `./bootstrap.sh check` 결과는 종료 코드 1: kubectl 미검출, Docker 데몬 연결 실패, Compose 실행 실패. Docker 줄의 ✓는 Windows 측 안내용 명령이 PATH에 있다는 뜻이며 정상 동작을 입증하지 않는다.
+- `/usr/bin/docker`와 `/usr/local/bin/kubectl`은 `/mnt/wsl/docker-desktop/cli-tools/...`를 가리키지만 현재 해당 마운트 경로가 없다. `/var/run/docker.sock`도 없다. 현재 사용자 그룹에는 docker가 포함돼 있다.
+- k3d v5.7.4, helm v3.16.2, k9s v0.32.5, lazydocker 0.23.3, dive 0.13.1, jq 1.7, curl 8.5.0, git 2.43.0, Python 3.12.3, iproute2 6.1.0을 직접 확인했다.
+- `/home/user/onprem-lab/bootstrap.sh`는 755, LF이며 Windows 사본과 SHA-256이 일치한다. agent, day01~day13, skeleton 디렉터리도 존재한다. 전체 소스의 일치 여부까지 검사한 것은 아니다.
+- 이 초기 점검에서는 엔진에 연결되지 않아 이미지 12개를 재확인하지 못했다. 이후 Desktop 실행 후 모두 확인했다(위 현재 상태 참고).
+- 설치·다운로드·버전 변경·컨테이너 실행은 하지 않았다. [직접 점검 증거](../day00/evidence/local-check-2026-09-23.txt)를 참고한다.
 
 ## 실행 위치와 파일 위치
-- 호스트: Windows, 컴퓨터 이름 DESKTOP-6KJVBND. Windows 버전·RAM·디스크 여유는 확인하지 않음.
-- 리눅스: Ubuntu WSL2, linux/amd64. Ubuntu 배포판 버전은 확인하지 않음.
+- 호스트: Windows 11 Pro, 컴퓨터 이름 DESKTOP-6KJVBND. RAM·디스크는 위 재점검 결과 참고.
+- 리눅스: Ubuntu 24.04.1 LTS, WSL2, linux/amd64.
 - Ubuntu 사용자: user
 - 현재 실습 디렉터리: `/home/user/onprem-lab`
+- 2026-09-23 사용자 제공 0-5 목록: agent, bootstrap.sh, day01~day13, skeleton 존재. Ubuntu에 day14는 없으며 Day 14 실습 시작 경로는 skeleton이다. Windows의 Day별 기록 폴더와 구분한다.
 - Windows 프로젝트 디렉터리: `C:\Users\user\Desktop\Applications\25. BCG X\7. 준비\12. Deploy Practice`
 - Windows 폴더와 Ubuntu 폴더는 별도 복사본이며 자동 동기화되지 않는다. 이후 코드 변경 시 어느 쪽을 수정했는지 기록하고 반영한다.
 - bootstrap.sh 원본의 LAB은 `${HOME}/onprem-lab`이다. 이 프로젝트를 Windows에 배치했다고 실습 위치가 변경되지는 않는다.
 - Docker Desktop은 Windows에서 실행하고 Ubuntu WSL Integration을 사용한다.
 
-## 확인된 도구
+## 이전에 확인된 도구 (2026-09-22 사용자 제공 출력)
 | 도구 | 실제 결과 | 비고 |
 |---|---|---|
 | Docker Desktop | 4.90.0 (238679) | Server 출력 |

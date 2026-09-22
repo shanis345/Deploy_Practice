@@ -1,0 +1,25 @@
+2026-09-23 / Day 0, 0-5 / 사용자 제공 실행 출력
+실행 위치: Ubuntu WSL2 /home/user/onprem-lab
+Codex 직접 실행 결과가 아님. 메시지의 이스케이프 표기만 정리함.
+
+$ ls -la ~/onprem-lab/
+total 76
+drwxr-xr-x 17 user docker 4096 Sep 22 16:43 .
+drwxr-x--- 14 user user   4096 Sep 23 08:25 ..
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 agent
+-rwxr-xr-x  1 user docker 5903 Sep 22 16:43 bootstrap.sh
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day01
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day02
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day03
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day04
+drwxr-xr-x  3 user docker 4096 Sep 22 16:43 day05
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day06
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day07
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day08
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day09
+drwxr-xr-x  2 user docker 4096 Sep 22 16:43 day10
+drwxr-xr-x  3 user docker 4096 Sep 22 16:43 day11
+drwxr-xr-x  3 user docker 4096 Sep 22 16:43 day12
+drwxr-xr-x  4 user docker 4096 Sep 22 16:43 day13
+drwxr-xr-x  7 user docker 4096 Sep 22 16:43 skeleton
+이후 Ubuntu 셸 프롬프트로 복귀.

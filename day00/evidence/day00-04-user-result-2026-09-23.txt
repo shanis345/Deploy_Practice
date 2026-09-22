@@ -1,0 +1,33 @@
+2026-09-23 / Day 0, 0-4 / 사용자 제공 출력 및 스크린샷 판독
+Codex가 Ubuntu 명령을 직접 실행한 증거가 아님.
+
+최초 lazydocker 화면:
+버전 0.23.3
+client version 1.25 is too old. Minimum supported API version is 1.40
+
+다운로드 재시도 출력:
+100 4818k 100 4818k 0 0 10.2M 0 --:--:-- --:--:-- --:--:-- 9065k
+
+압축 해제 및 설치 후 사용자 제공 버전 출력 (두 번 동일):
+Version: 0.25.2
+Date: 2026-04-19T02:51:21Z
+BuildSource: binaryRelease
+Commit: 7e7aadc2071d58031bf2daafca1fbd4093efc23f
+OS: linux
+Arch: amd64
+
+설치 명령:
+sudo install -m 0755 "$lab_tmp/lazydocker" /usr/local/bin/lazydocker && hash -r && lazydocker --version
+
+재실행 후 첨부 화면 판독:
+원본: C:/Users/user/Desktop/Applications/25. BCG X/7. 준비/11. Final guidebooks/Agent Deploy Guide/communications/버전교체 후.png
+화면 우측 아래: 0.25.2
+API 오류 창 없음, 이미지·네트워크 목록 표시됨.
+Images: agent / 0.1.0 / 189.09MB
+기타 실습 이미지 중 alpine, aquasec/trivy, hashicorp/http-echo,
+joxit/docker-registry-ui, mitmproxy/mitmproxy, nginx가 화면에 표시됨.
+Networks (드라이버 / 네트워크 이름): bridge / bridge, host / host, null / none
+추가로 다른 프로젝트의 종료된 컨테이너·이미지·볼륨·네트워크도 보임.
+화면 단축키: Images [4], Networks [6], q: quit
+
+0-4 이미지 및 기본 네트워크 확인 완료. q 종료 실행은 아직 확인하지 않음.
