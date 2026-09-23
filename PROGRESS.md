@@ -1,21 +1,22 @@
 # 진행 현황
 
 - 기준일: 2026-09-23
-- 실습 중단 지점: **Day 0 실습 완료 — 0-1~0-5 완료**
-- 2026-09-23 Codex 재점검: 사용자가 Docker Desktop을 실행한 후 `check` 전 항목 통과(종료 코드 0), 실습 이미지 12개 모두 존재. 0-1 실행 가능 상태를 재확인했다. kubectl 1.36.1·dive 0.13.1·Compose 5.5.1의 가이드 버전 차이는 남아 있다.
-- 2026-09-23 사용자 제공 출력·화면: 0-2~0-5 완료. lazydocker 0.25.2 교체 후 이미지·네트워크 화면 확인 및 Ubuntu 실습 폴더 목록 확인을 마쳤다. day14 폴더는 없지만 Day 14는 skeleton을 사용한다.
-- Day 0 실습 체크리스트 3개를 충족했다. 개념 자기점검 4문항의 사용자 답변 평가는 별도로 진행하지 않았다. 도구 버전 차이는 후속 실습의 미해결 확인 사항으로 유지한다. Day 1은 사용자 요청 전까지 진행하지 않는다.
-- 2026-09-23 세션 회고: [Day 0 기록](day00/SESSION.md)에 실습 결과 요약, 오류 원인·해결·재진단 순서, 핵심 Lessons, 이미지/컨테이너와 학습용 에이전트에 관한 후속 질문을 정리했다. Windows 기록에 반영했으며 Ubuntu 복사본은 동기화하지 않았다.
-- 로컬 프로젝트 자료 정리는 실습 진도와 별도로 수행했다.
-- GitHub 저장소: [https://github.com/shanis345/Deploy_Practice](https://github.com/shanis345/Deploy_Practice)
-- 초기 구성 PR #1은 GitHub `main`에 병합된 상태를 확인했다(2026-09-23, `3c8a290`). 초기 연결 직후 로컬 파일과 `origin/main`의 Git 기준 차이가 없었다.
-- Day 0 세션은 사용자 요청으로 종료했다. 완료 기록·환경 차이·증거 파일을 `codex/day00-completion` → `main`의 [PR #2](https://github.com/shanis345/Deploy_Practice/pull/2)로 제출했다. 병합은 아직 하지 않았다.
-- Codex 프로젝트 등록과 Day별 작업 생성은 아직 하지 않았다.
+- 현재 상태: **Day 0 실습 완료(0-1~0-5). Day 1 주요 학습·1-3 검증 완료, 마무리 남음.**
+- Day 1 세션 결과: VM/컨테이너·vSphere·SSH/SAC·고객사 역할 및 VM 신청 질문 12개를 학습했다. Ansible 두 대상 모두 첫 실행 changed=3, 재실행 changed=0, failed=0·unreachable=0이며 내부 계정·권한·설정 예시 파일도 확인했다.
+- 완료 근거: 사용자 제공 Ubuntu 출력. Codex가 Windows 기록·증거를 대조했다. 상세 명령·질의응답·오류 해결은 [Day 1 SESSION](day01/SESSION.md), 버전·호환성은 [환경 기록](docs/environment.md)에 보존한다.
+- 남은 항목: 컨테이너 삭제·deactivate 실행 확인, E-1 VM 신청서 초안, 최종 개념 자기점검. Day 1 전체 완료로 처리하지 않는다. Day 2는 미시작이다.
+- 마지막 확인 상태: vm-agent-01·02 내부 조회 성공. 이후 정리 결과는 받지 않았으며 현재 컨테이너 상태를 새로 조회하지 않았다.
+- Windows 프로젝트와 Ubuntu `/home/user/onprem-lab`은 별도 복사본이다. 이번 기록 정리에서 Ubuntu 동기화·실습 재실행은 하지 않았다.
+- Day 0의 이미지 빌드·API·UID/GID·정리·TUI 확인 결과는 [Day 0 SESSION](day00/SESSION.md)에 있다. 개념 자기점검 4문항의 별도 평가는 미진행이다.
+- 남은 환경 차이: kubectl·Compose·dive의 가이드 버전 차이, 가이드 lazydocker 고정값과 실제 설치 버전 차이, Ansible 인터프리터 탐색·facts 자동 주입 경고. 현재 실습 성공을 향후 모든 실습의 호환성 보장으로 해석하지 않는다.
+- GitHub 저장소: [Deploy_Practice](https://github.com/shanis345/Deploy_Practice). 초기 구성 PR #1 및 [Day 0 PR #2](https://github.com/shanis345/Deploy_Practice/pull/2)는 main에 병합됐다. PR #2 병합 커밋은 `065e7b9`이며 2026-09-23 GitHub 조회로 확인했다.
+- Day 1 기록은 `codex/day01-results` 브랜치에서 PR로 제출한다. PR 생성 결과는 제출 후 기록한다.
+- Codex 프로젝트 등록과 별도 Day별 작업 생성은 수행하지 않았다.
 
 | Day | 주제 | 상태 | 기록 |
 |---|---|---|---|
 | 00 | 환경 준비 | 실습 완료 · 0-1~0-5 | [SESSION](day00/SESSION.md) |
-| 01 | 가상화 계층과 vSphere: 물리 서버부터 컨테이너까지 | 미시작 | [SESSION](day01/SESSION.md) |
+| 01 | 가상화 계층과 vSphere: 물리 서버부터 컨테이너까지 | 주요 학습·1-3 검증 완료 · 마무리 남음 | [SESSION](day01/SESSION.md) |
 | 02 | 리눅스 네트워크 기초: 네임스페이스·브리지·라우팅·DNS | 미시작 | [SESSION](day02/SESSION.md) |
 | 03 | Docker 이미지·레이어·컨테이너, 그리고 심의를 통과하는 이미지 | 미시작 | [SESSION](day03/SESSION.md) |
 | 04 | Docker 네트워크와 진단 3단계 | 미시작 | [SESSION](day04/SESSION.md) |
@@ -32,6 +33,6 @@
 
 ## 다음 실습을 시작할 때
 
-1. Day 0 기록과 환경 차이를 읽는다.
-2. 사용자에게 지정받은 절과 범위를 기준으로 이어 간다.
+1. Day 1 SESSION의 결과 요약·인수인계와 환경 차이를 읽는다.
+2. 사용자가 지정한 범위에서 정리 결과 확인 → E-1 신청서 초안 → 최종 자기점검을 이어 간다.
 3. kubectl 고정 버전 불일치 등 미해결 사항을 완료로 간주하지 않는다.
