@@ -382,3 +382,10 @@ deactivate
 - 다음 시작 지점: 사용자의 컨테이너 정리 결과를 확인하고, 지정한 범위에서 E-1 신청서 초안과 최종 자기점검을 진행한다. 고객사의 실제 구성·담당자·리드타임은 확인값과 학습용 가정을 구분한다.
 - `docker rm -f vm-agent-01 vm-agent-02`, `docker ps -a --filter "name=vm-agent-"`, `deactivate`는 앞서 안내한 명령이며 실행 완료 증거는 아직 없다. 다음 세션에서는 실제 상태와 기존 터미널의 가상환경 활성 여부부터 확인한다.
 - PR 제출을 Day 1 전체 완료나 main 병합으로 간주하지 않는다. 제출 결과는 아래에 이어 기록한다.
+
+### 제출 결과
+
+- [PR #3 — Day 1 학습·Ansible 실습 결과와 인수인계 정리](https://github.com/shanis345/Deploy_Practice/pull/3)를 생성했다. `codex/day01-results` → `main`, 생성 시 open·미병합 상태다.
+- 본문·환경·증거 7개 파일을 커밋 `abd5a71`로 제출했고, PR 링크와 제출 결과는 후속 문서 커밋으로 기록한다.
+- 검증: `git diff --cached --check` 통과, 변경 문서의 로컬 링크 정상, 실습 파일 두 개의 SHA-256은 사전 확인값과 일치. Ubuntu 실습을 재실행한 결과는 아니다.
+- GitHub CLI 조회는 인증 오류가 있어 연결된 GitHub 도구로 PR 상태 조회·생성을 수행했다. 로컬 Git 작성자 설정은 기존 커밋의 작성자 정보를 명령 단위로 적용했으며 전역 설정은 변경하지 않았다. Git push는 성공했다.

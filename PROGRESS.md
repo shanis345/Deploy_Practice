@@ -10,7 +10,7 @@
 - Day 0의 이미지 빌드·API·UID/GID·정리·TUI 확인 결과는 [Day 0 SESSION](day00/SESSION.md)에 있다. 개념 자기점검 4문항의 별도 평가는 미진행이다.
 - 남은 환경 차이: kubectl·Compose·dive의 가이드 버전 차이, 가이드 lazydocker 고정값과 실제 설치 버전 차이, Ansible 인터프리터 탐색·facts 자동 주입 경고. 현재 실습 성공을 향후 모든 실습의 호환성 보장으로 해석하지 않는다.
 - GitHub 저장소: [Deploy_Practice](https://github.com/shanis345/Deploy_Practice). 초기 구성 PR #1 및 [Day 0 PR #2](https://github.com/shanis345/Deploy_Practice/pull/2)는 main에 병합됐다. PR #2 병합 커밋은 `065e7b9`이며 2026-09-23 GitHub 조회로 확인했다.
-- Day 1 기록은 `codex/day01-results` 브랜치에서 PR로 제출한다. PR 생성 결과는 제출 후 기록한다.
+- Day 1 기록은 `codex/day01-results` → `main`의 [PR #3](https://github.com/shanis345/Deploy_Practice/pull/3)으로 제출했다. PR 생성 시 open·미병합 상태를 확인했다. Day 1 전체 완료 판정과는 별개다.
 - Codex 프로젝트 등록과 별도 Day별 작업 생성은 수행하지 않았다.
 
 | Day | 주제 | 상태 | 기록 |
