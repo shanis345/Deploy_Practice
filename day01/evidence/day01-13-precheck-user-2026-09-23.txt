@@ -1,0 +1,24 @@
+출처: 2026-09-23 사용자가 제공한 Ubuntu WSL2 터미널 출력에서 주요 결과 발췌.
+Codex가 Ubuntu에서 직접 실행한 결과가 아님.
+
+명령:
+cd ~/onprem-lab/day01 && pwd && ls -l inventory.ini prepare-vm.yaml && sha256sum inventory.ini prepare-vm.yaml
+python3 --version
+docker version
+
+결과:
+/home/user/onprem-lab/day01
+-rwxr-xr-x 1 user docker  122 Sep 22 16:43 inventory.ini
+-rwxr-xr-x 1 user docker 1344 Sep 22 16:43 prepare-vm.yaml
+89e8408e1647d9a83a612b9e66dc2dc8314a5898ff09852cd8d2a6cb48df4b54  inventory.ini
+986c2636bcb75726552ff17938c4adc30a1b04cf9ec56e1e6b26c4fc72627d8e  prepare-vm.yaml
+Python 3.12.3
+Docker Client: 29.8.0; API 1.56; linux/amd64; Context default
+Server: Docker Desktop 4.92.0 (240144)
+Docker Engine: 29.8.0; API 1.56 (minimum 1.40); linux/amd64
+containerd: v2.3.5
+runc: 1.5.1
+docker-init: 0.19.0
+
+판정: 경로·파일 존재 정상. 두 파일의 SHA-256이 Codex가 조회한 Windows 사본과 일치.
+Python 버전 및 Docker Client/Server 응답 확인. Ansible 설치·컨테이너 생성 결과는 아직 없음.

@@ -1,0 +1,25 @@
+출처: 사용자 제공 Ubuntu WSL2 출력의 주요 내용 발췌. Codex 직접 실행 결과가 아님.
+실행 위치: /home/user/onprem-lab/day01, .venv 활성화
+
+명령(각 대상에 실행):
+docker exec vm-agent-01 sh -c 'getent passwd appuser && ls -ld /opt/agent/* /etc/docker-daemon.json && cat /etc/docker-daemon.json'
+docker exec vm-agent-02 sh -c 'getent passwd appuser && ls -ld /opt/agent/* /etc/docker-daemon.json && cat /etc/docker-daemon.json'
+
+두 대상 공통 출력:
+appuser:x:10001:10001::/home/appuser:/usr/sbin/nologin
+-rw-r--r-- 1 root    root  274 Sep 23 01:46 /etc/docker-daemon.json
+drwxr-x--- 2 appuser root 4096 Sep 23 01:46 /opt/agent/config
+drwxr-x--- 2 appuser root 4096 Sep 23 01:46 /opt/agent/data
+drwxr-x--- 2 appuser root 4096 Sep 23 01:46 /opt/agent/logs
+
+두 대상 모두 확인된 설정 내용:
+log-driver: json-file
+log-opts.max-size: 10m
+log-opts.max-file: 3
+proxies.http-proxy 및 https-proxy: http://proxy.corp.example:3128 (가이드의 예시 주소)
+proxies.no-proxy: localhost,127.0.0.1,.corp.example,10.0.0.0/8
+
+판정: 계정 UID·셸, 디렉터리 소유자·0750, 예시 파일 0644·내용이 의도한 설정과 일치.
+디렉터리 그룹은 root이며 플레이북은 group을 지정하지 않으므로 불일치가 아님.
+설정 파일은 컨테이너 내부 예시이며 실제 Docker 데몬 설정 적용이나 프록시 통신 증거가 아님.
+컨테이너 정리는 아직 결과 대기.

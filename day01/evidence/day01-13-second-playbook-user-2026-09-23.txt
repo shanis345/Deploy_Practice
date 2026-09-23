@@ -1,0 +1,18 @@
+출처: 사용자 제공 Ubuntu WSL2 출력의 주요 내용 발췌. Codex 직접 실행 결과가 아님.
+실행 위치: /home/user/onprem-lab/day01, .venv 활성화
+명령: ansible-playbook -i inventory.ini prepare-vm.yaml
+동일한 인벤토리와 플레이북의 두 번째 실행.
+
+두 대상 모두 Gathering Facts, 서비스 계정 생성, 애플리케이션 디렉터리(config/data/logs),
+도커 데몬 설정 예시 파일 작성, 사실 확인 출력이 ok.
+두 대상 debug: Debian 12.8, mem 15577MB, cpu 32
+
+PLAY RECAP
+vm-agent-01 : ok=5 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
+vm-agent-02 : ok=5 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
+
+경고: 첫 실행과 동일한 /usr/local/bin/python3.12 자동 탐색 경고 및
+INJECT_FACTS_AS_VARS 변경 예고(prepare-vm.yaml:39:14, 출력상 2.24 제거 예정).
+
+판정: 이번 플레이북의 동일 상태 재실행에서 변경 없음 확인. 멱등성 체크포인트 충족.
+컨테이너는 실행 중이며 별도 내부 조회와 정리는 아직 하지 않음.

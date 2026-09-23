@@ -3,6 +3,8 @@
 기준일: 2026-09-23. 환경 재점검은 Codex 직접 조회, 후속 lazydocker 업데이트·화면 확인은 사용자 제공 출력과 스크린샷에 근거한다. 이전 결과는 별도 이력으로 구분한다.
 
 ## 현재 상태 — Docker Desktop 실행 후 (2026-09-23)
+- Day 1의 1-3 사용자 출력으로 Ansible core 2.21.4를 `/home/user/onprem-lab/day01/.venv/bin/ansible`에서 확인했다(Python 3.12.3, Jinja 3.1.6, PyYAML 6.0.3). community.docker 5.3.0은 `/home/user/.ansible/collections/ansible_collections`에 설치돼 있다. 후속 사용자 출력에서 두 대상 연결 SUCCESS·pong, 첫 플레이북 실행 ok=5·changed=3·failed=0·unreachable=0, 두 번째 실행 ok=5·changed=0·failed=0·unreachable=0을 확인했다. 내부 별도 조회에서도 appuser UID 10001·nologin, 디렉터리 appuser:root·0750, 예시 설정 파일 root:root·0644를 확인했다. [내부 상태 증거](../day01/evidence/day01-13-state-user-2026-09-23.txt). 컨테이너 삭제와 deactivate 실행 결과는 아직 없으며 현재 실행 여부를 재조회하지 않았다.
+- Day 1의 1-3 사전 확인 사용자 출력: Docker Desktop 4.92.0(240144), Docker Client/Engine 29.8.0, API 1.56(서버 최소 1.40), linux/amd64, Python 3.12.3. Ubuntu day01의 inventory.ini·prepare-vm.yaml 두 파일은 Windows 사본과 SHA-256이 일치한다. 이번에는 사용자 제공 출력이며 Codex가 Ubuntu에서 직접 재실행한 것이 아니다. [증거](../day01/evidence/day01-13-precheck-user-2026-09-23.txt).
 - 후속 0-4 실습에서 lazydocker 0.23.3의 API 1.25 고정 사용과 Docker 최소 API 1.40 사이의 호환 오류를 확인했다. 사용자가 `/usr/local/bin/lazydocker`를 공식 바이너리 0.25.2(linux/amd64)로 교체한 뒤 오류 없이 이미지·네트워크 목록이 표시되는 화면을 제공했다. `agent:0.1.0`은 화면상 189.09MB이며 기본 네트워크 bridge·host·none이 모두 보인다.
 - lazydocker의 실제 설치 버전은 이제 0.25.2다. 가이드와 bootstrap.sh의 0.23.3 고정값은 수정하지 않았으므로 새 환경 설치 시 동일한 호환 오류가 재발할 수 있다. `check`의 버전 출력 성공만으로 TUI 동작을 보장할 수 없다.
 - 사용자가 Docker Desktop 실행을 알린 뒤 Codex가 Ubuntu에서 직접 재점검했다. `./bootstrap.sh check` 전 항목 통과, 종료 코드 0이다.
@@ -53,6 +55,8 @@
 | iproute2 | ip 명령 존재 | 버전 미기록 |
 
 ## 알려진 차이와 남은 확인
+- Ansible 2.21.4의 Day 1 첫 실행에서 Python 인터프리터 자동 탐색 경고와 INJECT_FACTS_AS_VARS 변경 예고가 표시됐다. 후자는 가이드 prepare-vm.yaml의 top-level facts 참조 방식 때문이며 출력은 2.24에서 제거 예정이라고 알린다. 현재 실행은 성공했으며 향후에는 ansible_facts 사전 참조로 수정할 필요가 있다. 이번에는 동일 플레이북 재실행 확인을 위해 소스를 변경하지 않았다.
+- Day 1의 1-3에서 `python3 -m venv .venv`가 ensurepip 불가로 실패했다. 이후 사용자 출력으로 `python3.12-venv` 3.12.3-1ubuntu0.17, `python3-pip-whl` 24.0+dfsg-1ubuntu1.3, `python3-setuptools-whl` 68.1.2-2ubuntu1.2 설치 완료를 확인했다. 기존 패키지 업그레이드는 없었다. 재실행 후 가상환경 생성·활성화에 성공했고 Python은 `/home/user/onprem-lab/day01/.venv/bin/python`, pip 24.0은 같은 .venv의 Python 3.12 경로를 가리켰다. ensurepip 오류 해소 확인. 후속 Ansible·community.docker 설치 버전도 사용자 출력으로 확인했다(위 현재 상태 참고). [오류·대응 기록](../day01/SESSION.md) 참고.
 - check의 ✓는 고정 버전 일치나 모든 후속 실습의 호환성을 보장하지 않는다.
 - kubectl 버전 차이는 해결되지 않은 항목으로 유지한다.
 - 가이드의 k3s v1.30 클러스터는 아직 생성·검증하지 않았다.
