@@ -1,0 +1,42 @@
+Day 2 정리 — 사용자 제공 Ubuntu 명령·출력
+수신일: 2026-09-25 (Asia/Seoul)
+출처: 사용자 대화 출력. Codex 직접 실행 결과가 아님.
+비밀번호 값은 제공·기록되지 않았다. 비밀번호 입력 프롬프트는 생략했다.
+
+$ sudo pkill -f "nc -l -k 10.42.0.20" 2>/dev/null
+$ sudo iptables -D FORWARD -i br-lab -j ACCEPT 2>/dev/null
+$ sudo iptables -D FORWARD -o br-lab -j ACCEPT 2>/dev/null
+$ sudo iptables -t nat -D POSTROUTING -s 10.42.0.0/24 ! -o br-lab -j MASQUERADE 2>/dev/null
+$ sudo ip netns del biz 2>/dev/null; sudo ip netns del db 2>/dev/null; sudo ip link del br-lab 2>/dev/null
+$ docker rm -f who1 who2 lim 2>/dev/null; docker network rm demo-net 2>/dev/null
+$ ip netns list; echo "정리 완료"
+who1
+who2
+lim
+demo-net
+정리 완료
+
+판정:
+- Docker 컨테이너 세 개와 demo-net 삭제 출력 확인.
+- ip netns list는 항목 없이 끝났다.
+- 오류를 숨기는 정리 명령이므로 마지막 echo만으로 NAT·브리지 제거를 단정하지 않는다.
+- 추가 FORWARD 규칙은 이 실습에서 넣지 않았다. 이미 종료한 리스너 PID를 재사용하지 않는다.
+- 위 명령에 ip_forward=0 복구는 포함되지 않았다. 복구·NAT·브리지 후속 조회 결과 대기.
+
+후속 확인 첫 시도 (오류 주요 발췌):
+$ sudo sysctl -w net.ipv4.ip_forward=0 sudo iptables -t nat -S POSTROUTING ip -brief link show type bridge
+sysctl: invalid option -- 't'
+
+원인: 세 명령 사이의 줄바꿈·구분자 누락. 뒤 명령이 sysctl 인자로 전달됐다.
+세미콜론으로 구분한 한 줄을 재안내했다. 복구 성공 결과로 간주하지 않는다.
+
+후속 재실행 성공 (사용자 제공 출력):
+$ sudo sysctl -w net.ipv4.ip_forward=0; sudo iptables -t nat -S POSTROUTING; ip -brief link show type bridge
+net.ipv4.ip_forward = 0
+-P POSTROUTING ACCEPT
+
+최종 판정:
+- ip_forward 사전 값 0 복구 확인.
+- NAT POSTROUTING에 개별 규칙이 없어 실습 MASQUERADE 제거 확인.
+- 브리지 목록은 빈 출력으로 br-lab 제거 확인.
+- 위 컨테이너·네트워크·네임스페이스 삭제 결과와 함께 실습 자원 정리 완료.

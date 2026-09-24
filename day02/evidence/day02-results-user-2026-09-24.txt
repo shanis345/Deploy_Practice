@@ -1,0 +1,110 @@
+Day 2 사용자 제공 Ubuntu 출력 — 주요 증거 발췌
+실습일: 2026-09-24 / 정리일: 2026-09-25
+출처: 사용자가 대화에 붙여넣은 실행 결과. Codex 직접 실행 로그가 아님.
+구성: 실제 출력의 주요 행을 절별로 발췌했다. 전체 터미널 덤프가 아니며
+생략한 행이나 예상 출력을 새 실행 결과로 추가하지 않았다.
+
+[2-1 빈 네임스페이스]
+$ sudo ip netns exec biz ip -brief addr
+lo               DOWN
+$ sudo ip netns exec biz ping -c1 -W1 8.8.8.8; echo "종료코드=$?"
+ping: connect: Network is unreachable
+종료코드=2
+
+[2-2 브리지·veth 통신]
+$ sudo ip netns exec biz ping -c1 -W1 10.42.0.1
+64 bytes from 10.42.0.1: icmp_seq=1 ttl=64 time=0.377 ms
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+$ sudo ip netns exec biz ping -c1 -W1 10.42.0.20
+64 bytes from 10.42.0.20: icmp_seq=1 ttl=64 time=0.143 ms
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+$ bridge link
+4: veth-biz@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-lab state forwarding priority 32 cost 2
+5: veth-db@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-lab state forwarding priority 32 cost 2
+
+[2-3 기본 경로 추가 전]
+$ sudo ip netns exec biz ip route
+10.42.0.0/24 dev eth0 proto kernel scope link src 10.42.0.10
+$ sudo ip netns exec biz ping -c1 -W1 1.1.1.1; echo "종료코드=$?"
+ping: connect: Network is unreachable
+종료코드=2
+
+[2-3 기본 경로 추가 후]
+$ sudo ip netns exec biz ip route
+default via 10.42.0.1 dev eth0
+10.42.0.0/24 dev eth0 proto kernel scope link src 10.42.0.10
+$ sudo ip netns exec biz ping -c1 -W1 1.1.1.1; echo "종료코드=$?"
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+종료코드=1
+
+[2-4 사전 값·설정·TCP 성공]
+$ sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 0
+$ sudo iptables -S FORWARD
+sudo: iptables: command not found
+
+후속 설치 안내 뒤 사용자 출력:
+$ iptables --version
+iptables v1.8.10 (nf_tables)
+$ sudo iptables -S FORWARD
+-P FORWARD ACCEPT
+$ sudo iptables -t nat -S POSTROUTING
+-P POSTROUTING ACCEPT
+$ sudo sysctl -w net.ipv4.ip_forward=1
+net.ipv4.ip_forward = 1
+$ sudo iptables -t nat -S POSTROUTING
+-P POSTROUTING ACCEPT
+-A POSTROUTING -s 10.42.0.0/24 ! -o br-lab -j MASQUERADE
+$ sudo ip netns exec biz nc -zv -w3 1.1.1.1 443
+Connection to 1.1.1.1 443 port [tcp/https] succeeded!
+종료코드=0
+
+[2-5 패킷 관찰]
+$ tcpdump --version
+tcpdump version 4.99.4
+libpcap version 1.10.4 (with TPACKET_V3)
+OpenSSL 3.0.13 30 Jan 2024
+
+db의 eth0에서 TCP 5432 패킷 두 개 캡처, biz에서 nc로 접속:
+Connection to 10.42.0.20 5432 port [tcp/postgresql] succeeded!
+접속 종료코드=0
+22:43:22.114615 IP 10.42.0.10.45566 > 10.42.0.20.5432: Flags [S], seq 27501029, win 64240, options [mss 1460,sackOK,TS val 1626502515 ecr 0,nop,wscale 7], length 0
+22:43:22.114691 IP 10.42.0.20.5432 > 10.42.0.10.45566: Flags [S.], seq 1257938297, ack 27501030, win 65160, options [mss 1460,sackOK,TS val 78116929 ecr 1626502515,nop,wscale 7], length 0
+2 packets captured
+6 packets received by filter
+0 packets dropped by kernel
+
+리스너 PID 2129 종료 후 ss 조회는 표 머리글만 출력됨.
+
+[2-6 Docker 자동 구성]
+$ docker network inspect demo-net --format 'Driver={{.Driver}} IPAM={{json .IPAM.Config}}'
+Driver=bridge IPAM=[{"Subnet":"172.19.0.0/16","Gateway":"172.19.0.1"}]
+$ docker exec who1 ip route
+default via 172.19.0.1 dev eth0
+172.19.0.0/16 dev eth0 scope link  src 172.19.0.2
+
+Docker 엔진 네트워크 공간에서 조회한 주요 행:
+br-0256008dc546  UP             82:f0:b4:50:6d:70 <BROADCAST,MULTICAST,UP,LOWER_UP>
+7: vethef0bed3@services1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 master br-0256008dc546 state forwarding priority 32 cost 2
+-A POSTROUTING -s 172.19.0.0/16 ! -o br-0256008dc546 -j MASQUERADE
+
+who1 resolv.conf: nameserver 127.0.0.11
+who2 resolv.conf: nameserver 192.168.65.7
+$ docker exec who1 nslookup who1
+Server:         127.0.0.11
+Address:        127.0.0.11:53
+Name:   who1
+Address: 172.19.0.2
+$ docker exec who2 nslookup who2
+Server:         192.168.65.7
+Address:        192.168.65.7:53
+** server can't find who2: NXDOMAIN
+
+[2-7 메모리 제한]
+$ docker stats --no-stream lim
+CONTAINER ID   NAME      CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
+98f480bce73a   lim       0.00%     416KiB / 64MiB      0.63%     872B / 126B   0B / 0B     1
+$ docker exec lim sh -c 'cat /sys/fs/cgroup/memory.max 2>/dev/null || cat /sys/fs/cgroup/memory/memory.limit_in_bytes'
+67108864
+
+검증 범위: 메모리 제한 값. OOM을 직접 재현한 출력은 없음.

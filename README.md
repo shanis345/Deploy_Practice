@@ -2,13 +2,14 @@
 
 온프렘·망분리 환경의 에이전트 배포 실습을 Day별로 수행하고, 소스와 학습 기록을 함께 관리하는 로컬 프로젝트다.
 
-**현재 상태: Day 0의 0-1 부트스트랩 완료. Day 0 전체 완료는 아니다.**
+**최신 완료 범위와 다음 시작 지점은 [진행 현황](PROGRESS.md)에서 관리한다.**
 
 ## 먼저 읽기
 - [진행 현황](PROGRESS.md): 완료 범위와 정확한 중단 지점, Day별 기록 링크
 - [환경 기록](docs/environment.md): WSL2·Docker·도구 버전과 가이드 대비 차이
 - [Codex 진행 규칙](AGENTS.md): 한 단계씩 진행하고 지정한 범위에서 멈추는 규칙
-- [Day 0 기록](day00/SESSION.md): 현재까지의 실행 과정과 오류 해결
+- [Day 0 기록](day00/SESSION.md): 초기 환경 준비 과정과 오류 해결
+- [Day 2 기록](day02/SESSION.md): 네트워크·Docker·cgroup 실습 결과와 핵심 개념
 - [가이드북 HTML](docs/guide/onprem-agent-deploy-guide.html): 브라우저에서 여는 원본 가이드
 
 ## 구조
@@ -31,7 +32,7 @@
 
 GitHub 저장소: [https://github.com/shanis345/Deploy_Practice](https://github.com/shanis345/Deploy_Practice)
 
-초기 자료는 `codex/initial-practice-setup` 브랜치의 PR로 관리한다. 실습 진도는 Day 0의 0-1 완료 상태다.
+초기 자료와 Day별 학습 기록은 작업 브랜치의 PR로 제출한다. PR 제출·병합 여부와 실습 완료 여부는 구분하며 상세 이력은 PROGRESS.md와 각 Day SESSION.md에 남긴다.
 Codex 프로젝트 등록 및 Day별 작업 생성은 아직 수행하지 않았다.
 
 ## Windows 프로젝트와 Ubuntu 실습 폴더

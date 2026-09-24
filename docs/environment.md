@@ -1,6 +1,22 @@
 # 실습 환경
 
-기준일: 2026-09-23. 환경 재점검은 Codex 직접 조회, 후속 lazydocker 업데이트·화면 확인은 사용자 제공 출력과 스크린샷에 근거한다. 이전 결과는 별도 이력으로 구분한다.
+기준일: 2026-09-25. Day 2 실습·정리 결과는 사용자 제공 Ubuntu 출력에 근거한다. 2026-09-23 환경 재점검은 Codex 직접 조회, 후속 lazydocker 업데이트·화면 확인은 사용자 제공 출력과 스크린샷에 근거한다. 이전 결과는 별도 이력으로 구분한다.
+
+## Day 2 종료 상태 (2026-09-25)
+- 실습 2-1~2-7 완료. 사용자 정리 출력으로 who1·who2·lim·demo-net 삭제 및 빈 ip netns list를 확인했다. 기존 koica 프로젝트는 정리 대상에 포함하지 않았다.
+- 첫 재확인 시 세 명령이 구분자 없이 한 줄로 붙어 sysctl 옵션 오류가 발생했으나 세미콜론으로 구분해 재실행했다. 후속 사용자 출력은 `net.ipv4.ip_forward = 0`, NAT는 `-P POSTROUTING ACCEPT`만 표시, 브리지 목록은 빈 출력이었다. 사전 전달 설정 복구와 실습 NAT·브리지 제거까지 확인해 정리를 완료했다.
+- 아래 2026-09-24의 실행 중 구성은 실습 당시 관찰 이력이며 현재 잔존 상태를 뜻하지 않는다. [정리 증거](../day02/evidence/day02-cleanup-user-2026-09-25.txt), [전체 기록](../day02/SESSION.md).
+
+## Day 2 실습 당시 상태 (2026-09-24)
+- 2-6 사전 조회에서 Docker 명령 네 개 모두 WSL integration 안내 오류로 실패했으나, Desktop 실행 안내 후 사용자 docker version 출력으로 Client·Engine 29.8.0, API 1.56, Desktop 4.92.0 (240144), linux/amd64, Context default 및 Client·Server 응답을 확인해 복구됐다. Windows에서 수행한 조작 상세는 미제공이다. 이후 사전 조회와 2-6 실습도 사용자 출력으로 확인했다.
+- 사용자 출력으로 2-1~2-7 완료를 확인했다. Day 전체 자원 정리·자기점검은 남아 있다. Ubuntu의 biz·db 네임스페이스, br-lab(10.42.0.1/24), veth 연결 및 biz(10.42.0.10/24)·db(10.42.0.20/24)의 통신을 확인했다. biz의 기본 경로는 10.42.0.1이며 db 기본 경로는 추가하지 않았다.
+- 2-7에서 lim을 --memory=64m·--rm·sleep 3600으로 실행했다. stats는 416KiB / 64MiB, 0.63%, PIDS 1이며 cgroup 상한 조회는 67108864바이트였다. 제한 값 일치를 확인했으며 OOM은 시험하지 않았다. lim은 아직 수동 정리하지 않았다.
+- 2-6의 Docker 엔진 관찰에서 demo-net(172.19.0.0/16·게이트웨이 172.19.0.1), who1(172.19.0.2/16), br-0256008dc546·veth 포트 및 해당 대역 MASQUERADE를 확인했다. who1은 DNS 127.0.0.11에서 자기 이름 조회 성공, 기본 bridge의 who2는 DNS 192.168.65.7에서 NXDOMAIN이었다. who1·who2는 --rm·sleep 3600으로 실행했고 demo-net과 함께 아직 수동 정리하지 않았다. 시간 경과 시 잔존 상태를 확인한다. 기존 koica 프로젝트는 정리 대상이 아니다.
+- 2-5에서 tcpdump 미검출 후 설치를 안내했고 사용자 버전 출력으로 tcpdump 4.99.4·libpcap 1.10.4·OpenSSL 3.0.13을 확인했다. db TCP 5432의 nc 리스너로 접속하며 SYN·SYN-ACK와 TCP 연결 성공을 관찰했다. 이후 캡처 작업 종료 및 리스너 PID 2129 종료·LISTEN 해제를 확인했다. 실제 PostgreSQL 서버를 설치한 것은 아니다.
+- iptables 명령 미검출 후 설치를 안내했고, 후속 출력에서 v1.8.10 (nf_tables)과 규칙 조회 성공을 확인했다. apt 설치 로그는 미제공이다. nc 경로는 /usr/bin/nc다.
+- 설정 전 ip_forward=0, FORWARD 기본 ACCEPT·개별 규칙 없음, NAT POSTROUTING 개별 규칙 없음을 확인했다. 이후 사용자가 ip_forward=1과 `-s 10.42.0.0/24 ! -o br-lab -j MASQUERADE` 규칙 한 개를 설정했다.
+- biz에서 `nc -zv -w3 1.1.1.1 443` 성공·종료 코드 0. DNS·TLS·HTTP 및 외부 ping 성공까지 검증한 것은 아니다. Ubuntu 경로 조회는 `via 172.18.48.1 dev eth0 src 172.18.60.227`이었다.
+- 실습 구성은 유지 중이다. 최종 정리 시 실습 NAT·네트워크 제거 및 ip_forward의 사전 값 0 복구를 포함한다. 영구 설정은 추가하지 않았다. Codex가 Ubuntu 설정을 직접 변경하거나 재시험하지 않았다. 상세 명령·출력은 [Day 2 SESSION](../day02/SESSION.md)에 기록했다.
 
 ## 현재 상태 — Docker Desktop 실행 후 (2026-09-23)
 - Day 1의 1-3 사용자 출력으로 Ansible core 2.21.4를 `/home/user/onprem-lab/day01/.venv/bin/ansible`에서 확인했다(Python 3.12.3, Jinja 3.1.6, PyYAML 6.0.3). community.docker 5.3.0은 `/home/user/.ansible/collections/ansible_collections`에 설치돼 있다. 후속 사용자 출력에서 두 대상 연결 SUCCESS·pong, 첫 플레이북 실행 ok=5·changed=3·failed=0·unreachable=0, 두 번째 실행 ok=5·changed=0·failed=0·unreachable=0을 확인했다. 내부 별도 조회에서도 appuser UID 10001·nologin, 디렉터리 appuser:root·0750, 예시 설정 파일 root:root·0644를 확인했다. [내부 상태 증거](../day01/evidence/day01-13-state-user-2026-09-23.txt). 컨테이너 삭제와 deactivate 실행 결과는 아직 없으며 현재 실행 여부를 재조회하지 않았다.
