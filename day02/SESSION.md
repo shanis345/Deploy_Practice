@@ -613,3 +613,4 @@ vSphere는 VM 인프라를 운영하는 플랫폼이다. ESXi는 물리 서버�
 - GitHub CLI 인증은 실패했으며 브라우저의 로그인된 GitHub 화면을 확인했다. PR 생성 결과와 검증 결과는 아래에 이어 기록한다.
 - 후속 사용자 출력으로 정리 완료 확인: 세미콜론으로 구분해 재실행한 결과 `net.ipv4.ip_forward = 0`, NAT POSTROUTING은 `-P POSTROUTING ACCEPT`만 출력, 브리지 목록은 빈 출력이었다. 앞선 삭제 결과와 합쳐 Day 2 실습·정리 완료로 갱신했다. 가이드 자기점검 5문항은 별도 평가하지 않았다.
 - Codex의 Windows 문서 검증: 변경 문서·증거 7개 파일의 LF와 로컬 링크 45개 존재 확인, `git diff --check` 통과. `day02/netns-lab.sh`의 SHA-256은 `8AD5DC88E164BFC2C5725731B97754FC1495B8343A8DFEEA9F308C2B55972DEE`로 기존과 동일하다. 문서만 변경했으므로 Ubuntu 실습 재실행이나 가이드 재빌드는 하지 않았다.
+- 제출 결과: 실습 기록 커밋 `031989d`를 push한 뒤 [PR #4](https://github.com/shanis345/Deploy_Practice/pull/4)를 생성했다. 대상은 `codex/day02-results` → `main`이며 생성 시 open·미병합 상태를 확인했다. 이 PR 링크를 진행 현황과 인수인계에도 추가했다.
