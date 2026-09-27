@@ -367,6 +367,7 @@ docker image ls --filter reference=leak:1 --format '{{.Repository}}:{{.Tag}}'
 - 원격 갱신으로 Day 2 PR #4의 main 병합(`18b805e`)을 확인하고 `codex/day03-results` 브랜치를 만들었다. Ubuntu 실습은 재실행하거나 동기화하지 않았다.
 - 별도 자기점검 평가, 실제 고객사 승인·운영 배포, Day 4 실습은 진행하지 않았다.
 - Codex 직접 문서 검증: 제출 대상 13개 파일의 LF 유지, Markdown 상대 링크 53개 대상 존재, `git diff --check` 통과를 확인했다. agent·skeleton·day03/scan.sh·가이드 원문 변경은 없다. 문서 변경이므로 앱 테스트·이미지 빌드는 재실행하지 않았다.
+- 결과 커밋 `b5bd00a`를 원격에 push하고 [PR #5](https://github.com/shanis345/Deploy_Practice/pull/5)를 생성했다. GitHub 화면에서 `codex/day03-results` → `main`, Open 상태를 확인했으며 병합은 수행하지 않았다. GitHub CLI 인증이 유효하지 않아 PR 생성에는 로그인된 브라우저를 사용했다.
 
 ## 가이드와 실제 환경의 차이
 공통 환경은 [환경 기록](../docs/environment.md)을 참고한다.
