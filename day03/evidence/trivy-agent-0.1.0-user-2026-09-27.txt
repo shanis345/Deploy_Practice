@@ -1,0 +1,29 @@
+출처: 사용자 첨부 붙여넣은 텍스트.txt (2026-09-27). 전체 로그가 아닌 주요 발췌.
+실행 위치: Ubuntu WSL2 ~/onprem-lab/day03
+확인 주체: 사용자 실행 출력. Codex 직접 스캔 결과가 아님.
+
+명령:
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD/trivy-cache:/root/.cache/" aquasec/trivy:0.56.2 image --severity HIGH,CRITICAL --scanners vuln agent:0.1.0 2>&1 | tee trivy-agent-0.1.0.log
+echo "스캔 종료코드=${PIPESTATUS[0]}"
+
+2026-09-27T10:19:32Z INFO [vulndb] Downloading artifact... repo="ghcr.io/aquasecurity/trivy-db:2"
+DB 다운로드 진행 출력: 117.74 MiB
+2026-09-27T10:19:45Z INFO [vulndb] Artifact successfully downloaded repo="ghcr.io/aquasecurity/trivy-db:2"
+2026-09-27T10:19:47Z INFO Detected OS family="debian" version="12.8"
+2026-09-27T10:19:47Z INFO [debian] Detecting vulnerabilities... os_version="12" pkg_num=105
+2026-09-27T10:19:47Z INFO [python-pkg] Detecting vulnerabilities...
+WARN: Using severities from other vendors for some vulnerabilities.
+
+agent:0.1.0 (debian 12.8)
+Total: 104 (HIGH: 95, CRITICAL: 9)
+스캔 종료코드=0
+
+표의 대표 항목 (보고된 값이며 실제 악용 가능성의 별도 검증은 아님):
+libcap2 | CVE-2026-4878 | fixed | Installed 1:2.66-4 | Fixed 1:2.66-4+deb12u3
+libssl3 | CVE-2026-31789 | CRITICAL | fixed | Installed 3.0.15-1~deb12u1 | Fixed 3.0.19-1~deb12u2
+perl-base | CVE-2026-13221 | CRITICAL | affected | Installed 5.36.0-7+deb12u1 | Fixed 빈칸
+zlib1g | CVE-2023-45853 | CRITICAL | will_not_fix | Installed 1:1.2.13.dfsg-1 | Fixed 빈칸
+
+해석 한계: 위 Total은 Debian 대상의 패키지별 검출 건수다. 고유 CVE 수·실제 악용 가능한 취약점 수로 단정하지 않는다.
+Python 패키지 검색 로그는 있지만 별도 Python 결과 요약은 첨부 출력에 없다.
+종료코드 0은 검사 완료를 뜻하며 취약점 0건이나 반입 기준 통과를 뜻하지 않는다.

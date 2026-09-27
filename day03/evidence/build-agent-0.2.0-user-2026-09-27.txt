@@ -1,0 +1,17 @@
+출처: 사용자 첨부 붙여넣은 텍스트.txt (2026-09-27). 주요 출력 발췌.
+확인 주체: 사용자 실행 결과. Codex 직접 빌드 결과가 아님.
+실행 위치: Ubuntu WSL2 ~/onprem-lab/agent
+
+$ docker build --build-arg BASE=python:3.12.14-slim --build-arg APP_VERSION=0.2.0 -t agent:0.2.0 .
+[+] Building 10.4s (14/14) FINISHED docker:default
+resolve docker.io/library/python:3.12.14-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+exporting manifest sha256:edd499f43e2a868f9c5a8ec5d6a194f0f7801b2618eaa605753687f04708db74
+exporting config sha256:617207ce6307a1477cad9b04ef41a954d38d1ddcd7b9ed1fb781075ca1ec432f
+exporting manifest list sha256:a4ef49ae142efb1a03fe43c30d4a6f68ceee1c649578c33407827e8f6f4185a3
+naming to docker.io/library/agent:0.2.0
+unpacking to docker.io/library/agent:0.2.0
+
+$ docker run --rm agent:0.2.0 python --version
+Python 3.12.14
+
+참고: 각 다이제스트는 빌드 출력의 라벨에 따라 구분한다. 앱 기동·재스캔 결과는 포함하지 않는다.

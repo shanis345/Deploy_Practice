@@ -1,0 +1,23 @@
+출처: 사용자 제공 Ubuntu 실행 결과 (2026-09-27). 주요 발췌.
+확인 주체: 사용자 출력. Codex 직접 실행 결과가 아님.
+실행 위치: ~/onprem-lab/day03/leak
+
+3-4 정리:
+docker image rm leak:1
+Untagged: leak:1
+Deleted: sha256:a0166d5a9bfdb92ca132ac47645f5f8daf69d7b42c938cd2a4d6c8e4ea9ebd0b
+test ! -e x && test ! -e leak.tar && echo "임시 파일 정리 확인"
+임시 파일 정리 확인
+
+Day 종료 정리 후 조회:
+$ docker image inspect agent:0.1.0 agent:0.2.0 --format '{{json .RepoTags}}'
+["agent:0.1.0"]
+["agent:0.2.0"]
+$ docker ps -a --filter 'name=^/agent$' --format '{{.Names}} {{.Status}}'
+(출력 없음)
+$ docker image ls --filter reference=leak:1 --format '{{.Repository}}:{{.Tag}}'
+(출력 없음)
+
+확인 범위: 두 agent 이미지 보존, agent 컨테이너와 leak:1 이미지 부재, 앞선 x·leak.tar 제거.
+image prune의 실제 삭제 목록은 stdout이 숨겨져 확인하지 못했다.
+빌드 캐시 전체 제거·복구 불가능한 삭제 또는 다른 프로젝트 자원 정리를 뜻하지 않는다.

@@ -1,0 +1,28 @@
+출처: 사용자 제공 Ubuntu 출력 (2026-09-27). 주요 발췌.
+실행 위치: ~/onprem-lab/day03/leak
+확인 주체: 사용자 실행 결과. Codex 직접 실행 결과가 아님.
+DEMO_ONLY 값은 학습용 가짜 문자열이며 실제 자격 증명이 아니다.
+
+1. 최종 컨테이너 파일 목록
+$ docker run --rm leak:1 ls -la /root/
+total 8
+drwx------    1 root     root          4096 Sep 27 10:54 .
+drwxr-xr-x    1 root     root          4096 Sep 27 10:57 ..
+
+2. 이미지 환경변수
+$ docker image inspect leak:1 --format '{{json .Config.Env}}'
+["PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","API_KEY=DEMO_ONLY_ENV_SECRET"]
+
+3. 이미지 내보내기·레이어 내부 파일 조회
+$ docker save leak:1 -o leak.tar && mkdir -p x && tar -xf leak.tar -C x
+$ for blob in x/blobs/sha256/*; do
+    if tar -tf "$blob" 2>/dev/null | grep -Fxq 'root/secret.txt'; then
+      echo "발견한 레이어: $(basename "$blob")"
+      tar -xOf "$blob" root/secret.txt
+    fi
+  done
+발견한 레이어: 99815a1743a4f6f7249688c7a3d804cc85632cd5015ef3c3d3ecfbcc1bc2ccd4
+DEMO_ONLY_FILE_SECRET
+
+의미: 최종 컨테이너에 파일이 보이지 않아도 이전 이미지 레이어에서 원문을 읽을 수 있다.
+별개로 ENV에 넣은 가짜 키도 이미지 설정에 남아 있다.
