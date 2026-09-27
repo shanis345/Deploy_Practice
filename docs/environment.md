@@ -1,6 +1,14 @@
 # 실습 환경
 
-기준일: 2026-09-25. Day 2 실습·정리 결과는 사용자 제공 Ubuntu 출력에 근거한다. 2026-09-23 환경 재점검은 Codex 직접 조회, 후속 lazydocker 업데이트·화면 확인은 사용자 제공 출력과 스크린샷에 근거한다. 이전 결과는 별도 이력으로 구분한다.
+기준일: 2026-09-27. Day 2·3 실습·정리 결과는 사용자 제공 Ubuntu 출력과 스크린샷에 근거한다. 2026-09-23 환경 재점검은 Codex 직접 조회이며 이전 결과는 별도 이력으로 구분한다.
+
+## Day 3 종료 상태 (2026-09-27)
+- 사용자 출력으로 Docker Client/Engine 29.8.0, Desktop 4.92.0(240144), API 1.56 및 화면으로 lazydocker 0.25.2의 정상 작동을 확인했다. 시작 시 WSL 연동 오류가 있었으나 후속 명령 성공으로 복구를 확인했다. Windows 조작 상세는 미제공이다.
+- agent:0.2.0을 python:3.12.14-slim으로 빌드했다. Python 3.12.14, 스캔 식별 OS Debian 13.7, linux/amd64, UID 10001·GID 0, 이미지 크기 181278388바이트를 확인했다.
+- Trivy 0.56.2의 사용자 결과: 초기 agent:0.1.0은 HIGH 95·CRITICAL 9, 새 이미지는 HIGH 44·CRITICAL 0, --ignore-unfixed 적용 시 0건. 실제 영향 평가·예외 승인과 구분한다.
+- 종료 조회로 agent:0.1.0·0.2.0 보존, 정확한 이름 agent의 컨테이너와 leak:1 이미지 부재를 확인했다. 앞서 day03/leak/x·leak.tar 제거도 확인했다. [정리 증거](../day03/evidence/cleanup-user-2026-09-27.txt).
+- day03/leak의 가짜 비밀 연습 소스와 day03의 스캔 로그·trivy-cache는 삭제 대상으로 지정하지 않았다. 캐시 전체 삭제나 비밀의 복구 불가능한 삭제를 수행한 것은 아니다. 화면의 기존 koica 자원은 이번 실습 정리 대상이 아니다.
+- Windows 기록과 Ubuntu 실습 폴더는 별도다. 전체 결과와 범위는 [Day 3 SESSION](../day03/SESSION.md), [반입 초안](../day03/IMPORT-PACKAGE.md)을 참고한다.
 
 ## Day 2 종료 상태 (2026-09-25)
 - 실습 2-1~2-7 완료. 사용자 정리 출력으로 who1·who2·lim·demo-net 삭제 및 빈 ip netns list를 확인했다. 기존 koica 프로젝트는 정리 대상에 포함하지 않았다.

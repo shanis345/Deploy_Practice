@@ -1,0 +1,25 @@
+출처: 2026-09-27 사용자 제공 Ubuntu 실행 결과.
+실행 위치: ~/onprem-lab/day03/leak (이미지 조회는 이 경로의 파일을 사용하지 않음).
+확인 주체: 사용자 출력. Codex 직접 조회가 아님.
+
+docker image inspect agent:0.2.0 조회값:
+ID=sha256:a4ef49ae142efb1a03fe43c30d4a6f68ceee1c649578c33407827e8f6f4185a3
+RepoDigests=["agent@sha256:a4ef49ae142efb1a03fe43c30d4a6f68ceee1c649578c33407827e8f6f4185a3"]
+User=10001
+Exposed={"8000/tcp":{}}
+SizeBytes=181278388
+Platform=linux/amd64
+
+Healthcheck 해석 (붙여넣기에서 URL 링크화·따옴표 이스케이프가 변형돼 원시 JSON으로 재구성하지 않음):
+Interval=15000000000 ns (15초)
+Retries=3
+StartPeriod=5000000000 ns (5초)
+Timeout=3000000000 ns (3초)
+Test=CMD-SHELL, Python urllib.request.urlopen으로 http://127.0.0.1:8000/healthz 요청
+
+$ docker run --rm agent:0.2.0 id
+uid=10001(appuser) gid=0(root) groups=0(root)
+
+실제 inspect ID는 빌드 로그의 manifest list 해시와 같았다. 빌드 config 해시로 바꿔 적지 않는다.
+RepoDigests 존재만으로 원격 레지스트리 push 또는 고객사 반입 완료를 판정하지 않는다.
+헬스체크 정의 조회이며 실제 healthy 상태를 검사한 것은 아니다.
