@@ -17,6 +17,7 @@
 - Day 1 기록의 [PR #3](https://github.com/shanis345/Deploy_Practice/pull/3)은 main에 병합됐다. 2026-09-25 원격 갱신으로 병합 커밋 `abb2ffb`를 확인했다. Day 1 전체 완료 판정과는 별개다.
 - Day 2 기록의 [PR #4](https://github.com/shanis345/Deploy_Practice/pull/4)는 main에 병합됐다. 2026-09-27 원격 갱신으로 병합 커밋 `18b805e`를 확인했다.
 - Day 3 기록의 [PR #5](https://github.com/shanis345/Deploy_Practice/pull/5)는 main에 병합됐다. 2026-09-28 원격 조회로 병합 커밋 `027012d`를 확인했다.
+- Day 4 기록은 `codex/day04-results` → `main`의 [PR #6](https://github.com/shanis345/Deploy_Practice/pull/6)으로 제출했다. 2026-09-28 생성했으며 병합은 별도다.
 - Codex 프로젝트 등록과 별도 Day별 작업 생성은 수행하지 않았다.
 
 | Day | 주제 | 상태 | 기록 |

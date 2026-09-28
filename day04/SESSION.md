@@ -361,6 +361,8 @@ ss -ltn '( sport = :8080 or sport = :8081 or sport = :9999 )'
 - 완료 판단: 4-1~4-6 실습·화면 관찰·개념 질의응답 및 사용자 자원 정리 완료 확인으로 Day 4를 종료한다. 별도 자기점검 5문항 평가, 직접 IP 시간 초과 및 TUI 불일치의 세부 원인 해결은 완료 범위에 포함하지 않는다.
 - Codex 작업: Windows의 README·SESSION·PROGRESS·환경 기록과 사용자 스크린샷을 정리한다. Ubuntu 동기화나 실습 재실행은 하지 않는다.
 - Git 기준: 원격 조회로 Day 3 PR #5의 main 병합(027012d)을 확인하고 `codex/day04-results`를 해당 main에서 생성했다. Day 4 변경만 별도 PR로 제출한다.
+- 제출 결과: [PR #6](https://github.com/shanis345/Deploy_Practice/pull/6), `codex/day04-results` → `main`. 2026-09-28 생성했으며 병합은 수행하지 않았다.
+- 문서 검증: git diff --check 통과, 변경 문서 4개의 로컬 링크 45개 대상 존재 확인, 변경 텍스트 범위의 자격 증명 패턴 검출 없음. 문서·화면 증거만 변경하여 애플리케이션 테스트나 Ubuntu 실습 재실행은 하지 않았다.
 
 ## 오류와 해결
 - 기본 bridge의 web2 이름 해석 실패는 비교 실습에서 의도한 결과다. 수정하지 않았다.
