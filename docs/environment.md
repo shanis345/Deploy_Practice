@@ -1,6 +1,14 @@
 # 실습 환경
 
-기준일: 2026-09-27. Day 2·3 실습·정리 결과는 사용자 제공 Ubuntu 출력과 스크린샷에 근거한다. 2026-09-23 환경 재점검은 Codex 직접 조회이며 이전 결과는 별도 이력으로 구분한다.
+기준일: 2026-09-28. Day 2~4 실습 결과는 사용자 제공 출력과 스크린샷에 근거한다. 2026-09-23 환경 재점검은 Codex 직접 조회이며 이전 결과는 별도 이력으로 구분한다.
+
+## Day 4 종료 상태와 네트워크 관찰 (2026-09-28)
+- Day 4 컨테이너 web·client·web2·client2·isolated·pub·pub2 및 lab-net·other-net의 삭제와 목록·포트 조회를 안내했고 사용자가 “완료했어”라고 확인했다. 종료 출력 원문은 미제공이므로 현재 목록·리스너 부재를 Codex가 검증한 것은 아니다. 아래 주소·연결 정보는 실습 당시 관찰이다. 기존 koica 자원·이미지·볼륨은 정리 대상에 포함하지 않았다.
+- lazydocker 0.25.2의 사용자 lab-net·other-net 화면은 모두 Containers: none 및 서브넷 미표시였지만, Docker inspect는 lab-net의 client·web·isolated와 other-net의 isolated를 보고했다. 양쪽 연결은 직접 조회 출력으로 확인했으며 두 화면을 증거로 보존해 관찰을 마쳤다. 화면 표시 불일치의 내부 원인은 미확정이다. 업데이트·설정 변경은 수행하지 않았다.
+- Ubuntu IP는 `172.18.60.227`, Docker bridge는 `172.17.0.0/16`, 기존 koica-oda-local-test_default는 `172.18.0.0/16`, lab-net은 `172.19.0.0/16`, other-net은 `172.20.0.0/16`이다. Ubuntu IP와 기존 koica Docker 대역의 겹침을 확인했다. koica 자원은 변경하지 않았다.
+- Ubuntu의 Python 9999 서버를 127.0.0.1에서 0.0.0.0으로 바꾸자 Ubuntu 자체의 비루프백 IP 요청은 코드 7에서 HTTP 200으로 바뀌었다. 컨테이너의 Ubuntu IP 직접 요청은 변경 전후 모두 연결 시간 초과(코드 28)였다. 대역 겹침은 경로 충돌 후보이며 패킷 경로·방화벽의 상세 원인은 미검증이다.
+- Docker Desktop 기본 host.docker.internal 경로는 Ubuntu 서버가 루프백에 바인딩된 상태에서도 실습 본문·HTTP 200을 반환했다. getent의 IPv6 결과는 `fdc4:f303:9324::254`였으나 0.0.0.0으로 바인딩을 바꾼 뒤 마지막 curl은 HTTP 200과 실제 remote_ip `192.168.65.254`를 반환했다. 이름 조회 결과와 실제 접속 주소를 구분하며 가이드 Linux Docker Engine의 실패 예상과도 구분한다.
+- 4-4 임시 Python 서버(PID 1904)는 종료했다. 사용자 출력의 ps·ss에 헤더만 남아 프로세스 및 Ubuntu 9999 리스너 부재를 확인했다. 임시 폴더 `/tmp/day04-http.fdpmdu`와 로그는 삭제 대상에 포함하지 않았다. Docker 실습 자원 정리는 위 사용자 완료 진술과 구분해 기록한다. 상세 명령·범위는 [Day 4 SESSION](../day04/SESSION.md)에 있다.
 
 ## Day 3 종료 상태 (2026-09-27)
 - 사용자 출력으로 Docker Client/Engine 29.8.0, Desktop 4.92.0(240144), API 1.56 및 화면으로 lazydocker 0.25.2의 정상 작동을 확인했다. 시작 시 WSL 연동 오류가 있었으나 후속 명령 성공으로 복구를 확인했다. Windows 조작 상세는 미제공이다.
