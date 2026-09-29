@@ -364,6 +364,11 @@ ss -ltn '( sport = :8080 or sport = :8081 or sport = :9999 )'
 - 제출 결과: [PR #6](https://github.com/shanis345/Deploy_Practice/pull/6), `codex/day04-results` → `main`. 2026-09-28 생성했으며 병합은 수행하지 않았다.
 - 문서 검증: git diff --check 통과, 변경 문서 4개의 로컬 링크 45개 대상 존재 확인, 변경 텍스트 범위의 자격 증명 패턴 검출 없음. 문서·화면 증거만 변경하여 애플리케이션 테스트나 Ubuntu 실습 재실행은 하지 않았다.
 
+### 2026-09-28 — PR 병합 확인
+- 사용자 알림: “merge 했어”. Codex가 GitHub에서 PR #6의 MERGED 상태와 병합 커밋 `f316ff898cfdf5390c8207ae460f2061d60d6cd6`을 확인했다. 병합 시각은 2026-09-28 13:33:50 KST다.
+- Windows 로컬 main으로 전환하고 origin/main까지 fast-forward 갱신했다. Ubuntu 복사본은 변경하지 않았다.
+- 이 병합 확인 메모와 PROGRESS 갱신은 로컬 미커밋 변경으로 남겨 다음 기록 커밋에 포함한다. 추가 PR·원격 main 직접 푸시는 수행하지 않았다. Day 5는 시작하지 않았다.
+
 ## 오류와 해결
 - 기본 bridge의 web2 이름 해석 실패는 비교 실습에서 의도한 결과다. 수정하지 않았다.
 - 4-1의 curl 코드 28은 `Resolving timed out`이므로 이름 해석 단계 시간 초과다. 4-4 Ubuntu IP 직접 요청의 코드 28은 `Connection timed out`이므로 연결 단계 시간 초과다. 코드만으로 방화벽·바인딩 등 상세 원인을 단정하지 않는다.

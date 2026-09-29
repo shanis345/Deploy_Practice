@@ -1,6 +1,25 @@
 # 실습 환경
 
-기준일: 2026-09-28. Day 2~4 실습 결과는 사용자 제공 출력과 스크린샷에 근거한다. 2026-09-23 환경 재점검은 Codex 직접 조회이며 이전 결과는 별도 이력으로 구분한다.
+기준일: 2026-09-29. Day 2~5 실습·정리 결과는 사용자 제공 출력과 스크린샷에 근거한다. 2026-09-23 환경 재점검은 Codex 직접 조회이며 이전 결과는 별도 이력으로 구분한다.
+
+## Day 5 종료 상태 (2026-09-29)
+- 사용자 compose down 출력으로 day05-nginx-1·day05-agent-1·day05-postgres-1 및 day05_default 제거를 확인했다. compose ps -a·해당 네트워크 목록은 헤더만 남았고 Ubuntu ss에 8080 LISTEN 행이 없다.
+- day05_pgdata 볼륨은 local로 존재한다. 이미지와 프롬프트 임시 백업 /tmp/day05-prompt.GrrBHr는 삭제 대상으로 지정하지 않았으며 이번 단계에서 재조회하지 않았다. 프롬프트 원복은 앞선 파일 비교·API·해시로 확인했다.
+- Day 4 잔존 자원·기존 koica 자원은 정리 범위에 포함하지 않았다. 아래 실행 중 상태는 실습 당시 이력이며 Day 5의 현재 컨테이너 실행 상태가 아니다.
+- 5-1~5-4·지정 자원 정리를 완료해 사용자 요청에 따라 Day 5를 종료했다. 일부 TUI 상세 관찰과 별도 자기점검 평가는 미확인으로 남긴다. [정리 증거](../day05/evidence/cleanup-user-2026-09-29.txt), [SESSION](../day05/SESSION.md).
+
+## Day 5 사전 점검 및 Day 4 자원 잔존 (2026-09-29)
+- 사용자 Ubuntu 출력에서 Docker Client/Engine 29.8.0, Desktop 4.92.0(240144), Compose v5.5.1 및 Compose 문법 검사 성공을 확인했다. Day 5 실습 파일 5개의 SHA-256은 Windows 사본과 일치한다.
+- 사전 점검에서 이전 Day 4 정리 완료 진술과 달리 pub·pub2·web·web2가 실행 중이며 isolated·client·client2도 중지된 상태로 남아 있었다. 이후 pub 중지를 확인했고 lazydocker 화면에는 lab-net·other-net도 보였다. 과거 진술과 다른 경위는 미확인이다. Day 4 자원 정리 완료로 간주하지 않는다.
+- 사전 점검에서 pub는 127.0.0.1:8080→80, pub2는 8081→80을 게시했고 Ubuntu ss에도 127.0.0.1:8080 LISTEN이 표시됐다. 후속 사용자 출력으로 pub 중지 및 ss의 8080 리스너 부재를 확인했다. 실행 중 목록에는 pub2·web2·web이 남아 있다.
+- Day 5 적용 이미지는 agent:0.2.0·postgres:16.4-alpine·nginx:1.27-alpine이다. 후속 사용자 up·ps 출력으로 day05_default 네트워크·day05_pgdata 볼륨 생성, agent·postgres healthy 및 nginx 실행·127.0.0.1:8080→80 게시 성공을 확인했다.
+- 후속 API 출력으로 healthz의 status=ok·version=0.2.0, prompt_exists=true·prompt_sha=258e1f7baff4·rubric 내용·db_dsn_set=true, postgres:5432의 TCP ok=true·elapsed_ms=1을 확인해 5-1 완료. DB 인증·SQL·영속성 시험은 미진행이다.
+- 5-2 ① 사용자 출력으로 agent의 /_lab/exit 후 RestartCount 0→1, health starting→healthy 및 healthz 정상 응답을 확인했다. 컨테이너 생성 시각과 host a105f231277a는 유지됐다.
+- ② 사용자 출력에서 postgres 중단(Exited 0) 중에도 agent healthy·healthz ok이나 DB TCP는 gaierror(Temporary failure in name resolution)였다. postgres 재기동 후 Up 12 seconds (healthy)·TCP ok=true·elapsed_ms=0을 확인했다.
+- ③ 첫 조회부터 RestartCount=1·unhealthy였고 hang 요청은 10초 타임아웃이었다. 40초 후에도 횟수 1·unhealthy 및 healthz 3초 타임아웃(코드 28)을 확인했다. 수동 restart 후 agent Up 12 seconds (healthy)·healthz ok·DB TCP ok=true로 복구됐다. 처음 무응답의 원인은 미확정이다.
+- ③ 재확인에서는 RestartCount=0·healthy → hang=true 응답 → 40초 후 RestartCount=0·unhealthy 및 healthz 3002ms 타임아웃(코드 28)을 확인했다. 수동 restart 후 agent Up 10 seconds (healthy), nginx Up 31 minutes, postgres Up 11 minutes (healthy) 및 healthz ok로 복구돼 5-2 완료. 마지막 복구 후 DB TCP는 재조회하지 않았다. Day 5 서비스·네트워크·볼륨은 유지 중이다.
+- 5-3 사용자 출력으로 Ubuntu config/prompt.txt의 한 줄 추가가 /prompt에 반영되고 prompt_reloaded sha가 258e1f7baff4→a9099fd31924로 바뀐 것을 확인했다. 이미지 ID a4ef49ae142e… 및 StartedAt=2026-09-29T00:48:28.108529054Z, RestartCount=0·healthy는 유지됐다. 후속 cp·cmp·API 출력으로 백업 /tmp/day05-prompt.GrrBHr와 파일 일치, 원본 두 문장·sha=258e1f7baff4 복귀를 확인해 5-3 완료. 임시 백업은 삭제하지 않았고 Windows prompt.txt는 원본을 유지한다.
+- 기존 koica 앱은 사전 조회에서 Exited (143) 2 weeks ago이며 변경하지 않았다. Codex가 Ubuntu 명령을 직접 실행하거나 파일을 동기화하지 않았다. 상세는 [Day 5 SESSION](../day05/SESSION.md)을 참고한다.
 
 ## Day 4 종료 상태와 네트워크 관찰 (2026-09-28)
 - Day 4 컨테이너 web·client·web2·client2·isolated·pub·pub2 및 lab-net·other-net의 삭제와 목록·포트 조회를 안내했고 사용자가 “완료했어”라고 확인했다. 종료 출력 원문은 미제공이므로 현재 목록·리스너 부재를 Codex가 검증한 것은 아니다. 아래 주소·연결 정보는 실습 당시 관찰이다. 기존 koica 자원·이미지·볼륨은 정리 대상에 포함하지 않았다.
