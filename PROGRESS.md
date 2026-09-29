@@ -1,8 +1,11 @@
 # 진행 현황
 
-- 기준일: 2026-09-28
+- 기준일: 2026-09-29
+- Day 5 체크포인트: 사용자 요청으로 5문항 해설을 제공했다. Compose도 정식 운영에 사용할 수 있음을 공식 문서로 보완했다. 사용자 독립 답변의 평가·통과 기록과 구분하며 자기점검 통과로 처리하지 않는다.
+- Day 5: **종료(2026-09-29). 5-1~5-4·지정 자원 정리 완료.** 사용자 출력으로 세 컨테이너·day05_default 제거, 8080 리스너 부재 및 day05_pgdata 보존을 확인했다. lazydocker 정상 상태·로그 표시와 체크포인트 해설까지 진행했다. Stats·TUI 상태 변화 화면과 별도 자기점검 평가는 미확인으로 남긴다. 이미지·임시 백업은 삭제 대상이 아니었다. [SESSION](day05/SESSION.md), [정리 증거](day05/evidence/cleanup-user-2026-09-29.txt).
+- Day 4 정리 상태 재확인(2026-09-29): 이전 완료 진술과 달리 사전 점검에서 실습 컨테이너 7개가 존재했다. 이후 pub를 중지해 8080을 해제했고, lazydocker 화면에는 pub2·web·web2 실행 및 lab-net·other-net 잔존이 보였다. Day 4 자원 정리 완료로 간주하지 않으며, 과거 진술과 다른 경위는 미확인이다. Day 5 종료 시 이 자원들은 재조회하지 않았다.
 - Day 3: 완료(2026-09-27 사용자 완료 확인). 실습 3-1~3-5·반입 초안·lazydocker 관찰·종료 정리는 사용자 증거로 확인했다. 새 이미지 스캔은 HIGH 44·CRITICAL 0, 수정 버전 미제공 항목 제외 시 0건이다. 별도 자기점검 문답 평가 기록은 없다. [Day 3 요약](day03/README.md), [SESSION](day03/SESSION.md), [반입 패키지 초안](day03/IMPORT-PACKAGE.md).
-- 현재 상태: **Day 0 실습 완료(0-1~0-5). Day 1 주요 학습·1-3 검증 완료, 마무리 남음. Day 2 실습·정리 완료. Day 3 완료(사용자 확인). Day 4 완료(실습·관찰 및 사용자 정리 완료 확인).**
+- 현재 상태: **Day 0 실습 완료. Day 1 주요 학습 완료·마무리 남음. Day 2 실습·정리 완료. Day 3 완료. Day 4 실습 완료·9/29 잔존 자원 확인. Day 5 핵심 실습·정리 완료 및 종료. 다음 Day 6은 미시작.**
 - Day 4: 완료(2026-09-28 사용자 마무리 요청 및 자원 정리 완료 확인). 4-1~4-6·lazydocker 관찰은 사용자 출력·화면으로 확인했다. 마지막 정리는 사용자 진술이며 삭제 후 목록·포트 출력은 미제공이다. 별도 자기점검 5문항 평가는 미진행이다. [결과 요약](day04/README.md), [SESSION](day04/SESSION.md).
 - Day 4 남은 관찰 사항: Ubuntu IP와 기존 koica Docker 대역의 겹침, 컨테이너의 Ubuntu IP 직접 요청 시간 초과, lazydocker 0.25.2의 Containers: none 표시 불일치. 세부 원인은 미확정이며 koica 자원·Docker 전역 설정은 변경하지 않았다. 임시 Python 서버 종료는 출력으로 확인했고 임시 폴더와 이미지는 삭제하지 않았다.
 - Day 2: 수동 네트워크·라우팅·NAT·패킷 관찰, Docker 네트워크·DNS, 64MiB 메모리 제한과 cgroup 값 일치를 확인했다. 사용자 출력으로 who1·who2·lim·demo-net 삭제, 빈 네임스페이스·브리지 목록, 실습 NAT 제거, ip_forward=0 복구를 확인했다. 개념 질의응답은 진행했으며 가이드 자기점검 5문항의 별도 평가는 미진행이다. [Day 2 SESSION](day02/SESSION.md).
@@ -17,7 +20,7 @@
 - Day 1 기록의 [PR #3](https://github.com/shanis345/Deploy_Practice/pull/3)은 main에 병합됐다. 2026-09-25 원격 갱신으로 병합 커밋 `abb2ffb`를 확인했다. Day 1 전체 완료 판정과는 별개다.
 - Day 2 기록의 [PR #4](https://github.com/shanis345/Deploy_Practice/pull/4)는 main에 병합됐다. 2026-09-27 원격 갱신으로 병합 커밋 `18b805e`를 확인했다.
 - Day 3 기록의 [PR #5](https://github.com/shanis345/Deploy_Practice/pull/5)는 main에 병합됐다. 2026-09-28 원격 조회로 병합 커밋 `027012d`를 확인했다.
-- Day 4 기록은 `codex/day04-results` → `main`의 [PR #6](https://github.com/shanis345/Deploy_Practice/pull/6)으로 제출했다. 2026-09-28 생성했으며 병합은 별도다.
+- Day 4 기록의 [PR #6](https://github.com/shanis345/Deploy_Practice/pull/6)은 main에 병합됐다. 2026-09-28 GitHub 조회로 병합 커밋 `f316ff8`을 확인하고 Windows 로컬 main을 fast-forward 갱신했다. 당시 남긴 병합 확인 메모는 이번 Day 5 기록 변경에 포함한다. Ubuntu 복사본은 갱신하지 않았다.
 - Codex 프로젝트 등록과 별도 Day별 작업 생성은 수행하지 않았다.
 
 | Day | 주제 | 상태 | 기록 |
@@ -26,8 +29,8 @@
 | 01 | 가상화 계층과 vSphere: 물리 서버부터 컨테이너까지 | 주요 학습·1-3 검증 완료 · 마무리 남음 | [SESSION](day01/SESSION.md) |
 | 02 | 리눅스 네트워크 기초: 네임스페이스·브리지·라우팅·DNS | 실습·정리 완료 · 별도 자기점검 미진행 | [SESSION](day02/SESSION.md) |
 | 03 | Docker 이미지·레이어·컨테이너, 그리고 심의를 통과하는 이미지 | 완료(사용자 확인) · 별도 자기점검 평가 기록 없음 | [SESSION](day03/SESSION.md) |
-| 04 | Docker 네트워크와 진단 3단계 | 완료 · 정리는 사용자 진술 · 별도 자기점검 미진행 | [SESSION](day04/SESSION.md) |
-| 05 | Docker Compose: 다중 서비스와 그 한계 | 미시작 | [SESSION](day05/SESSION.md) |
+| 04 | Docker 네트워크와 진단 3단계 | 실습 완료 · 9/29 자원 잔존 확인 · 별도 자기점검 미진행 | [SESSION](day04/SESSION.md) |
+| 05 | Docker Compose: 다중 서비스와 그 한계 | 종료 · 5-1~5-4·정리 완료 · 일부 화면 관찰·별도 평가 미확인 | [SESSION](day05/SESSION.md) |
 | 06 | 망분리 재현: DMZ · 업무망 · DB존, 그리고 방화벽 신청서 | 미시작 | [SESSION](day06/SESSION.md) |
 | 07 | 포워드 프록시, 화이트리스트, HTTP_PROXY/NO_PROXY 함정 | 미시작 | [SESSION](day07/SESSION.md) |
 | 08 | 사내 CA와 TLS 검사(SSL 인스펙션) | 미시작 | [SESSION](day08/SESSION.md) |
@@ -40,6 +43,6 @@
 
 ## 다음 실습을 시작할 때
 
-1. Day 4는 종료했다. 사용자가 요청하면 Day 5를 시작하며 자동 진행하지 않는다. Day 4 자기점검 5문항 평가는 미진행이고, 직접 IP 경로와 TUI 표시 차이의 세부 원인은 미확정으로 보존한다. 자원 정리 완료는 사용자 진술이므로 필요 시 재개 전에 현재 상태를 조회한다.
+1. Day 5는 종료했다. 사용자가 요청하면 Day 6부터 시작하며 자동 진행하지 않는다. Day 5 컨테이너·네트워크 제거 및 8080 해제, DB 볼륨 보존을 확인했다. 이미지·임시 백업은 삭제하지 않았다. Stats·TUI 상태 변화 화면과 별도 자기점검 평가는 미확인으로 남긴다. 5-2 ③ 최초 무응답 원인과 Day 4 잔존 자원·관찰 미해결 사항은 그대로 보존한다.
 2. Day 1의 정리 결과 확인·E-1 신청서 초안·최종 자기점검은 미완료로 유지하며 사용자가 재개할 때 이어 간다.
 3. kubectl 고정 버전 불일치 등 미해결 사항을 완료로 간주하지 않는다.

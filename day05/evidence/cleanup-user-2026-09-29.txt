@@ -1,0 +1,28 @@
+Day 5 종료 정리 — 사용자 제공 출력 발췌
+기록일: 2026-09-29
+실행 위치: Ubuntu WSL2 /home/user/onprem-lab/day05
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+
+실행 명령:
+docker compose down
+docker compose ps -a
+docker network ls --filter name=day05_default
+docker volume ls --filter name=day05_pgdata
+ss -ltn '( sport = :8080 )'
+
+사용자 출력(터미널 정렬 공백 및 장식 간소화):
+[+] down 4/4
+Container day05-nginx-1 Removed 0.7s
+Container day05-agent-1 Removed 3.4s
+Container day05-postgres-1 Removed 0.4s
+Network day05_default Removed 0.4s
+
+NAME IMAGE COMMAND SERVICE CREATED STATUS PORTS
+NETWORK ID NAME DRIVER SCOPE
+DRIVER VOLUME NAME
+local day05_pgdata
+State Recv-Q Send-Q Local Address:Port Peer Address:Port Process
+
+판독: Day 5 컨테이너·네트워크 목록은 헤더만 표시.
+DB 볼륨 day05_pgdata는 존재. Ubuntu 8080 LISTEN 행 없음.
+이미지·임시 백업·Day 4 및 koica 자원은 이 조회로 재검증하지 않음.
