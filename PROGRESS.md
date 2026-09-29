@@ -22,6 +22,7 @@
 - Day 3 기록의 [PR #5](https://github.com/shanis345/Deploy_Practice/pull/5)는 main에 병합됐다. 2026-09-28 원격 조회로 병합 커밋 `027012d`를 확인했다.
 - Day 4 기록의 [PR #6](https://github.com/shanis345/Deploy_Practice/pull/6)은 main에 병합됐다. 2026-09-28 GitHub 조회로 병합 커밋 `f316ff8`을 확인하고 Windows 로컬 main을 fast-forward 갱신했다. 당시 남긴 병합 확인 메모는 이번 Day 5 기록 변경에 포함한다. Ubuntu 복사본은 갱신하지 않았다.
 - Codex 프로젝트 등록과 별도 Day별 작업 생성은 수행하지 않았다.
+- Day 5 기록은 `codex/day05-results` → `main`의 [PR #7](https://github.com/shanis345/Deploy_Practice/pull/7)로 제출했다. 2026-09-29 생성했으며 병합은 별도다.
 
 | Day | 주제 | 상태 | 기록 |
 |---|---|---|---|
