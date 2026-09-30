@@ -1,0 +1,12 @@
+출처: 사용자 제공 Ubuntu WSL2 출력(2026-09-30). Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day07
+
+docker image rm day07-buildargs:lab
+rm -- /tmp/day07-buildargs.YTZNch/Dockerfile && rmdir -- /tmp/day07-buildargs.YTZNch
+docker image ls day07-buildargs --format 'table {{.Repository}}\t{{.Tag}}\t{{.ID}}'
+test ! -e /tmp/day07-buildargs.YTZNch && echo '임시 폴더 정리 완료'
+
+Untagged: day07-buildargs:lab
+Deleted: sha256:c8a558367039da731016b0e92eebec645231565df0d28b7629ffd0fa442dc2bd
+REPOSITORY   TAG       IMAGE ID
+임시 폴더 정리 완료

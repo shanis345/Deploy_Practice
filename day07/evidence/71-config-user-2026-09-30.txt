@@ -1,0 +1,32 @@
+출처: 사용자 제공 Ubuntu WSL2 출력(2026-09-30). Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day07
+
+docker compose ps -a
+NAME                   IMAGE                         COMMAND                  SERVICE        CREATED              STATUS                        PORTS
+day07-agent-1          agent:0.2.0                   "python app.py"          agent          About a minute ago   Up About a minute (healthy)   8000/tcp
+day07-internal-api-1   traefik/whoami:v1.10          "/whoami --port 80 -…"   internal-api   About a minute ago   Up About a minute             80/tcp
+day07-probe-1          nicolaka/netshoot:v0.13       "sleep infinity"         probe          About a minute ago   Up About a minute
+day07-proxy-1          ubuntu/squid:5.2-22.04_beta   "entrypoint.sh -f /e…"   proxy          About a minute ago   Up About a minute             3128/tcp
+
+docker network inspect day07_closed day07_outside --format '{{.Name}} internal={{.Internal}} containers={{range .Containers}}{{.Name}} {{end}}'
+day07_closed internal=true containers=day07-internal-api-1 day07-proxy-1 day07-agent-1 day07-probe-1
+day07_outside internal=false containers=day07-proxy-1
+
+q() { docker compose exec -T probe curl --noproxy '*' -fsS -m 15 "http://agent:8000/$1"; }
+q healthz | jq .
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "9f5102a4fb70"
+}
+q diag | jq '{proxy}'
+{
+  "proxy": {
+    "HTTP_PROXY": "http://proxy:3128",
+    "HTTPS_PROXY": "http://proxy:3128",
+    "NO_PROXY": "localhost,127.0.0.1,proxy,internal-api,.corp.local",
+    "http_proxy": "http://proxy:3128",
+    "https_proxy": "http://proxy:3128",
+    "no_proxy": "localhost,127.0.0.1,proxy,internal-api,.corp.local"
+  }
+}

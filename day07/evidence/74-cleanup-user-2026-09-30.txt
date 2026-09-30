@@ -1,0 +1,18 @@
+Day 7-4 정리 — 2026-09-30 사용자 제공 Ubuntu 출력
+실행 위치: /home/user/onprem-lab/day07
+Codex 직접 실행 결과가 아니다.
+
+$ docker stop mitm
+mitm
+$ docker ps -a --filter 'name=^/mitm$' --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+NAMES     STATUS    PORTS
+$ ss -ltn '( sport = :8082 )'
+State          Recv-Q          Send-Q                   Local Address:Port                    Peer Address:Port          Process
+$ docker compose ps -a
+NAME                   IMAGE                         COMMAND                  SERVICE        CREATED       STATUS                 PORTS
+day07-agent-1          agent:0.2.0                   "python app.py"          agent          2 hours ago   Up 2 hours (healthy)   8000/tcp
+day07-internal-api-1   traefik/whoami:v1.10          "/whoami --port 80 -…"   internal-api   2 hours ago   Up 2 hours             80/tcp
+day07-probe-1          nicolaka/netshoot:v0.13       "sleep infinity"         probe          2 hours ago   Up 2 hours
+day07-proxy-1          ubuntu/squid:5.2-22.04_beta   "entrypoint.sh -f /e…"   proxy          2 hours ago   Up 2 hours             3128/tcp
+
+확인: mitm 컨테이너 부재, Ubuntu 8082 리스너 부재, 기존 Compose 네 서비스 실행 및 agent healthy.

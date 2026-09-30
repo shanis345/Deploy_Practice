@@ -1,0 +1,13 @@
+출처: 사용자 제공 Ubuntu WSL2 출력(2026-09-30). Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day07
+임시 폴더: /tmp/day07-buildargs.YTZNch
+이미지: day07-buildargs:lab
+값의 성격: demo:demo 및 .invalid 주소는 공개 더미이며 실제 자격 증명이 아니다.
+빌드 조건: default 빌더, alpine:3.20 기반, ARG PIP_INDEX_URL, RUN echo build.
+전달한 인자: HTTP_PROXY=http://demo:demo@proxy.invalid:3128 및 PIP_INDEX_URL=https://demo:demo@packages.invalid/simple.
+
+docker history --no-trunc --format '{{.CreatedBy}}' day07-buildargs:lab
+RUN |1 PIP_INDEX_URL=https://demo:demo@packages.invalid/simple /bin/sh -c echo build # buildkit
+ARG PIP_INDEX_URL=https://demo:demo@packages.invalid/simple
+CMD ["/bin/sh"]
+ADD alpine-minirootfs-3.20.10-x86_64.tar.gz / # buildkit

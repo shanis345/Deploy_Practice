@@ -1,0 +1,43 @@
+출처: 사용자가 붙여넣은 mitmweb 탭 텍스트(2026-09-30).
+Codex 직접 브라우저 검증이나 스크린샷이 아니다. 핵심 내용 발췌 및 본문 요약.
+관찰 주소: http://localhost:8082/
+관찰 흐름: probe curl -> mitm:8080 -> http://example.com/
+사용자 터미널 결과: via mitm: 200
+
+[Request]
+GET http://example.com/ HTTP/1.1
+Host: example.com
+User-Agent: curl/8.7.1
+Accept: */*
+Proxy-Connection: Keep-Alive
+No content
+
+[Response]
+HTTP/1.1 200 OK
+Date: Wed, 30 Sep 2026 03:39:16 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: cloudflare
+Last-Modified: Mon, 28 Sep 2026 16:19:23 GMT
+Allow: GET, HEAD
+Accept-Ranges: bytes
+Age: 11295
+cf-cache-status: HIT
+CF-RAY: a4303316b83958e2-ICN
+
+[Response 본문 요약]
+HTML 문서이며 title은 Example Domain이다.
+문서 예제용 도메인이라는 설명과 https://iana.org/help/example-domains 링크가 있다.
+사용자가 제공한 전체 HTML을 그대로 복제한 것은 아니다.
+
+[Timing — 사용자 UI 표시 그대로]
+Client conn. established: 2026-09-30 03:39:17.489 (-4ms)
+First request byte: 2026-09-30 03:39:17.494
+Request complete: 2026-09-30 03:39:17.495 (1ms)
+Server conn. initiated: 2026-09-30 03:39:17.496 (2ms)
+Server conn. TCP handshake: 2026-09-30 03:39:17.700 (207ms)
+First response byte: 2026-09-30 03:39:17.716 (222ms)
+Response complete: 2026-09-30 03:39:17.717 (223ms)
+Client conn. closed: 2026-09-30 03:39:17.718 (224ms)
+Server conn. closed: 2026-09-30 03:39:17.718 (225ms)
