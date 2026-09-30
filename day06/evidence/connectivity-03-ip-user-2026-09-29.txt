@@ -1,0 +1,19 @@
+Day 6 / 6-2 ③ DB IP 직접 TCP 접근 — 2026-09-29
+출처: 사용자 제공 Ubuntu WSL2 출력. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+
+이름 기반 재시도:
+$ docker compose exec -T probe-dmz sh -c 'nc -z -v -w3 postgres 5432; result=$?; printf "종료코드=%s\n" "$result"'
+nc: getaddrinfo for host "postgres" port 5432: Try again
+종료코드=1
+
+IP 직접 시험:
+$ db_ip=$(docker inspect day06-postgres-1 --format '{{(index .NetworkSettings.Networks "day06_dbzone").IPAddress}}')
+$ printf 'DB IP=%s\n' "$db_ip"
+$ docker compose exec -T probe-dmz sh -c 'nc -z -v -w3 "$1" 5432; result=$?; printf "종료코드=%s\n" "$result"' sh "$db_ip"
+DB IP=172.22.0.4
+nc: connect to 172.22.0.4 port 5432 (tcp) timed out: Operation in progress
+종료코드=1
+
+판정: DNS를 우회한 probe-dmz→172.22.0.4:5432 TCP 연결도 3초 대기 내 성립하지 않음.
+특정 방화벽 규칙이나 패킷 폐기 위치를 직접 조회한 것은 아님.

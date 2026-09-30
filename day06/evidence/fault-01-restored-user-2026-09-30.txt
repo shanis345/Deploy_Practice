@@ -1,0 +1,23 @@
+출처: 사용자 제공 Ubuntu WSL2 실행 결과. Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day06
+
+$ docker network connect --alias agent day06_dbzone day06-agent-1
+출력 없이 프롬프트 복귀.
+
+$ docker inspect day06-agent-1 --format '{{range $name, $config := .NetworkSettings.Networks}}{{$name}} {{end}}'
+day06_biz day06_dbzone
+
+$ curl -fsS --max-time 10 'http://127.0.0.1:8080/healthz' | jq .
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "f4298542de49"
+}
+
+$ curl -fsS --max-time 15 'http://127.0.0.1:8080/tcp?host=postgres&port=5432' | jq .
+{
+  "ok": true,
+  "host": "postgres",
+  "port": 5432,
+  "elapsed_ms": 1
+}

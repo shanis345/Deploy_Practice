@@ -1,0 +1,23 @@
+출처: 사용자 제공 Ubuntu WSL2 실행 결과 요약. Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day06
+
+$ ./break.sh 5
+출력 없이 프롬프트 복귀.
+
+$ docker compose ps -a agent
+day06-agent-1 agent:0.2.0 Up 12 hours (healthy) 8000/tcp
+
+$ curl -fsS --max-time 10 'http://127.0.0.1:8080/healthz' | jq .
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "f4298542de49"
+}
+
+$ curl -fsS --max-time 20 'http://127.0.0.1:8080/egress?url=http://example.com&timeout=5' | jq .
+{
+  "ok": true,
+  "url": "http://example.com",
+  "status": 200,
+  "elapsed_ms": 228
+}

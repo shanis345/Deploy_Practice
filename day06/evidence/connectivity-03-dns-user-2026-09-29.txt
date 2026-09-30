@@ -1,0 +1,9 @@
+Day 6 / 6-2 ③ 이름 기반 DB 접근 — 2026-09-29
+출처: 사용자 제공 Ubuntu WSL2 출력. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+
+$ docker compose exec -T probe-dmz sh -c 'nc -z -v -w3 postgres 5432; result=$?; printf "종료코드=%s\n" "$result"'
+nc: getaddrinfo for host "postgres" port 5432: Try again
+종료코드=1
+
+판정: postgres 이름 해석 실패. DB IP 직접 TCP 연결 차단 여부는 이 결과만으로 확인되지 않는다.

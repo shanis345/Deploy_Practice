@@ -1,6 +1,39 @@
 # 실습 환경
 
+## 최신 Day 6 상태 — 종료 정리 후 (2026-09-30)
+- 사용자 출력으로 docker compose -p day06 down의 컨테이너 7개·네트워크 3개 제거를 확인했다. Day 6 프로젝트 필터 컨테이너·네트워크 목록 및 Ubuntu의 8080 리스너 조회는 헤더만 표시됐다.
+- 이미지·볼륨·임시 백업 삭제는 하지 않았다. 해당 목록과 다른 프로젝트 상태를 이번에 다시 조회한 것은 아니다. Codex 직접 Ubuntu 실행 결과와 구분한다. [정리 증거](../day06/evidence/cleanup-user-2026-09-30.txt).
+
+## Day 6 상태 이력 — 누적 장애 복구 후, 정리 전 (2026-09-30)
+- 사용자 출력 기준으로 장애 1~5번 개별 복구를 확인했다. 마지막 agent 소속은 biz·dbzone이며 healthz 정상·외부 요청 gaierror(1ms)다. 4번 복구 후 healthy·FailingStreak=0·최근 검사 5회 성공도 확인했다.
+- 실습 컨테이너·네트워크와 /tmp/day06-compose.OTTiFi 백업을 유지한다. 전체 자원 정리나 마지막 시점의 모든 경로 재시험은 하지 않았다. Ubuntu에서 Codex가 직접 실행한 결과가 아니다. 상세 이력은 [Day 6 SESSION](../day06/SESSION.md) 참고.
+
 기준일: 2026-09-29. Day 2~5 실습·정리 결과는 사용자 제공 출력과 스크린샷에 근거한다. 2026-09-23 환경 재점검은 Codex 직접 조회이며 이전 결과는 별도 이력으로 구분한다.
+
+## Day 6 6-3 완료·원복 상태 (2026-09-29)
+- 사용자 출력으로 compose.yaml과 `/tmp/day06-compose.OTTiFi`의 SHA-256이 원본 1c2e71cf3ac308e285d14ed3a2a3ab5d7dd7f0db86a82294b610bad4e69db3cb와 일치함을 확인했다.
+- agent는 재생성 후 healthy이며 실제 연결은 day06_biz·day06_dbzone만 남았다. healthz status=ok·version=0.2.0·host=f4298542de49, 외부 요청은 ok=false·gaierror·7ms다. 원복 후 DB·ERP는 재시험하지 않았다.
+- 6-3 원복까지 완료했다. Day 6 구성은 유지하고 백업 파일도 보존한다. 6-4 이후 및 Day 전체 정리는 미진행이다. [원복 증거](../day06/evidence/63-restored-user-2026-09-29.txt), [SESSION](../day06/SESSION.md).
+
+## Day 6 6-3 DMZ 추가 당시 상태 (2026-09-29, 원복 전 이력)
+- 사용자 출력으로 백업 `/tmp/day06-compose.OTTiFi`와 원본 compose.yaml의 SHA-256 일치를 확인한 뒤 agent의 networks 한 줄만 변경·재적용했다. Windows 실습 소스는 원본을 유지한다.
+- DMZ 추가 당시 agent는 biz·dbzone·dmz에 연결됐으며 healthy였다. gateway 경유 healthz는 status=ok·version=0.2.0·host=8faa0748aa9d, 외부 example.com 요청은 ok=true·HTTP 200·105ms였다.
+- 이후 원복을 확인했으므로 이 구성은 과거 재현 이력이다. [재현 증거](../day06/evidence/63-dmz-added-user-2026-09-29.txt), [SESSION](../day06/SESSION.md).
+
+## Day 6 6-2 완료·통신 확인 (2026-09-29, DMZ 추가 전 이력)
+- 사용자 Ubuntu 출력으로 gateway 경유 healthz status=ok·version=0.2.0·host=b03497230cb3 및 agent→postgres:5432 TCP ok=true·elapsed_ms=1을 확인했다. DB 인증·SQL은 미시험이다.
+- ③ DMZ→DB 이름 기반 접속은 getaddrinfo Try again·종료코드 1로 실패했다. DB IP 172.22.0.4:5432 직접 시도도 3초 타임아웃·종료코드 1이다. 예상한 접근 제한은 확인했으며 특정 방화벽 규칙을 조회한 것은 아니다. ④ probe-biz에서 example.com DNS 실패·코드 1을 확인했고 IPv4 라우팅에는 172.21.0.0/16 직접 연결 경로(src 172.21.0.2)만 있고 default가 없다. 외부 IP 직접 연결·IPv6는 미시험이다. ⑤ 실제 agent→ERP HTTP 200·Name: erp-api를 확인했다. ERP IP는 172.21.0.5, 요청 RemoteAddr는 172.21.0.3:57002다. ⑥ agent의 example.com 요청은 ok=false·gaierror·이름 해석 실패·8ms다. 모든 외부 IP·포트를 시험한 것은 아니다. ⑦ probe-db→agent(172.22.0.3):8000 신규 TCP 연결은 succeeded·종료코드 0이다. 6-2 완료이며 실습 구성은 유지한다. 6-3 이후는 미진행이다. [⑦ 증거](../day06/evidence/connectivity-07-user-2026-09-29.txt). [⑥ 증거](../day06/evidence/connectivity-06-user-2026-09-29.txt). [⑤ 증거](../day06/evidence/connectivity-05-user-2026-09-29.txt). [④ 증거](../day06/evidence/connectivity-04-user-2026-09-29.txt). [①② 증거](../day06/evidence/connectivity-01-02-user-2026-09-29.txt), [③ DNS 증거](../day06/evidence/connectivity-03-dns-user-2026-09-29.txt), [③ IP 증거](../day06/evidence/connectivity-03-ip-user-2026-09-29.txt).
+
+## Day 6 6-1 완료·실행 상태 (2026-09-29)
+- 사용자 up·ps·network inspect 출력으로 네트워크 3개와 컨테이너 7개 생성·기동을 확인했다. 모두 Up이고 agent·postgres는 healthy다. gateway가 127.0.0.1:8080→80을 게시한다.
+- day06_dmz internal=false: gateway·probe-dmz. day06_biz internal=true: gateway·erp·agent·probe-biz. day06_dbzone internal=true: agent·postgres·probe-db. 소속이 구성과 일치한다.
+- 6-1 완료이며 구성은 실행 중이다. 6-2 실제 통신·차단 시험은 미진행이다. Codex 직접 Ubuntu 실행·재조회와 구분한다. [기동 증거](../day06/evidence/startup-user-2026-09-29.txt), [SESSION](../day06/SESSION.md).
+
+## Day 6 사전 점검 (2026-09-29, 기동 전 이력)
+- 사용자 Ubuntu 출력으로 Day 6 파일 3개(compose.yaml·gateway.conf·break.sh)의 SHA-256이 Windows 사본과 일치함을 확인했다. break.sh는 755이며 동일 해시의 Windows 파일은 LF다.
+- Docker Client/Engine 29.8.0, Desktop 4.92.0(240144), Compose v5.5.1, Compose 문법 검사 성공 및 필요 이미지 5개의 linux/amd64 로컬 존재를 확인했다.
+- Ubuntu 8080 리스너와 Docker의 8080 게시가 없다. pub2(8081 게시)·web·web2는 실행 중이고 pub·isolated·client·client2·기존 koica 앱은 중지 상태로 남아 있다. 기존 자원 변경·파일 동기화는 수행하지 않았다.
+- 이 사전 점검 뒤 6-1 기동을 안내했고 후속 출력으로 위 실행 상태를 확인했다. [사전 점검 증거](../day06/evidence/precheck-user-2026-09-29.txt), [SESSION](../day06/SESSION.md).
 
 ## Day 5 종료 상태 (2026-09-29)
 - 사용자 compose down 출력으로 day05-nginx-1·day05-agent-1·day05-postgres-1 및 day05_default 제거를 확인했다. compose ps -a·해당 네트워크 목록은 헤더만 남았고 Ubuntu ss에 8080 LISTEN 행이 없다.

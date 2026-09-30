@@ -1,0 +1,17 @@
+출처: 사용자 제공 Ubuntu WSL2 출력의 주요 내용 요약. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+
+./break.sh 2
+출력 없이 프롬프트 복귀.
+
+curl -fsS --max-time 10 'http://127.0.0.1:8080/healthz' | jq .
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "f4298542de49"
+}
+
+docker compose exec -T agent python -c 'import urllib.request; r = urllib.request.urlopen("http://erp:8080", timeout=5); print("HTTP", r.status); print(r.read().decode())'
+트레이스백 주요 오류 (중간 스택 생략):
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+urllib.error.URLError: <urlopen error [Errno -3] Temporary failure in name resolution>

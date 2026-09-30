@@ -1,0 +1,37 @@
+Day 6 / 6-1 사전 점검 — 2026-09-29
+출처: 사용자가 제공한 Ubuntu WSL2 출력 발췌. Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day06
+명령 전체: ../SESSION.md의 사전 확인 안내 참고.
+
+/home/user/onprem-lab/day06
+-rwxr-xr-x 1 user docker 1436 Sep 22 16:43 break.sh
+-rwxr-xr-x 1 user docker 2527 Sep 22 16:43 compose.yaml
+-rwxr-xr-x 1 user docker 158 Sep 22 16:43 gateway.conf
+1c2e71cf3ac308e285d14ed3a2a3ab5d7dd7f0db86a82294b610bad4e69db3cb  compose.yaml
+a42b9bf44c67636c41a44a87e38b476a594afe97565dfbf2c5bc59e0393e2ef8  gateway.conf
+bcfb82849dcdab259bde2babeff19a0dbaaee1afe08e648fd80f6ab33e0db5a3  break.sh
+
+Docker Client 29.8.0 / API 1.56 / linux/amd64 / Context default
+Server: Docker Desktop 4.92.0 (240144)
+Engine 29.8.0 / API 1.56 (minimum version 1.40) / linux/amd64
+Docker Compose version v5.5.1
+Compose 문법 OK
+
+NAMES                          STATUS                    PORTS
+pub2                           Up 37 hours               0.0.0.0:8081->80/tcp, [::]:8081->80/tcp
+pub                            Exited (0) 4 hours ago
+isolated                       Exited (0) 23 hours ago
+client2                        Exited (0) 36 hours ago
+web2                           Up 37 hours               80/tcp
+client                         Exited (0) 24 hours ago
+web                            Up 38 hours               80/tcp
+koica-oda-local-test-oda-app-1   Exited (143) 2 weeks ago
+
+ss -lnt 'sport = :8080': 헤더만 출력됨(리스너 행 없음).
+State Recv-Q Send-Q Local Address:Port Peer Address:Port Process
+
+nginx:1.27-alpine | linux/amd64
+agent:0.2.0 | linux/amd64
+traefik/whoami:v1.10 | linux/amd64
+postgres:16.4-alpine | linux/amd64
+nicolaka/netshoot:v0.13 | linux/amd64
