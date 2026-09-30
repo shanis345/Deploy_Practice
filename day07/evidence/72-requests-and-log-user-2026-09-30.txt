@@ -1,0 +1,54 @@
+출처: 사용자 제공 Ubuntu WSL2 출력(2026-09-30). Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day07
+앞선 세션에서 정의한 q 함수를 사용했다.
+
+q "egress?url=http://example.com" | jq '{ok,status,error_type,error,elapsed_ms}'
+{
+  "ok": true,
+  "status": 200,
+  "error_type": null,
+  "error": null,
+  "elapsed_ms": 331
+}
+
+q "egress?url=https://example.com" | jq '{ok,status,error_type,error,elapsed_ms}'
+{
+  "ok": true,
+  "status": 200,
+  "error_type": null,
+  "error": null,
+  "elapsed_ms": 191
+}
+
+q "egress?url=http://www.google.com" | jq '{ok,status,error_type,error,elapsed_ms}'
+{
+  "ok": false,
+  "status": 403,
+  "error_type": "HTTPError",
+  "error": "HTTP Error 403: Forbidden",
+  "elapsed_ms": 1
+}
+
+q "egress?url=https://www.google.com" | jq '{ok,status,error_type,error,elapsed_ms}'
+{
+  "ok": false,
+  "status": null,
+  "error_type": "OSError",
+  "error": "Tunnel connection failed: 403 Forbidden",
+  "elapsed_ms": 1
+}
+
+q "egress?url=http://internal-api" | jq '{ok,status,error_type,error,elapsed_ms}'
+{
+  "ok": true,
+  "status": 200,
+  "error_type": null,
+  "error": null,
+  "elapsed_ms": 11
+}
+
+docker compose exec -T proxy cat /var/log/squid/access.log
+1790735586.019    298 172.22.0.2 TCP_MISS/200 1150 GET http://example.com/ - HIER_DIRECT/104.20.23.154 text/html
+1790735753.888    190 172.22.0.2 TCP_TUNNEL/200 6711 CONNECT example.com:443 - HIER_DIRECT/172.66.147.243 -
+1790735891.475      0 172.22.0.2 TCP_DENIED/403 3447 GET http://www.google.com/ - HIER_NONE/- text/html
+1790735990.981      0 172.22.0.2 TCP_DENIED/403 3456 CONNECT www.google.com:443 - HIER_NONE/- text/html

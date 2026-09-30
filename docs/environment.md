@@ -1,5 +1,27 @@
 # 실습 환경
 
+## 최신 Day 7 상태 — 종료 정리 후 (2026-09-30)
+- 사용자 Ubuntu 출력으로 docker compose -p day07 down의 컨테이너 4개(agent·internal-api·probe·proxy)·네트워크 2개(closed·outside) 제거를 확인했다. 프로젝트 필터 컨테이너·네트워크 목록은 헤더만 표시됐다.
+- 관찰용 mitm 제거·8082 리스너 부재와 임시 빌드 이미지·폴더 제거는 앞서 확인했다. 이미지·볼륨 삭제 옵션 및 전역 prune은 사용하지 않았다. 다른 프로젝트 자원은 이번에 재조회하지 않았다.
+- Codex 직접 Ubuntu 실행·동기화가 아닌 사용자 출력 확인이다. 아래 Day 7 기동·관찰 기록은 종료 전 이력이다. [종료 정리 증거](../day07/evidence/cleanup-user-2026-09-30.txt).
+
+## Day 7 mitm 관찰·정리 완료 (2026-09-30)
+- 사용자 출력으로 mitmproxy/mitmproxy:11.0.0의 mitm 컨테이너 running을 확인했다. 초기에는 outside만 연결됐으나 후속 사용자 network connect·inspect 출력으로 day07_closed·day07_outside 양쪽 연결을 확인했다.
+- 웹 포트는 호스트 127.0.0.1:8082→컨테이너 8081이다. 가이드의 8081 호스트 포트는 기존 pub2가 사용 중이어서 변경했다. v11.0.0 공식 웹 옵션에 없는 web_password는 제외하고 실행했다.
+- 초기 로그는 usermod: no changes만 반환했으나 후속 사용자 출력으로 probe에서 mitm:8080을 명시한 HTTP 요청이 via mitm: 200임을 확인했다. 후속 사용자 제공 Request 탭 텍스트에서 GET http://example.com/·curl/8.7.1 등 헤더와 요청 본문 없음을 확인했다. Response 텍스트에서 HTTP 200·HTML 응답 헤더·Example Domain 본문도 확인했다. Timing에서 요청 첫 바이트→응답 완료 223ms를 관찰했다. 후속 사용자 출력으로 mitm 종료·자동 제거·8082 리스너 부재를 확인했다. 기존 Compose 네 서비스는 모두 실행 중이며 agent는 healthy다. Codex의 직접 브라우저 검증은 아니다. 기존 Compose 서비스는 유지한다. [Day 7 SESSION](../day07/SESSION.md).
+
+## Day 7 임시 빌드 정리 완료 — 7-3 종료 (2026-09-30)
+- 사용자 출력으로 default 빌더(docker 드라이버, 사전 조회 BuildKit v0.33.0)의 임시 이미지 day07-buildargs:lab 빌드 성공을 확인했다. 후속 사용자 출력으로 day07-buildargs:lab 삭제·이미지 목록 부재 및 /tmp/day07-buildargs.YTZNch 폴더 제거를 확인했다. 빌드 캐시는 정리하지 않았다. Alpine 3.20 기반 RUN echo build만 수행했다.
+- 예약 프록시 인자와 일반 ARG 비교용 공개 더미 값을 사용했다. 사용자 히스토리 출력에서 일반 ARG의 더미 값이 남고 예약 HTTP_PROXY는 표시되지 않음을 확인했다. 임시 이미지·폴더 정리는 완료했으며 실제 프록시 네트워크 장애·pip 설치를 시험한 것은 아니다. [정리 증거](../day07/evidence/73-cleanup-user-2026-09-30.txt).
+- buildx ls의 별도 desktop-linux 항목은 protocol not available이다. 해당 항목은 변경하지 않았고 원인은 미확정이다. 이번 빌드는 default를 명시해 성공했다. 기존 Day 7 Compose 구성은 유지한다.
+
+## Day 7 상태 이력 — 7-1·7-2 완료 (2026-09-30)
+- 사용자 Ubuntu 출력 기준: /home/user/onprem-lab/day07에서 로컬 이미지로 네 서비스를 기동했다. agent healthy 및 probe→agent healthz status=ok·version=0.2.0을 확인했다.
+- day07_closed internal=true: internal-api·proxy·agent·probe. day07_outside internal=false: proxy만 연결. 호스트 포트 게시 없음.
+- agent의 HTTP_PROXY·HTTPS_PROXY·http_proxy·https_proxy는 http://proxy:3128, NO_PROXY·no_proxy는 localhost,127.0.0.1,proxy,internal-api,.corp.local로 전달됐다. 7-2 사용자 출력으로 example.com HTTP/HTTPS 200(331ms/191ms), www.google.com HTTP 403·HTTPError·1ms 및 HTTPS OSError·터널 403 거부·1ms를 확인했다. Squid 접근 로그의 외부 요청 네 행(TCP_MISS/200, TCP_TUNNEL/200, TCP_DENIED/403 두 행)이 앱 결과와 일치한다. internal-api는 200·11ms이고 해당 로그에 없어 우회 설정과 일치한다. [응답·로그 증거](../day07/evidence/72-requests-and-log-user-2026-09-30.txt).
+- 컨테이너 4개·네트워크 2개 유지. 사전 조회에서 기존 Day 4 pub2·web2·web은 실행 중이었고 나머지 Day 4 컨테이너 및 koica 앱은 중지 상태였다. 해당 자원은 변경하지 않았다.
+- Codex 직접 Ubuntu 실행·동기화가 아닌 사용자 출력 확인이다. [Day 7 기록](../day07/SESSION.md), [검증 증거](../day07/evidence/71-config-user-2026-09-30.txt).
+
 ## 최신 Day 6 상태 — 종료 정리 후 (2026-09-30)
 - 사용자 출력으로 docker compose -p day06 down의 컨테이너 7개·네트워크 3개 제거를 확인했다. Day 6 프로젝트 필터 컨테이너·네트워크 목록 및 Ubuntu의 8080 리스너 조회는 헤더만 표시됐다.
 - 이미지·볼륨·임시 백업 삭제는 하지 않았다. 해당 목록과 다른 프로젝트 상태를 이번에 다시 조회한 것은 아니다. Codex 직접 Ubuntu 실행 결과와 구분한다. [정리 증거](../day06/evidence/cleanup-user-2026-09-30.txt).

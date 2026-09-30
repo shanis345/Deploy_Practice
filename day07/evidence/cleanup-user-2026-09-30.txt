@@ -1,0 +1,21 @@
+Day 7 종료 정리 — 2026-09-30 사용자 제공 Ubuntu 출력
+실행 위치: /home/user/onprem-lab/day07
+Codex 직접 실행 결과가 아니다.
+
+$ cd /home/user/onprem-lab/day07 && docker compose -p day07 down
+[+] down 6/6
+ ✔ Container day07-internal-api-1 Removed  0.5s
+ ✔ Container day07-proxy-1        Removed  4.1s
+ ✔ Container day07-agent-1        Removed  3.9s
+ ✔ Container day07-probe-1        Removed  3.6s
+ ✔ Network day07_closed           Removed  0.3s
+ ✔ Network day07_outside          Removed  0.7s
+
+$ docker ps -a --filter label=com.docker.compose.project=day07 --format 'table {{.Names}}\t{{.Status}}'
+NAMES     STATUS
+
+$ docker network ls --filter label=com.docker.compose.project=day07
+NETWORK ID   NAME      DRIVER    SCOPE
+
+확인: Day 7 컨테이너 4개·네트워크 2개 제거, 프로젝트 필터 잔존 목록 없음.
+이미지·볼륨 삭제 옵션과 전역 prune은 사용하지 않았다. 다른 프로젝트 자원은 이번에 재조회하지 않았다.
