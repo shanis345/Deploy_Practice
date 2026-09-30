@@ -1,0 +1,20 @@
+Day 6 / 6-3 사전 확인·백업 — 2026-09-29
+출처: 사용자 제공 Ubuntu WSL2 출력. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+
+docker compose ps agent:
+day06-agent-1 agent:0.2.0 "python app.py" agent
+CREATED 6 hours ago / STATUS Up 6 hours (healthy) / PORTS 8000/tcp
+
+docker compose config --format json | jq '.services.agent.networks':
+{
+  "biz": null,
+  "dbzone": null
+}
+
+docker inspect day06-agent-1 네트워크:
+day06_biz day06_dbzone
+
+백업 파일: /tmp/day06-compose.OTTiFi
+1c2e71cf3ac308e285d14ed3a2a3ab5d7dd7f0db86a82294b610bad4e69db3cb  compose.yaml
+1c2e71cf3ac308e285d14ed3a2a3ab5d7dd7f0db86a82294b610bad4e69db3cb  /tmp/day06-compose.OTTiFi

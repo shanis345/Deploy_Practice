@@ -1,0 +1,7 @@
+확인 근거: 사용자 제공 실행 출력. Codex 직접 실행 아님.
+실행 위치: Ubuntu WSL2 /home/user/onprem-lab/day06
+
+$ docker network inspect day06_dmz day06_biz day06_dbzone --format '{{.Name}} internal={{.Internal}} containers={{range .Containers}}{{.Name}} {{end}}'
+day06_dmz internal=false containers=day06-gateway-1 day06-probe-dmz-1
+day06_biz internal=true containers=day06-gateway-1 day06-erp-1 day06-probe-biz-1 day06-agent-1
+day06_dbzone internal=true containers=day06-postgres-1 day06-agent-1 day06-probe-db-1

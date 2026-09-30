@@ -1,0 +1,35 @@
+Day 6 / 6-1 기동 확인 — 2026-09-29
+출처: 사용자 제공 Ubuntu WSL2 출력. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+
+실행 명령:
+docker compose up -d --pull never
+sleep 15
+docker compose ps -a
+docker network inspect day06_dmz day06_biz day06_dbzone --format '{{.Name}} internal={{.Internal}} containers={{range .Containers}}{{.Name}} {{end}}'
+
+출력(기동 진행 표시는 텍스트로 정리):
+[+] up 10/10
+Network day06_biz Created
+Network day06_dbzone Created
+Network day06_dmz Created
+Container day06-erp-1 Started
+Container day06-probe-biz-1 Started
+Container day06-postgres-1 Started
+Container day06-agent-1 Started
+Container day06-probe-db-1 Started
+Container day06-probe-dmz-1 Started
+Container day06-gateway-1 Started
+
+NAME                IMAGE                     COMMAND                  SERVICE     CREATED          STATUS                    PORTS
+day06-agent-1       agent:0.2.0               "python app.py"          agent       15 seconds ago   Up 14 seconds (healthy)   8000/tcp
+day06-erp-1         traefik/whoami:v1.10      "/whoami --port 8080…"   erp         15 seconds ago   Up 13 seconds             80/tcp
+day06-gateway-1     nginx:1.27-alpine         "/docker-entrypoint.…"   gateway     15 seconds ago   Up 14 seconds             127.0.0.1:8080->80/tcp
+day06-postgres-1    postgres:16.4-alpine      "docker-entrypoint.s…"   postgres    15 seconds ago   Up 13 seconds (healthy)   5432/tcp
+day06-probe-biz-1   nicolaka/netshoot:v0.13   "sleep infinity"         probe-biz   15 seconds ago   Up 14 seconds
+day06-probe-db-1    nicolaka/netshoot:v0.13   "sleep infinity"         probe-db    15 seconds ago   Up 14 seconds
+day06-probe-dmz-1   nicolaka/netshoot:v0.13   "sleep infinity"         probe-dmz   15 seconds ago   Up 15 seconds
+
+day06_dmz internal=false containers=day06-gateway-1 day06-probe-dmz-1
+day06_biz internal=true containers=day06-gateway-1 day06-erp-1 day06-agent-1 day06-probe-biz-1
+day06_dbzone internal=true containers=day06-agent-1 day06-postgres-1 day06-probe-db-1

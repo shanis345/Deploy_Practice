@@ -1,0 +1,11 @@
+Day 6 / 6-2 ④ 업무망에서 인터넷 연결·라우팅 — 2026-09-29
+출처: 사용자 제공 Ubuntu WSL2 출력. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+
+$ docker compose exec -T probe-biz sh -c 'nc -z -v -w3 example.com 80; result=$?; printf "종료코드=%s\n" "$result"; ip route'
+nc: getaddrinfo for host "example.com" port 80: Try again
+종료코드=1
+172.21.0.0/16 dev eth0 proto kernel scope link src 172.21.0.2
+
+판정: example.com 이름 해석 실패. IPv4 경로는 내부 직접 연결 대역만 있고 default 경로가 없다.
+외부 IP 직접 TCP 연결이나 IPv6 경로는 이 단계에서 시험하지 않았다.

@@ -1,0 +1,33 @@
+Day 6 / 6-3 DMZ 추가 및 외부 접속 재현 — 2026-09-29
+출처: 사용자 제공 Ubuntu WSL2 출력 발췌. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+명령 전체는 SESSION.md의 6-3 백업 확인 및 DMZ 추가 안내 참고.
+
+diff의 변경 행(인접 환경변수는 생략):
+-    networks: [biz, dbzone]          # 업무망 + DB존. 인터넷 경로 없음
++    networks: [dmz, biz, dbzone] # Day 6-3 temporary test
+
+Compose 문법 검사 후 up 1/1:
+Container day06-agent-1 Started
+
+docker compose ps agent:
+day06-agent-1 / agent:0.2.0 / "python app.py" / agent
+CREATED 19 seconds ago / STATUS Up 15 seconds (healthy) / PORTS 8000/tcp
+
+실제 네트워크:
+day06_biz day06_dbzone day06_dmz
+
+healthz:
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "8faa0748aa9d"
+}
+
+egress (http://example.com, timeout=5):
+{
+  "ok": true,
+  "url": "http://example.com",
+  "status": 200,
+  "elapsed_ms": 105
+}

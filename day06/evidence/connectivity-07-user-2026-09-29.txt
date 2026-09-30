@@ -1,0 +1,10 @@
+Day 6 / 6-2 ⑦ DB존에서 agent로 새 TCP 연결 — 2026-09-29
+출처: 사용자 제공 Ubuntu WSL2 출력. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+
+$ docker compose exec -T probe-db sh -c 'nc -z -v -w3 agent 8000; result=$?; printf "종료코드=%s\n" "$result"'
+Connection to agent (172.22.0.3) 8000 port [tcp/*] succeeded!
+종료코드=0
+
+판정: dbzone을 공유하는 probe-db에서 agent의 DB존 주소 172.22.0.3:8000으로 새 TCP 연결 성공.
+기존 agent→DB 연결의 응답 패킷을 시험한 것이 아니다.

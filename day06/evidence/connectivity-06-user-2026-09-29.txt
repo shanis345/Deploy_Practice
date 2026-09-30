@@ -1,0 +1,15 @@
+Day 6 / 6-2 ⑥ agent에서 외부 HTTP 요청 — 2026-09-29
+출처: 사용자 제공 Ubuntu WSL2 출력. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+
+$ curl -fsS --max-time 20 'http://127.0.0.1:8080/egress?url=http://example.com&timeout=5' | jq .
+{
+  "ok": false,
+  "url": "http://example.com",
+  "error_type": "gaierror",
+  "error": "[Errno -3] Temporary failure in name resolution",
+  "elapsed_ms": 8
+}
+
+판정: agent의 example.com 요청은 이름 해석 단계에서 실패했다.
+이 결과만으로 모든 외부 IP·포트의 차단을 직접 검증한 것은 아니다.

@@ -1,0 +1,22 @@
+출처: 사용자 제공 Ubuntu WSL2 실행 결과 요약. Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day06
+
+$ docker compose start erp
+Container day06-erp-1 Started (0.2s)
+
+$ docker compose ps -a erp
+day06-erp-1 traefik/whoami:v1.10 erp Up 3 seconds 80/tcp
+
+$ docker compose exec -T agent python -c 'import urllib.request; r = urllib.request.urlopen("http://erp:8080", timeout=5); print("HTTP", r.status); print(r.read().decode())'
+HTTP 200
+Name: erp-api
+Hostname: a175214f01f1
+IP: 127.0.0.1
+IP: ::1
+IP: 172.21.0.5
+RemoteAddr: 172.21.0.3:44254
+GET / HTTP/1.1
+Host: erp:8080
+User-Agent: Python-urllib/3.12
+Accept-Encoding: identity
+Connection: close

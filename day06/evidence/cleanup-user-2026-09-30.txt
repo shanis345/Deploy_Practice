@@ -1,0 +1,24 @@
+출처: 사용자 제공 Ubuntu WSL2 실행 결과. Codex 직접 실행 아님.
+
+$ cd /home/user/onprem-lab/day06 && docker compose -p day06 down
+[+] down 10/10
+Container day06-probe-dmz-1 Removed
+Container day06-gateway-1 Removed
+Container day06-postgres-1 Removed
+Container day06-erp-1 Removed
+Container day06-probe-biz-1 Removed
+Container day06-agent-1 Removed
+Container day06-probe-db-1 Removed
+Network day06_dmz Removed
+Network day06_biz Removed
+Network day06_dbzone Removed
+상기 제거 출력은 소요 시간·진행 기호를 생략했다.
+
+$ docker ps -a --filter label=com.docker.compose.project=day06 --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+NAMES     STATUS    PORTS
+
+$ docker network ls --filter label=com.docker.compose.project=day06 --format 'table {{.Name}}\t{{.Driver}}'
+NAME      DRIVER
+
+$ ss -lnt 'sport = :8080'
+State          Recv-Q          Send-Q                   Local Address:Port                    Peer Address:Port          Process

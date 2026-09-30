@@ -1,0 +1,13 @@
+출처: 사용자 제공 Ubuntu WSL2 실행 결과의 주요 내용 요약. Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day06
+
+$ ./break.sh 3
+출력 없이 프롬프트 복귀.
+
+$ docker compose ps -a
+서비스 7개 모두 Up. agent Up 12 hours (healthy), postgres Up 20 hours (healthy).
+gateway Up 20 hours, 127.0.0.1:8080->80/tcp.
+ERP Up About a minute, probe 3개 Up 20 hours.
+
+$ curl -sS -i --max-time 10 'http://127.0.0.1:8080/healthz'
+curl: (28) Operation timed out after 10002 milliseconds with 0 bytes received

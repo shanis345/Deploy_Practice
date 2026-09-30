@@ -1,0 +1,21 @@
+출처: 사용자 제공 Ubuntu WSL2 결과의 주요 내용. Codex 직접 실행 아님.
+위치: /home/user/onprem-lab/day06
+주의: 복구 명령의 붙여넣기 첫 줄은 프롬프트가 섞여 있고 대상명이 day06-gateway-11로 기재돼 실제 입력 문자열은 미확정이다. 아래 후속 결과로 복구를 확인했다.
+
+$ docker inspect day06-gateway-1 --format '{{range $name, $config := .NetworkSettings.Networks}}{{$name}} {{end}}'
+day06_biz day06_dmz
+
+$ curl -sS -i --max-time 10 'http://127.0.0.1:8080/healthz'
+HTTP/1.1 200 OK
+Server: nginx/1.27.5
+Date: Wed, 30 Sep 2026 00:43:32 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 68
+Connection: keep-alive
+X-Request-Id: 044fae4b794f
+
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "f4298542de49"
+}
