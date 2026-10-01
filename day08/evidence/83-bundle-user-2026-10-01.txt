@@ -1,0 +1,14 @@
+Day 8 / 8-3 CA 번들 비교 — 사용자 Ubuntu 출력 (2026-10-01)
+실행 위치: /home/user/onprem-lab/day08
+Codex 직접 Ubuntu 실행 결과가 아님.
+
+$ docker compose -p day08 exec -T agent grep -c 'BEGIN CERTIFICATE' /etc/ssl/certs/ca-certificates.crt
+150
+$ docker compose -p day08 exec -T agent-ca grep -c 'BEGIN CERTIFICATE' /etc/ssl/certs/ca-certificates.crt
+151
+
+agent-ca의 Python ssl로 /etc/ssl/certs/ca-certificates.crt만 읽어 commonName=mitmproxy인 CA 조회:
+mitmproxy CA 개수: 1
+{'commonName': 'mitmproxy', 'organizationName': 'mitmproxy'}
+
+전체 실행 코드는 SESSION.md의 8-3 CA 번들 비교 안내에 기록돼 있다.

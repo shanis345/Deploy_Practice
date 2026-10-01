@@ -1,0 +1,31 @@
+Day 8 / 8-1 — 사용자 제공 Ubuntu 실행 출력 (2026-10-01)
+실행 위치: /home/user/onprem-lab/day08
+확인 주체: 사용자 실행 출력. Codex 직접 Ubuntu 실행 아님.
+
+$ mkdir -p certs
+$ docker compose -p day08 up -d --pull never --no-build tls-proxy
+[+] up 3/3
+ Network day08_closed Created
+ Network day08_outside Created
+ Container day08-tls-proxy-1 Started
+
+$ docker compose -p day08 ps -a
+NAME                IMAGE                        COMMAND                  SERVICE     CREATED         STATUS         PORTS
+day08-tls-proxy-1   mitmproxy/mitmproxy:11.0.0   "docker-entrypoint.s…"   tls-proxy   5 seconds ago   Up 4 seconds   127.0.0.1:8082->8081/tcp
+
+$ ls -l certs/
+total 24
+-rw-r--r-- 1 user user 1172 Oct  1 20:29 mitmproxy-ca-cert.cer
+-rw-r--r-- 1 user user 1035 Oct  1 20:29 mitmproxy-ca-cert.p12
+-rw-r--r-- 1 user user 1172 Oct  1 20:29 mitmproxy-ca-cert.pem
+-rw------- 1 user user 2336 Oct  1 20:29 mitmproxy-ca.p12
+-rw------- 1 user user 2847 Oct  1 20:29 mitmproxy-ca.pem
+-rw-r--r-- 1 user user  770 Oct  1 20:29 mitmproxy-dhparam.pem
+
+$ openssl x509 -in certs/mitmproxy-ca-cert.pem -noout -subject -issuer -dates
+subject=CN = mitmproxy, O = mitmproxy
+issuer=CN = mitmproxy, O = mitmproxy
+notBefore=Sep 29 13:29:25 2026 GMT
+notAfter=Sep 28 13:29:25 2036 GMT
+
+참고: 기동 출력의 체크 표시와 소요 시간만 생략했다.

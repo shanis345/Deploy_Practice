@@ -1,0 +1,27 @@
+Day 8 / 8-2 CA 병합 이미지 빌드 — 사용자 출력 핵심 발췌 (2026-10-01)
+실행 위치: Ubuntu /home/user/onprem-lab/day08
+Codex 직접 Ubuntu 실행 결과가 아님.
+
+Dockerfile.ca 수정 후 SHA-256:
+0e0e31fe4b131800d944a924cf80d143d3312a9dadc34f8dbb7121e32d54cb78
+
+실행 명령:
+sed -i '/^RUN apt-get update /,+2c\RUN update-ca-certificates' ../agent/Dockerfile.ca
+sha256sum ../agent/Dockerfile.ca
+cp certs/mitmproxy-ca-cert.pem ../agent/corp-ca.crt
+docker build --builder default --network=none \
+  -f ../agent/Dockerfile.ca \
+  --build-arg BASE_IMAGE=agent:0.2.0 \
+  -t agent:0.2.0-ca ../agent
+
+주요 출력:
+[+] Building 1.6s (8/8) FINISHED  docker:default
+[2/3] COPY corp-ca.crt /usr/local/share/ca-certificates/corp-ca.crt
+[3/3] RUN update-ca-certificates
+exporting manifest sha256:d93eb99d90413a623a0868a9000f62c9b50680c4727f78524a99bc96e5a011c2
+exporting config sha256:48d03bd76378ec0e7bd40b052a3bf8630f1ee575285ad1886de9a3f71d2f2565
+exporting manifest list sha256:ebe1f3076bf2d600d2bebb2dbfbf5848a390f0893955bcfc8eff50a9d537152f
+naming to docker.io/library/agent:0.2.0-ca
+unpacking to docker.io/library/agent:0.2.0-ca
+
+범위: 빌드 성공 확인. 새 컨테이너의 HTTPS 성공·임시 corp-ca.crt 제거는 후속 결과 대기.

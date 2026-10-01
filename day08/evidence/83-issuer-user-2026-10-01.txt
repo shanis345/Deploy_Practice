@@ -1,0 +1,20 @@
+Day 8 / 8-3 프록시 경유 인증서 조회 — 사용자 출력 (2026-10-01)
+실행 위치: Ubuntu /home/user/onprem-lab/day08
+확인 주체: 사용자 실행 출력. Codex 직접 Ubuntu 실행 아님.
+
+Compose ps 핵심: agent·agent-ca·agent-envca 모두 healthy, probe·tls-proxy Up.
+tls-proxy UI 게시: 127.0.0.1:8082->8081/tcp.
+
+실행 명령:
+docker compose -p day08 exec -T probe sh -c '
+  timeout 15 openssl s_client -connect example.com:443 -proxy tls-proxy:8080 -servername example.com -verify_hostname example.com </dev/null 2>&1 |
+  grep -E "subject=|issuer=|Verify return code|verify error|error:|errno="
+'
+
+인증서 진단 출력:
+verify error:num=20:unable to get local issuer certificate
+verify error:num=21:unable to verify the first certificate
+subject=CN=example.com
+issuer=CN=mitmproxy, O=mitmproxy
+Verification error: unable to verify the first certificate
+Verify return code: 21 (unable to verify the first certificate)

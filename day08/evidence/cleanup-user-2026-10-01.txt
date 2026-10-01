@@ -1,0 +1,26 @@
+Day 8 종료 정리 — 사용자 제공 Ubuntu 출력 (2026-10-01)
+실행 위치: /home/user/onprem-lab/day08
+Codex 직접 Ubuntu 실행 결과가 아님. 제거 출력의 장식·소요 시간만 생략.
+
+$ cd /home/user/onprem-lab/day08 && docker compose -p day08 down
+[+] down 7/7
+Container day08-agent-1 Removed
+Container day08-probe-1 Removed
+Container day08-agent-ca-1 Removed
+Container day08-agent-envca-1 Removed
+Container day08-tls-proxy-1 Removed
+Network day08_outside Removed
+Network day08_closed Removed
+
+$ docker ps -a --filter label=com.docker.compose.project=day08 --format 'table {{.Names}}\t{{.Status}}'
+NAMES     STATUS
+
+$ docker network ls --filter label=com.docker.compose.project=day08
+NETWORK ID   NAME      DRIVER    SCOPE
+
+$ ls -l certs/mitmproxy-ca-cert.pem
+-rw-r--r-- 1 user user 1172 Oct  1 20:29 certs/mitmproxy-ca-cert.pem
+
+$ docker image ls agent:0.2.0-ca
+IMAGE            ID             DISK USAGE   CONTENT SIZE   EXTRA
+agent:0.2.0-ca   ebe1f3076bf2        182MB         44.3MB

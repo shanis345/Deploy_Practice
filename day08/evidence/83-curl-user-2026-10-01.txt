@@ -1,0 +1,19 @@
+Day 8 / 8-3 curl CA 지정 전후 비교 — 사용자 Ubuntu 출력 핵심 발췌 (2026-10-01)
+실행 위치: /home/user/onprem-lab/day08
+Codex 직접 Ubuntu 실행 결과가 아님.
+
+$ docker compose -p day08 cp certs/mitmproxy-ca-cert.pem probe:/tmp/day08-corp-ca.pem
+day08-probe-1 Copied certs/mitmproxy-ca-cert.pem to day08-probe-1:/tmp/day08-corp-ca.pem
+
+$ docker compose -p day08 exec -T probe curl --noproxy '' -sS -m 20 \
+  -x http://tls-proxy:8080 -o /dev/null \
+  -w 'CA 지정 전: HTTP=%{http_code}, exit=%{exitcode}\n' https://example.com
+curl: (60) SSL certificate problem: unable to get local issuer certificate
+CA 지정 전: HTTP=000, exit=60
+
+$ docker compose -p day08 exec -T probe curl --noproxy '' -sS -m 20 \
+  -x http://tls-proxy:8080 --cacert /tmp/day08-corp-ca.pem -o /dev/null \
+  -w 'CA 지정 후: HTTP=%{http_code}, exit=%{exitcode}\n' https://example.com
+CA 지정 후: HTTP=200, exit=0
+
+공개 CA 임시 사본은 probe의 /tmp/day08-corp-ca.pem에 유지한다.

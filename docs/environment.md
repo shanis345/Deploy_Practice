@@ -1,5 +1,45 @@
 # 실습 환경
 
+## Day 8 종료 — 지정 자원 제거 확인 (2026-10-01)
+- 사용자 Ubuntu 출력으로 Day 8 컨테이너 5개·네트워크 2개 제거와 프로젝트 필터 잔존 목록 부재를 확인했다. probe 내부 임시 공개 CA 사본도 해당 컨테이너와 함께 제거됐다.
+- certs/mitmproxy-ca-cert.pem(1172바이트) 및 agent:0.2.0-ca 이미지(ID ebe1f3076bf2, DISK USAGE 182MB·CONTENT SIZE 44.3MB) 보존을 확인했다. 이미지·볼륨 삭제 옵션이나 전역 prune은 사용하지 않았다. certs 전체 목록·기존 백업·다른 프로젝트 자원·8082 리스너는 재조회하지 않았다.
+- 8-1~8-4 실습·정리·체크포인트 해설 완료, 독립 평가는 미실시다. [종료 정리 증거](../day08/evidence/cleanup-user-2026-10-01.txt). 아래 실행 중·유지 문구는 종료 전 이력이다. Codex 직접 Ubuntu 실행·전체 동기화가 아닌 사용자 출력 확인이다.
+
+## Day 8의 8-4 완료 — 자원 유지 (2026-10-01)
+- 사용자 텍스트로 mitmweb의 GET https://example.com/·Python-urllib/3.12 요청 헤더와 HTTP 200·응답 헤더·Example Domain HTML 본문을 확인했다. CLI의 새 agent-ca HTTPS 요청도 HTTP 200이었다. [관찰 증거](../day08/evidence/84-https-observation-user-2026-10-01.txt).
+- 8-1~8-4 실습 완료. 컨테이너 5개·네트워크 2개·CA·이미지·probe 임시 공개 CA 사본을 유지하며 전체 정리는 미진행이다. Codex 직접 브라우저 조작이나 Ubuntu 재실행은 하지 않았다.
+
+## Day 8의 8-3 완료 — 인증서 진단 확인 (2026-10-01)
+- 사용자 출력으로 프록시 경유 subject=example.com·issuer=mitmproxy 및 probe 검증 코드 21, CA 번들 150·151개와 mitmproxy CA 1개를 확인했다. 이후 probe curl은 CA 미지정 exit=60·HTTP=000, 지정 후 exit=0·HTTP=200이었다.
+- 컨테이너 5개·네트워크 2개·certs·이미지를 유지한다. probe의 /tmp/day08-corp-ca.pem은 공개 CA 임시 사본이며 삭제하지 않았다. OS 신뢰 저장소는 변경하지 않았다. [curl 증거](../day08/evidence/83-curl-user-2026-10-01.txt). 8-4와 전체 정리는 미진행이다.
+
+## Day 8의 8-2 완료 — 컨테이너 5개 유지 (2026-10-01)
+- 사용자 Ubuntu 출력으로 agent:0.2.0-ca의 agent-ca healthy·healthz 정상·uid=10001·gid=0·CA 환경변수의 병합 번들 경로 및 example.com HTTPS 200을 확인했다. agent·agent-envca도 healthy, probe·tls-proxy는 Up이다. tls-proxy UI는 127.0.0.1:8082 게시를 유지한다.
+- 임시 ../agent/corp-ca.crt 제거와 부재 메시지를 확인했다. certs 원본·이미지·네트워크는 유지한다. Windows·Ubuntu Dockerfile.ca 수정 후 해시는 일치했다. [사용자 성공 증거](../day08/evidence/82-ca-success-user-2026-10-01.txt).
+- 8-3 이후 및 Day 8 전체 정리는 미진행이다. 아래 기동·결과 대기 문구는 이전 관찰 이력이다. Codex가 Ubuntu에서 직접 실행한 결과가 아니다.
+
+## Day 8 CA 병합 이미지 빌드 성공 (2026-10-01)
+- 사용자 Ubuntu 출력으로 간소화한 Dockerfile.ca의 Windows·Ubuntu 해시 일치와 agent:0.2.0-ca 빌드를 확인했다. default 빌더, RUN 네트워크 비활성화, 공개 CA COPY 및 update-ca-certificates 성공이다.
+- agent-ca 실행·통신 시험과 임시 ../agent/corp-ca.crt 제거는 안내 후 결과 대기 중이다. certs 원본은 유지한다. [빌드 증거](../day08/evidence/82-ca-build-user-2026-10-01.txt).
+
+## Day 8의 8-2 CA 파일 지정 성공 (2026-10-01)
+- 사용자 출력으로 agent-envca의 CA 파일 지정과 example.com HTTPS HTTP 200을 확인했다. healthz 정상·원본 agent healthy, agent-envca의 Docker health 상태는 당시 starting이다. 현재 agent·agent-envca·probe·tls-proxy 네 컨테이너 유지 중이다.
+- CA 병합 이미지 빌드·agent-ca 기동은 아직 하지 않았다. [해결 1 증거](../day08/evidence/82-envca-user-2026-10-01.txt). 아래 기록은 이전 단계의 관찰이다.
+
+## Day 8의 8-2 실패 재현 확인 (2026-10-01)
+- 사용자 출력으로 tls-proxy·agent·probe 실행과 agent healthz 정상(version=0.2.0)을 확인했다. ps 당시 agent는 health: starting이며 healthy 판정을 확인한 것은 아니다.
+- agent의 example.com HTTPS 요청은 SSLCertVerificationError·unable to get local issuer certificate로 실패했다. 현재 세 컨테이너·네트워크·CA를 유지한다. 다음 agent-envca 기동·CA 파일 지정 시험은 안내만 했고 결과 대기 중이다. [증거](../day08/evidence/82-no-ca-user-2026-10-01.txt).
+
+## Day 8의 8-1 완료 — 프록시 실행 중 (2026-10-01)
+- 사용자 Ubuntu 출력으로 day08_closed·day08_outside 생성과 day08-tls-proxy-1의 Up 상태를 확인했다. mitmproxy/mitmproxy:11.0.0, UI 게시 127.0.0.1:8082→8081/tcp다. 다른 Day 8 서비스는 아직 기동하지 않았다.
+- certs/의 CA 관련 파일 6개와 공개 인증서의 subject·issuer(CN=mitmproxy, O=mitmproxy), 유효기간 2026-09-29 13:29:25 GMT~2036-09-28 13:29:25 GMT를 확인했다. 프록시·네트워크·CA는 유지한다. HTTPS 통신·웹 화면·클라이언트 신뢰 등록은 아직 시험하지 않았다.
+- Codex 직접 Ubuntu 실행이 아닌 사용자 출력 확인이다. [8-1 증거](../day08/evidence/81-startup-user-2026-10-01.txt). 아래 사전 점검의 결과 대기 문구는 기동 전 이력이다.
+
+## Day 8 사전 점검 — Docker 연결 복구 (2026-10-01)
+- 사용자 Ubuntu 출력으로 Desktop 실행 전 Docker 명령 사용 불가를 확인했다. 사용자가 Desktop 미실행을 확인하고 실행한 뒤 Client/Engine 29.8.0·Desktop 4.92.0(240144)·API 1.56·default context 응답을 제공했다. 별도 WSL 설정 변경은 보고되지 않았다.
+- 기존 컨테이너 8개 모두 Exited이며 pub2에는 호스트 8081 게시 설정이 남아 있다. mitmproxy/mitmproxy:11.0.0 이미지가 존재한다. Ubuntu ss 출력의 8081·8082 리스너는 없었다. 기존 자원 변경이나 Windows 전체 포트 조회는 하지 않았다.
+- OpenSSL 3.0.13 확인. Windows·Ubuntu Compose에서 web_password 제거·호스트 8082 변경을 반영했고, 사용자 출력으로 Compose config 성공 및 두 사본의 수정 후 SHA-256 일치를 확인했다. 프록시 기동·CA 생성 명령은 안내했으며 실행 결과 대기 중이다. [Day 8 SESSION](../day08/SESSION.md).
+
 ## 최신 Day 7 상태 — 종료 정리 후 (2026-09-30)
 - 사용자 Ubuntu 출력으로 docker compose -p day07 down의 컨테이너 4개(agent·internal-api·probe·proxy)·네트워크 2개(closed·outside) 제거를 확인했다. 프로젝트 필터 컨테이너·네트워크 목록은 헤더만 표시됐다.
 - 관찰용 mitm 제거·8082 리스너 부재와 임시 빌드 이미지·폴더 제거는 앞서 확인했다. 이미지·볼륨 삭제 옵션 및 전역 prune은 사용하지 않았다. 다른 프로젝트 자원은 이번에 재조회하지 않았다.

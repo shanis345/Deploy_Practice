@@ -1,0 +1,36 @@
+Day 8 / 8-2 해결 1 — 사용자 제공 Ubuntu 출력 요약과 응답 원문 (2026-10-01)
+실행 위치: /home/user/onprem-lab/day08
+Codex 직접 Ubuntu 실행 결과가 아님.
+
+실행: docker compose -p day08 up -d --pull never --no-build agent-envca
+결과: day08-agent-envca-1 Started
+
+docker compose -p day08 ps -a 결과 요약:
+agent: agent:0.2.0, Up 25 minutes (healthy)
+agent-envca: agent:0.2.0, Up 5 seconds (health: starting)
+probe: nicolaka/netshoot:v0.13, Up 25 minutes
+tls-proxy: mitmproxy/mitmproxy:11.0.0, Up 42 minutes, 127.0.0.1:8082->8081/tcp
+
+probe에서 curl --noproxy '*' -fsS -m 10 http://agent-envca:8000/healthz:
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "cb3d0488358f"
+}
+
+probe에서 http://agent-envca:8000/diag 요청 후 jq '{ca}':
+{
+  "ca": {
+    "SSL_CERT_FILE": "/certs/mitmproxy-ca-cert.pem",
+    "REQUESTS_CA_BUNDLE": "/certs/mitmproxy-ca-cert.pem",
+    "CURL_CA_BUNDLE": "(unset)"
+  }
+}
+
+probe에서 http://agent-envca:8000/egress?url=https://example.com 요청 후 jq '{ok,status,error_type,error}':
+{
+  "ok": true,
+  "status": 200,
+  "error_type": null,
+  "error": null
+}
