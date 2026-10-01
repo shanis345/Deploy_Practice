@@ -1,0 +1,28 @@
+Day 8 / 8-2 첫 실패 재현 — 사용자 Ubuntu 출력 (2026-10-01)
+실행 위치: /home/user/onprem-lab/day08
+Codex 직접 실행 결과가 아님. 기동 출력은 표시 장식·소요 시간만 생략.
+
+$ docker compose -p day08 up -d --pull never --no-build tls-proxy agent probe
+Container day08-tls-proxy-1 Running
+Container day08-probe-1 Started
+Container day08-agent-1 Started
+
+$ docker compose -p day08 ps -a
+day08-agent-1     agent:0.2.0                  Up 4 seconds (health: starting)  8000/tcp
+day08-probe-1     nicolaka/netshoot:v0.13      Up 4 seconds
+day08-tls-proxy-1 mitmproxy/mitmproxy:11.0.0   Up 17 minutes  127.0.0.1:8082->8081/tcp
+
+$ docker compose -p day08 exec -T probe curl --noproxy '*' -fsS -m 10 http://agent:8000/healthz
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "66d155a02586"
+}
+
+$ docker compose -p day08 exec -T probe curl --noproxy '*' -fsS -m 20 'http://agent:8000/egress?url=https://example.com' | jq '{ok,status,error_type,error}'
+{
+  "ok": false,
+  "status": null,
+  "error_type": "SSLCertVerificationError",
+  "error": "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)"
+}

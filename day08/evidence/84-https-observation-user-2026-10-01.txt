@@ -1,0 +1,38 @@
+Day 8 / 8-4 HTTPS 화면 관찰 — 사용자 제공 텍스트 (2026-10-01)
+Codex 직접 브라우저 조작·스크린샷 검증 결과가 아님.
+
+앞선 사용자 Ubuntu 요청:
+docker compose -p day08 exec -T probe curl --noproxy '*' -fsS -m 20 \
+  'http://agent-ca:8000/egress?url=https://example.com' | jq '{ok,status,error_type,error}'
+결과: {"ok":true,"status":200,"error_type":null,"error":null}
+
+사용자가 제공한 mitmweb Response 탭:
+HTTP/1.1 200 OK
+Date: Thu, 01 Oct 2026 14:12:11 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: close
+Server: cloudflare
+last-modified: Mon, 28 Sep 2026 16:19:32 GMT
+allow: GET, HEAD
+Accept-Ranges: bytes
+Age: 6060
+cf-cache-status: HIT
+CF-RAY: a43c0f96dd2c04c4-HKG
+
+HTML 본문 요약:
+- title: Example Domain
+- 문서 예제용 도메인 안내 문구
+- IANA example-domains 설명 링크
+- /s.js 스크립트 참조가 포함됐으나 Codex가 방문·실행하지 않음
+
+후속 사용자 제공 Request 탭:
+GET https://example.com/ HTTP/1.1
+Accept-Encoding: identity
+Host: example.com
+User-Agent: Python-urllib/3.12
+Connection: close
+No content
+
+최종 확인 범위: 같은 요청의 HTTPS 주소·GET·요청 헤더 및 응답 상태·헤더·HTML 본문 관찰.
+No content는 이 GET 요청에 본문이 없음을 뜻하며 응답 본문 부재를 뜻하지 않는다.

@@ -6,10 +6,10 @@ services:
     image: mitmproxy/mitmproxy:11.0.0
     command: >
       mitmweb --web-host 0.0.0.0 --web-port 8081
-      --set block_global=false --set web_password=lab
+      --set block_global=false
     networks: [closed, outside]
     ports:
-      - "127.0.0.1:8081:8081"          # 웹 UI (검사된 요청을 눈으로)
+      - "127.0.0.1:8082:8081"          # 웹 UI (검사된 요청을 눈으로)
     volumes:
       - ./certs:/home/mitmproxy/.mitmproxy
     restart: unless-stopped

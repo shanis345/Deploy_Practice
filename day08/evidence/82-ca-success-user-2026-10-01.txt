@@ -1,0 +1,42 @@
+Day 8 / 8-2 해결 2 — 사용자 제공 Ubuntu 출력 (2026-10-01)
+실행 위치: /home/user/onprem-lab/day08
+Codex 직접 Ubuntu 실행 결과가 아님. ps는 핵심 항목만 발췌.
+
+$ rm -- ../agent/corp-ca.crt
+$ test ! -e ../agent/corp-ca.crt && echo '임시 CA 파일 정리 완료'
+임시 CA 파일 정리 완료
+$ docker compose -p day08 up -d --pull never --no-build agent-ca
+Container day08-agent-ca-1 Started
+
+$ docker compose -p day08 ps -a
+day08-agent-1       agent:0.2.0                 Up 35 minutes (healthy)  8000/tcp
+day08-agent-ca-1    agent:0.2.0-ca              Up 16 seconds (healthy)  8000/tcp
+day08-agent-envca-1 agent:0.2.0                 Up 10 minutes (healthy)  8000/tcp
+day08-probe-1       nicolaka/netshoot:v0.13     Up 35 minutes
+day08-tls-proxy-1   mitmproxy/mitmproxy:11.0.0  Up 53 minutes  127.0.0.1:8082->8081/tcp
+
+$ docker compose -p day08 exec -T probe curl --noproxy '*' -fsS -m 10 http://agent-ca:8000/healthz
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "9654322c6bc3"
+}
+
+$ docker compose -p day08 exec -T probe curl --noproxy '*' -fsS -m 10 http://agent-ca:8000/diag | jq '{uid,gid,ca}'
+{
+  "uid": 10001,
+  "gid": 0,
+  "ca": {
+    "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt",
+    "REQUESTS_CA_BUNDLE": "/etc/ssl/certs/ca-certificates.crt",
+    "CURL_CA_BUNDLE": "/etc/ssl/certs/ca-certificates.crt"
+  }
+}
+
+$ docker compose -p day08 exec -T probe curl --noproxy '*' -fsS -m 20 'http://agent-ca:8000/egress?url=https://example.com' | jq '{ok,status,error_type,error}'
+{
+  "ok": true,
+  "status": 200,
+  "error_type": null,
+  "error": null
+}

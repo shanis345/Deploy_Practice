@@ -5,9 +5,7 @@ FROM ${BASE_IMAGE}
 USER 0
 COPY corp-ca.crt /usr/local/share/ca-certificates/corp-ca.crt
 # Debian/Ubuntu 계열: update-ca-certificates 가 /etc/ssl/certs/ca-certificates.crt 를 재생성 (공인 CA + 사내 CA)
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates \
- && update-ca-certificates \
- && rm -rf /var/lib/apt/lists/*
+RUN update-ca-certificates
 # 파이썬 requests(certifi)·Node·curl 이 OS 번들을 보도록 지정. 병합된 번들이므로 공인 CA도 그대로 유효.
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
     REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
