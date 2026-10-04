@@ -1,0 +1,24 @@
+2026-10-04 사용자 Ubuntu WSL2 실행 결과 요약 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+agent-0.2.0-offline.tar.gz: OK
+Untagged: localhost:5000/ax/agent:0.2.0
+Untagged: agent:0.2.0-offline
+Deleted: sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812
+두 태그 각각의 docker image ls 출력은 헤더만 표시.
+
+docker pull --platform linux/amd64 localhost:5000/ax/agent:0.2.0
+0.2.0: Pulling from ax/agent
+3c880f96f8ba: Pull complete
+a910e4d2eeea: Pull complete
+4f4fb700ef54: Pull complete
+1270b9d36296: Pull complete
+44136fa355b3: Already exists
+ea5ec5489826: Download complete
+Digest: sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812
+Status: Downloaded newer image for localhost:5000/ax/agent:0.2.0
+localhost:5000/ax/agent:0.2.0
+
+inspect:
+ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812 OS=linux ARCH=amd64 USER=10001 DIGESTS=["localhost:5000/ax/agent@sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812"]
+
+기존 push/API의 index digest와 일치한다. 원래 agent:0.2.0-offline 태그는 아직 다시 추가하지 않았다.

@@ -1,0 +1,12 @@
+Day 9 / 9-2 내부 /tmp 진단 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+
+$ docker exec -w /tmp day09-airgap sh -c 'pwd; ls -ld /tmp; ls -lah /tmp'
+/tmp
+drwxrwxrwt    2 root     root            40 Oct  3 07:15 /tmp
+total 4K
+drwxrwxrwt    2 root     root          40 Oct  3 07:15 .
+drwxr-xr-x    1 root     root        4.0K Oct  3 07:23 ..
+
+ID=a1a9a7d2713ea3c22cbc29b6dad4c3a4c6e1f0f688d21ce9cc979d9add5079bc STATUS=running RESTARTS=0 MOUNTS=[{"Destination":"/var/lib/docker","Driver":"local","Mode":"","Name":"ba9f80170ab1734fe7dee47dddf808470eb6e88a23b917896b374b42fed6b698","Propagation":"","RW":true,"Source":"/var/lib/docker/volumes/ba9f80170ab1734fe7dee47dddf808470eb6e88a23b917896b374b42fed6b698/_data","Type":"volume"}]

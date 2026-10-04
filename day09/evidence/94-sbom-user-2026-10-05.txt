@@ -1,0 +1,16 @@
+2026-10-05 사용자 Ubuntu WSL2 SBOM 생성 결과 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+실행: aquasec/trivy:0.56.2, --network none, --image-src docker, DB 갱신 중지, --offline-scan, --format cyclonedx
+대상: localhost:5000/ax/agent:0.2.0
+출력: /out/sbom-agent-0.2.0.cdx.json (/out은 Ubuntu 현재 폴더)
+
+2026-10-04T15:44:25Z INFO "--format cyclonedx" disables security scanning. Specify "--scanners vuln" explicitly if you want to include vulnerabilities in the "cyclonedx" report.
+2026-10-04T15:44:25Z INFO Detected OS family="debian" version="13.7"
+2026-10-04T15:44:25Z INFO Number of language-specific files num=1
+-rw-r--r-- 1 user user 197K Oct 5 00:44 sbom-agent-0.2.0.cdx.json
+형식: CycloneDX 규격: 1.6
+대상: localhost:5000/ax/agent:0.2.0
+구성 요소 수: 90
+Python 패키지: [('pip', '25.0.1'), ('PyYAML', '6.0.2')]
+
+JSON 파싱·bomFormat 확인·요약 조회 성공. 전체 JSON 스키마 검증이나 구성 요소 완전성 검증은 아니다.

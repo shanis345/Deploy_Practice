@@ -1,0 +1,9 @@
+Day 9 / 9-2 별도 Docker 데몬 사전 점검 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+
+$ docker image inspect docker:27-dind --format 'ID={{.Id}} OS={{.Os}} ARCH={{.Architecture}}'
+Error response from daemon: No such image: docker:27-dind
+
+$ docker ps -a --filter 'name=^/day09-airgap$' --format 'table {{.Names}}\t{{.Status}}'
+NAMES     STATUS

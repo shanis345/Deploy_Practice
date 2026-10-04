@@ -1,0 +1,8 @@
+Day 9 / 9-2 외부 pull 실패 확인 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+
+$ docker exec day09-airgap docker -H unix:///var/run/docker.sock pull alpine:3.20
+Error response from daemon: Get "https://registry-1.docker.io/v2/": dial tcp: lookup registry-1.docker.io on 192.168.65.7:53: dial udp 192.168.65.7:53: connect: network is unreachable
+pull 종료 코드=1
+Server=27.5.1 images=0

@@ -104,7 +104,7 @@ sha256sum compose.yaml
 - 현재 프록시·네트워크·certs를 유지한다. 8-2는 사용자 요청 후 CA 미신뢰 실패와 두 해결 방식 비교로 이어 간다.
 
 ## 다음에 이어 할 지점
-Day 8의 8-1~8-4 실습·종료 정리·체크포인트 6문항 해설 완료. 사용자 독립 답변 평가는 미실시다. CA와 agent:0.2.0-ca 이미지는 Ubuntu에 보존돼 있다. 사용자 요청에 따라 codex/day08-results에서 main 대상 PR을 만들며 병합은 사용자가 수행한다. 다음 학습은 사용자 요청 후 Day 9이며 자동 시작하지 않는다.
+Day 8의 8-1~8-4 실습·종료 정리·체크포인트 6문항 해설 완료. 사용자 독립 답변 평가는 미실시다. CA와 agent:0.2.0-ca 이미지는 Ubuntu에 보존돼 있다. PR #10은 사용자가 main에 병합했고 Windows main 갱신을 확인했다. 다음 학습은 사용자 요청 후 Day 9이며 자동 시작하지 않는다.
 
 ### 2026-10-01 — 8-2 시작·CA 미신뢰 실패 재현 안내
 - 사용자 요청: "8-2를 진행하자". PROGRESS·환경·Day 8 기록·가이드 8-2·Compose·agent Dockerfile.ca 및 앱의 urllib 기반 egress 구현을 Windows에서 확인했다.
@@ -352,3 +352,10 @@ docker image ls agent:0.2.0-ca
 - 포함 범위: Day 8 SESSION·README·텍스트 증거 10개, PROGRESS·환경 기록, day08/compose.yaml의 web_password 제거·UI 포트 8082, agent/Dockerfile.ca의 이미 설치된 CA 도구 활용이다. Dockerfile은 CA 도구가 있는 검증된 agent:0.2.0을 전제로 한다.
 - 검증: Windows 소스와 사용자 Ubuntu 수정 후 해시 일치, 사용자 출력으로 Compose config·이미지 빌드·HTTPS 비교·정리를 확인했다. Codex의 git diff --check는 통과했다. 실습 재실행·CA 개인 키 또는 인증서 원본 업로드는 없다.
 - PR 대상은 main이며 자동 병합하지 않는다. 커밋·푸시·PR 생성 결과는 GitHub 이력에서 확인한다. Day 9는 이번 요청 범위에 포함하지 않는다.
+
+### 2026-10-01 — PR #10 생성·사용자 병합 확인 및 Windows main 갱신
+- 앞선 PR 생성 작업에서 Day 8 커밋 f2b5df96666b802e49bf4064cb6733166723d78d를 codex/day08-results에 push하고 [PR #10](https://github.com/shanis345/Deploy_Practice/pull/10)을 main 대상으로 생성했다. Codex는 병합하지 않았다.
+- 사용자가 "완료했어"라고 알린 뒤 GitHub 직접 조회로 state=MERGED, base=main, merge commit=6801a098a0b4cd5b138e08aa707b7926a6f0c8bc를 확인했다. mergedAt=2026-10-01T14:58:34Z(Asia/Bangkok 21:58:34)다.
+- Windows 작업 폴더가 깨끗한 상태에서 git fetch origin, git switch main, git merge --ff-only origin/main을 실행했다. HEAD와 origin/main 해시 일치 및 f2b5df9가 HEAD의 조상임을 확인했다.
+- Ubuntu 사본은 갱신하지 않았고 실습을 재실행하지 않았다. 로컬·원격 브랜치는 삭제하지 않았다. Day 9도 시작하지 않았다.
+- SESSION·PROGRESS에 병합 확인 메모를 추가했다. 이 두 기록 수정은 로컬 미커밋 상태이며 새 커밋·main 직접 push·추가 PR 생성은 수행하지 않았다.

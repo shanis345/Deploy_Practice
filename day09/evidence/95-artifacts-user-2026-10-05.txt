@@ -1,0 +1,20 @@
+출처: 2026-10-05 사용자 제공 Ubuntu WSL2 실행 출력. Codex 직접 실행 결과가 아님.
+실행 위치: /home/user/onprem-lab/day09
+
+실행 명령:
+cd /home/user/onprem-lab/day09 &&
+sha256sum -c agent-0.2.0-offline.sha256 &&
+stat -c '%n | %s bytes' \
+  agent-0.2.0-offline.tar.gz trivy-agent-0.2.0.txt sbom-agent-0.2.0.cdx.json &&
+sha256sum trivy-agent-0.2.0.txt sbom-agent-0.2.0.cdx.json &&
+docker image inspect localhost:5000/ax/agent:0.2.0 \
+  --format 'ID={{.Id}} DIGESTS={{json .RepoDigests}} OS={{.Os}} ARCH={{.Architecture}} USER={{.Config.User}} PORTS={{json .Config.ExposedPorts}}'
+
+출력:
+agent-0.2.0-offline.tar.gz: OK
+agent-0.2.0-offline.tar.gz | 43776190 bytes
+trivy-agent-0.2.0.txt | 55261 bytes
+sbom-agent-0.2.0.cdx.json | 201644 bytes
+94ebfe6ccc9ab5f441beb409753677470393105a431f53764dbb517c7d80e7c2  trivy-agent-0.2.0.txt
+4c331693d41f69b03b92affdab09a01df3961d3a3d9c748a9c68f54e62109a42  sbom-agent-0.2.0.cdx.json
+ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812 DIGESTS=["agent@sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812","localhost:5000/ax/agent@sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812"] OS=linux ARCH=amd64 USER=10001 PORTS={"8000/tcp":{}}

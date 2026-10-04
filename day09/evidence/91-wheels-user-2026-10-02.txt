@@ -1,0 +1,12 @@
+Day 9 / 9-1 wheel 준비 — 2026-10-02
+출처: 사용자 제공 Ubuntu 출력의 핵심 발췌. Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day09
+실행 명령: SESSION의 2026-10-02 베이스 이미지 준비 확인·wheel 다운로드 안내 참조.
+
+Collecting pyyaml==6.0.2 (from -r requirements.txt (line 1))
+Downloading PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (767 kB)
+Saved ./wheels/PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+Successfully downloaded pyyaml
+total 752K
+-rw-r--r-- 1 user user 750K Oct  2 21:09 PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+756K    wheels/

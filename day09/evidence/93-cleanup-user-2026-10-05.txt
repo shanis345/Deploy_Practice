@@ -1,0 +1,13 @@
+2026-10-05 수신한 사용자 Ubuntu WSL2 정리 결과 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+실행: from-reg 제거, 원래 offline 태그 복원, 컨테이너 부재·이미지·반입 파일 해시·Compose 상태 확인
+
+from-reg
+NAMES     STATUS
+TAGS=["agent:0.2.0-offline","localhost:5000/ax/agent:0.2.0"] ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812
+agent-0.2.0-offline.tar.gz: OK
+day09-registry-1 registry:2.8.3 Created 4 hours ago, Up 4 hours, 127.0.0.1:5000->5000/tcp
+day09-registry-ui-1 joxit/docker-registry-ui:2.5.7 Created 4 hours ago, Up 4 hours, 127.0.0.1:18082->80/tcp
+
+from-reg 부재·태그 두 개 및 동일 ID·반입 파일 무결성·두 서비스 실행 유지 확인.
+regdata 볼륨 삭제 명령은 실행하지 않았다. 이번 출력은 별도 볼륨 inspect나 전체 레이어 검사는 아니다.

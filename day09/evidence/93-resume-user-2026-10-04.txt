@@ -1,0 +1,20 @@
+2026-10-04 사용자 제공 Ubuntu WSL2 출력 요약 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+Docker context: default
+Docker Server: 29.8.0
+day09-registry-1: Created 26 hours ago, Up 2 minutes, 127.0.0.1:5000->5000/tcp
+day09-registry-ui-1: Created 26 hours ago, Up 2 minutes, 80/tcp
+local volume: day09_regdata 존재
+agent:0.2.0-offline 및 localhost:5000/ax/agent:0.2.0:
+ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812 linux/amd64
+nicolaka/netshoot:v0.13 및 localhost:5000/tools/netshoot:v0.13:
+ID=sha256:a20c2531bf35436ed3766cd6cfe89d352b050ccc4d7005ce6400adf97503da1b linux/amd64
+GET http://localhost:5000/v2/_catalog:
+{"repositories":["ax/agent","tools/netshoot"]}
+Registry HTTP=200
+GET http://localhost:8082/:
+curl: (7) Failed to connect to localhost port 8082 after 0 ms: Couldn't connect to server
+UI HTTP=000
+
+현재 UI의 Compose ps 출력에는 호스트 8082 게시가 보이지 않는다. 원인은 추가 조회 전 미확정.
+catalog 목록 존재를 확인했으며 현재 모든 레이어 무결성·pull 성공을 재검증한 것은 아니다.

@@ -1,0 +1,20 @@
+2026-10-05 수신한 사용자 Ubuntu WSL2 DB 준비 결과 요약 (Codex 직접 실행 아님)
+원본 첨부: f379133f-cc8f-4c2c-a436-0e77035c978f/붙여넣은 텍스트.txt
+위치: /home/user/onprem-lab/day09
+Trivy: aquasec/trivy:0.56.2, image --cache-dir /cache/trivy --download-db-only
+2026-10-04T15:36:25Z INFO [vulndb] Downloading artifact... repo="ghcr.io/aquasecurity/trivy-db:2"
+전송량 표시: 121.00 MiB, 100%
+2026-10-04T15:36:41Z INFO [vulndb] Artifact successfully downloaded repo="ghcr.io/aquasecurity/trivy-db:2"
+du -sh: 1.4G trivy-cache
+ls -lh trivy-cache/trivy/db/:
+-rw-r--r-- 1 user user 151 Oct 5 00:36 metadata.json
+-rw-r--r-- 1 user user 1.4G Oct 4 23:34 trivy.db
+metadata.json:
+{
+  "Version": 2,
+  "NextUpdate": "2026-10-05T14:28:15.15296468Z",
+  "UpdatedAt": "2026-10-04T14:28:15.152965452Z",
+  "DownloadedAt": "2026-10-04T15:36:41.35690486Z"
+}
+UTC→KST: UpdatedAt=10월 4일 23:28:15, DownloadedAt=10월 5일 00:36:41, NextUpdate=10월 5일 23:28:15.
+DB 준비 완료이며 스캔 결과는 아직 없다.

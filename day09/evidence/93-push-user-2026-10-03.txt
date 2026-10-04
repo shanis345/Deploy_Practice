@@ -1,0 +1,15 @@
+2026-10-03 사용자 제공 Ubuntu WSL2 실행 결과 요약 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+실행: docker tag 및 docker push로 agent와 netshoot를 localhost:5000에 업로드
+
+The push refers to repository [localhost:5000/ax/agent]
+0.2.0: digest: sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812 size: 856
+
+The push refers to repository [localhost:5000/tools/netshoot]
+4f4fb700ef54: Mounted from ax/agent
+v0.13: digest: sha256:5a21d467fed653554bdc483ca5e7e866805c5b4c8f7ecb195a43f778c8d02fb8 size: 3156
+Not all multiplatform-content is present and only the available single-platform image was pushed
+sha256:a20c2531bf35436ed3766cd6cfe89d352b050ccc4d7005ce6400adf97503da1b -> sha256:5a21d467fed653554bdc483ca5e7e866805c5b4c8f7ecb195a43f778c8d02fb8
+
+나머지 레이어는 Pushed로 표시됐다. 이 파일은 주요 출력 요약이며 대화 복사 과정의 줄 끝 이스케이프는 제외했다.
+API/UI 조회와 레지스트리 pull 실행은 아직 확인하지 않았다.

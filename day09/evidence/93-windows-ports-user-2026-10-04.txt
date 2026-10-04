@@ -1,0 +1,22 @@
+2026-10-04 사용자 제공 Windows PowerShell 출력 요약 (Codex 직접 실행 아님)
+프롬프트: PS C:\Users\user>
+Get-NetTCPConnection | Where-Object { $_.LocalPort -eq 8082 } 결과: 출력 행 없음, 오류 없음.
+
+netsh interface ipv4 show excludedportrange protocol=tcp
+netsh interface ipv6 show excludedportrange protocol=tcp
+두 조회의 범위는 동일:
+1462-1462
+1939-2038
+7767-7866
+7887-7986
+7987-8086
+8090-8189
+11391-11490
+11791-11890
+12564-12663
+13187-13286
+50000-50059 *
+* 관리 포트 제외
+
+8082는 IPv4/IPv6의 7987-8086 제외 범위에 포함된다.
+대안 18082는 이 시점의 제외 범위에 없으나 점유 조회와 실제 게시 성공은 아직 확인하지 않았다.

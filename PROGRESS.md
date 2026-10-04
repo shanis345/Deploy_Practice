@@ -1,6 +1,53 @@
 # 진행 현황
 
-- 기준일: 2026-10-01
+- 기준일: 2026-10-05
+- Day 9 저장소 반영: 사용자 요청으로 codex/day09-results에서 main 대상 PR을 준비한다. 실습 기록·증거·신청서·UI 포트 수정 및 기존 Day 8 병합 확인 메모를 포함하며, 누적 점검 미진행 상태를 유지한다. 실제 커밋·push·PR 결과는 GitHub 이력에서 확인한다.
+- **Day 9 실습 자원 정리 완료(2026-10-05 사용자 출력):** 압축 파일 검사·체크섬 OK, registry·UI 컨테이너 및 day09_default 제거·Compose 목록 부재를 확인했다. 압축 전 tar 삭제 명령도 성공했다. regdata·agent 이미지·압축 반입 파일·체크섬·보고서·SBOM·wheels 756K·DB 캐시 1.4G는 보존했다. 9-1~9-5와 자원 정리 완료, 누적 점검·체크포인트 평가는 미진행이다. [정리 증거](day09/evidence/cleanup-user-2026-10-05.txt). 아래는 이전 이력이다.
+- **Day 9의 9-5 완료(2026-10-05):** 사용자 출력으로 반입 파일 해시 OK·첨부 3종의 정확한 크기·보고서/SBOM 해시·이미지 식별 정보를 확인하고 Windows에 [학습용 반입 신청서](day09/IMPORT-PACKAGE.md)를 작성했다. HIGH 51·CRITICAL 0과 수정 버전 제공 항목, 고객사 정보·승인 미확인을 반영했다. 9-1~9-5 완료이며 누적 점검·전체 정리·Day 9 전체 완료는 아직이다. 실제 제출·Ubuntu 문서 복사는 미진행이다. [SESSION](day09/SESSION.md). 아래 대기 문구는 이전 이력이다.
+- **Day 9의 9-4 완료(2026-10-05 사용자 출력):** DB 준비·network none 취약점 스캔(HIGH 51·CRITICAL 0)·CycloneDX 1.6 SBOM 생성 및 구성 요소 90개·pip/PyYAML 확인을 마쳤다. 보고서 54K·SBOM 197K와 DB 캐시는 Ubuntu에 보존한다. 9-1~9-4 완료, 다음은 사용자 요청 후 9-5이며 Day 9 전체는 미완료다. [SBOM 증거](day09/evidence/94-sbom-user-2026-10-05.txt). 아래 대기 문구는 이전 이력이다.
+- Day 9의 9-4 오프라인 스캔 성공: 사용자 첨부에서 Debian 13.7·OS 패키지 87개 탐지, HIGH 51·CRITICAL 0과 호스트 보고서 54K·user:user 소유를 확인했다. 수정 버전이 있는 항목도 있으며 취약점 해소로 기록하지 않는다. 동일 이미지의 CycloneDX SBOM 생성·요약 조회 결과 대기 중이다. [증거](day09/evidence/94-scan-user-2026-10-05.txt).
+- Day 9의 9-4 DB 준비 확인: 사용자 첨부에서 DB v2 다운로드 성공·캐시 1.4G·user:user 소유와 갱신 메타데이터를 확인했다. network none·로컬 Docker 이미지·DB 갱신 중지로 HIGH/CRITICAL 스캔 및 호스트 보고서 저장을 안내했으며 결과 대기 중이다. [증거](day09/evidence/94-db-user-2026-10-05.txt).
+- Day 9의 9-4 사전 점검 확인: 사용자 출력에서 Trivy 0.56.2·대상 agent linux/amd64 존재, 기존 캐시/보고서/SBOM 부재와 Ubuntu 가용 952G 표시를 확인했다. 사용자 소유 캐시에 취약점 DB만 다운로드하고 메타데이터를 조회하도록 안내했으며 결과 대기 중이다. [증거](day09/evidence/94-precheck-user-2026-10-05.txt).
+- Day 9의 9-4 시작: 사용자 요청으로 Docker 연결·Trivy 및 대상 이미지·디스크·기존 캐시/보고서/SBOM 조회를 안내했다. 사전 점검 결과 대기 중이며 DB 다운로드·스캔·SBOM 생성은 아직 미실행이다. 9-1~9-3 완료를 유지하고 9-5는 미진행이다. [SESSION](day09/SESSION.md).
+- **Day 9의 9-3 완료(2026-10-05 사용자 정리 출력 확인):** 레지스트리 push·API/UI·digest 연결 검증·포트 오류 복구·pull·앱 실행 후 from-reg 제거·원래 offline 태그 복원·반입 파일 해시 OK를 확인했다. registry·UI·regdata는 유지하며 UI는 http://localhost:18082다. 9-1~9-3 완료, 9-4 이후·Day 9 전체는 미완료다. [정리 증거](day09/evidence/93-cleanup-user-2026-10-05.txt). 아래 대기 문구는 이전 이력이다.
+- Day 9의 9-3 실행 검증 성공: 사용자 출력에서 사내 레지스트리 이미지의 running·NETWORK=none·UID=10001·PyYAML=6.0.2·healthz ok 및 version=0.2.0을 확인했다. from-reg 정리·원래 offline 태그 복원·보존 확인 결과 대기 중이다. [증거](day09/evidence/93-runtime-user-2026-10-04.txt).
+- Day 9의 9-3 pull 성공: 사용자 출력으로 반입 파일 해시 OK·로컬 태그 두 개 제거·사내 레지스트리 pull 성공과 이전 digest 일치·linux/amd64·USER=10001을 확인했다. from-reg의 포트 없는 실행·내부 healthz 조회를 안내했고 결과 대기 중이다. [증거](day09/evidence/93-pull-user-2026-10-04.txt).
+- Day 9의 9-3 index 연결 확인: 사용자 API 본문의 linux/amd64 manifest가 UI·원본 빌드와 일치한다. 반입 파일 해시 검사 후 로컬 agent 태그 제거·사내 레지스트리 pull·inspect를 안내했고 결과 대기 중이다. 앱 실행·9-3 완료는 아직이다. [증거](day09/evidence/93-index-user-2026-10-04.txt).
+- Day 9의 9-3 UI 관찰 확인: 사용자 텍스트에서 agent 0.2.0·43 MB·amd64 및 manifest digest 0fc1da16...를 확인했고 원본 빌드 로그와 일치한다. push/API index 4c10e5ca...와의 연결을 index 본문에서 확인하도록 안내했다. pull 실행·9-3 완료는 아직이다. [증거](day09/evidence/93-ui-observation-user-2026-10-04.txt).
+- Day 9의 9-3 UI HTTP 복구 성공: 사용자 출력에서 Ubuntu Compose 해시 일치, 두 서비스 Up·18082 게시·UI/registry HTTP 200·새 CORS·저장소 두 개 유지를 확인했다. Windows 브라우저 http://localhost:18082 관찰 결과 대기 중이며 pull 실행·9-3 완료는 아직이다. [증거](day09/evidence/93-ui-recovery-user-2026-10-04.txt).
+- Day 9의 9-3 대안 포트 적용 안내: 사용자 출력으로 18082 TCP 사용 항목 없음을 확인했다. Windows Compose UI 게시·CORS를 18082로 수정했고 Ubuntu 별도 변경·두 서비스 재생성·HTTP/CORS/catalog 조회를 안내했다. 실제 복구 결과 대기 중이다. [SESSION](day09/SESSION.md).
+- Day 9의 9-3 Windows 진단 확인: 8082 TCP 사용 항목은 없으나 IPv4/IPv6 제외 범위 7987–8086에 포함된다. UI 게시 실패의 유력한 원인으로 보고 제외 범위 밖인 18082의 점유 조회를 안내했다. 결과 대기이며 Compose 포트·CORS 변경과 복구는 아직이다. [증거](day09/evidence/93-windows-ports-user-2026-10-04.txt).
+- Day 9의 9-3 추가 상태 확인: 사용자 출력에서 UI Created·registry Up 및 catalog HTTP 200·저장소 두 개 유지를 확인했다. Ubuntu 점검은 받았으며 Windows 8082 점유·IPv4/IPv6 제외 범위 결과만 대기 중이다. 추가 복구는 아직 시행하지 않았다. [SESSION](day09/SESSION.md).
+- Day 9의 9-3 UI 복구 시도 실패: 재생성 중 8082 포트 게시의 /forwards/expose HTTP 500 오류를 사용자 출력으로 확인했다. 뒤의 && 조회는 미실행이다. Windows 포트 점유·제외 범위 및 현재 Docker 컨테이너·registry 응답 조회 결과 대기 중이다. [증거](day09/evidence/93-ui-recreate-error-user-2026-10-04.txt).
+- Day 9의 9-3 UI 포트 진단: Compose·컨테이너 설정의 8082 바인딩과 달리 실제 게시 목록이 비어 있음을 사용자 출력으로 확인했다. UI만 --no-deps·--force-recreate·--pull never로 재생성하고 포트·HTTP를 확인하도록 안내했으며 결과 대기 중이다. 발생 계기는 미확정이다. [증거](day09/evidence/93-ui-ports-user-2026-10-04.txt).
+- Day 9의 9-3 재개 점검 확인: 레지스트리 catalog HTTP 200·저장소 두 개, regdata 및 로컬 이미지 존재를 사용자 출력으로 확인했다. UI는 Up이나 8082 게시가 ps에 보이지 않고 curl 연결 실패다. Compose 설정·inspect 포트·로그 조회 결과 대기 중이다. [증거](day09/evidence/93-resume-user-2026-10-04.txt).
+- Day 9의 9-3 중단 후 재개: 마지막 확인은 10월 3일 push·API digest 일치다. 사용자 요청으로 현재 Docker 연결·Compose 상태·regdata·로컬 이미지·API/UI HTTP 읽기 전용 점검을 안내했으며 결과 대기 중이다. 현재 실행 상태는 미확인이고 UI 관찰·pull 실행은 남아 있다. [SESSION](day09/SESSION.md).
+- Day 9의 9-3 API 검증 성공: 사용자 출력에서 저장소 두 개·각 태그·HTTP 200과 push 대비 전체 digest 일치를 확인했다. Windows 브라우저 UI 관찰 결과 대기 중이며 pull 실행·9-3 완료는 아직이다. [증거](day09/evidence/93-api-user-2026-10-03.txt).
+- Day 9의 9-3 이미지 push 성공: 사용자 출력으로 agent·netshoot 업로드와 각 digest를 확인했다. netshoot의 단일 플랫폼 push 안내는 앞서 확인한 linux/amd64 실습 범위에 맞는다. 저장소·태그·digest API 조회 결과를 기다리며 UI 관찰·pull 실행·9-3 완료는 아직이다. [증거](day09/evidence/93-push-user-2026-10-03.txt). 아래 대기 문구는 이전 이력이다.
+- Day 9의 9-3 레지스트리 기동 확인: 사용자 출력으로 컨테이너 2개 Up·루프백 5000/8082 게시·day09_default 및 day09_regdata 생성, /v2/와 UI HTTP 200·빈 catalog를 확인했다. agent·netshoot의 태그 추가·push를 안내했으며 결과 대기 중이다. 자원은 유지하고 9-3 완료·9-4 이후는 아직 아니다. [증거](day09/evidence/93-startup-user-2026-10-03.txt).
+- Day 9의 9-3 사전 점검 확인: 사용자 출력으로 Compose 파일 Windows·Ubuntu 해시 일치·config 통과, 필요 이미지 4개 linux/amd64 존재, 기존 컨테이너 8개 Exited·day09_regdata 부재를 확인했다. registry·registry-ui 기동과 API·UI HTTP 검사를 안내했으며 결과 대기 중이다. push와 9-4 이후는 미진행이다. [증거](day09/evidence/93-precheck-user-2026-10-03.txt).
+- Day 9의 9-3 시작: 사용자 요청으로 레지스트리 실습 사전 점검을 안내했다. Windows TCP Listen 조회에서 5000·8082·8000 항목 부재를 직접 확인했다. Ubuntu Compose 파일 해시·구성·필요 이미지·기존 컨테이너와 regdata 볼륨 결과 대기 중이다. 기동·다운로드·push는 아직 미진행이며 이번 범위는 9-3이다. [SESSION](day09/SESSION.md).
+- Day 9 복습: 사용자 요청으로 9-1·9-2의 준비→파일 반입→복원·기동 흐름과 dind 시험의 목적을 설명했다. 이미지 부재·의도된 네트워크 실패·실제 /tmp 경로 오류·ID 표시 차이를 구분했다. 설명 제공이며 별도 독립 평가는 아니다. 9-1·9-2 완료를 유지하고 9-3 진행·실습 재실행은 없다.
+- **Day 9의 9-2 완료(2026-10-03 사용자 출력):** 이미지 save·압축·해시 검증·복원, 빈 별도 엔진의 외부 pull 실패·파일 적재·앱 기동 및 시험 컨테이너·익명 볼륨 정리를 확인했다. 호스트 agent:0.2.0-offline·tar 43M·tar.gz 42M·sha256 파일 보존과 해시 OK도 확인했다. 다음은 사용자 요청 후 9-3이며 Day 9 전체는 미완료다. [정리 증거](day09/evidence/92-cleanup-user-2026-10-03.txt), [SESSION](day09/SESSION.md). 아래 대기 문구는 이전 이력이다.
+- Day 9의 9-2 실행 검증 완료: 사용자 출력으로 별도 엔진 내부 agent의 running·NETWORK=none, UID=10001·GID=0·PyYAML=6.0.2·healthz ok를 확인했다. 내부 agent·day09-airgap·해당 익명 볼륨 정리 및 호스트 이미지·반입 파일 보존 확인을 안내했으며 결과 대기 중이다. 9-2 최종 완료·9-3 진행은 아직 아니다. [증거](day09/evidence/92-airgap-runtime-user-2026-10-03.txt).
+- Day 9의 9-2 내부 적재 성공: 사용자 출력으로 /tmp tmpfs와 /day09-import 경로 변경 후 해시 OK·load 성공을 확인했다. 내부 ID b7e1e28...는 앞선 빌드의 config 해시와 일치하며 linux/amd64·USER=10001이다. 내부 agent 기동·UID·PyYAML·healthz 확인을 안내했으며 결과 대기 중이다. 정리·9-2 완료는 아직 아니다. [증거](day09/evidence/92-airgap-load-user-2026-10-03.txt).
+- Day 9의 9-2 복사 경로 진단: 사용자 출력에서 내부 /tmp가 비어 있고 동일 컨테이너 running·재시작 0임을 확인했다. 공식 dind 스크립트의 /tmp tmpfs 마운트를 원인 후보로 좁혔다. 내부 mountinfo 조회와 /day09-import 경로의 복사·해시 검증·load 재시도를 안내했으며 결과 대기 중이다. [증거](day09/evidence/92-airgap-tmp-user-2026-10-03.txt).
+- Day 9의 9-2 내부 파일 조회 오류: 사용자 출력에서 tar.gz·sha256의 docker cp 성공 표시 후 내부 sha256sum이 No such file or directory로 실패했다. &&에 따라 load는 실행되지 않았다. 내부 /tmp·작업 위치·컨테이너 상태·마운트 조회를 안내했고 결과 대기 중이다. 원인은 미확정이며 기존 파일·컨테이너는 유지한다. [증거](day09/evidence/92-airgap-copy-error-user-2026-10-03.txt).
+- Day 9의 9-2 외부 pull 실패 확인: 사용자 출력으로 내부 Docker의 DNS 서버 접속 network is unreachable·종료 코드 1 및 images=0 유지를 확인했다. tar.gz·해시 파일의 day09-airgap 복사·내부 검증·load를 안내했으며 결과 대기 중이다. 내부 앱 기동·정리·9-2 완료는 아직 아니다. [증거](day09/evidence/92-airgap-pull-user-2026-10-03.txt).
+- Day 9의 9-2 별도 엔진 기동 확인: 사용자 출력으로 day09-airgap의 running·NETWORK=none 및 내부 Docker 27.5.1·images=0을 확인했다. 내부 alpine:3.20 pull 실패 시험·종료 코드·이미지 수 조회를 안내했으며 결과 대기 중이다. 컨테이너는 유지하고 파일 반입·앱 기동은 아직 미진행이다. [증거](day09/evidence/92-dind-start-user-2026-10-03.txt).
+- Day 9의 9-2 dind 이미지 준비 확인: 사용자 출력으로 docker:27-dind pull 성공·linux/amd64를 확인했다. day09-airgap을 privileged·network=none으로 기동하고 내부 Docker 버전·images=0을 확인하도록 안내했으며 결과 대기 중이다. 별도 엔진 적재·앱 기동 및 9-2 완료는 아직 아니다. [증거](day09/evidence/92-dind-image-user-2026-10-03.txt).
+- Day 9의 9-2 별도 데몬 사전 점검: 사용자 출력으로 docker:27-dind 이미지 부재와 day09-airgap 컨테이너 부재를 확인했다. linux/amd64 이미지 pull·inspect를 안내했으며 결과 대기 중이다. 컨테이너 생성은 아직 없다. [증거](day09/evidence/92-dind-precheck-user-2026-10-03.txt).
+- Day 9의 9-2 파일 검증·복원 성공: 사용자 출력으로 gzip·SHA-256 검사, 해당 이미지 제거·목록 부재, tar.gz load 및 복원 전후 ID·linux/amd64·USER=10001 일치를 확인했다. docker:27-dind 이미지·day09-airgap 이름 사전 점검을 안내했고 결과 대기 중이다. 별도 데몬 시험·9-2 완료는 아직 아니다. [증거](day09/evidence/92-load-user-2026-10-03.txt).
+- Day 9의 9-2 반입 파일 생성 확인: 사용자 출력으로 이미지 ID 일치, tar 43M·tar.gz 42M·파일 SHA-256 생성을 확인했다. gzip·해시 검증 성공 조건으로 해당 이미지 제거·검사한 tar.gz의 load 복원을 안내했으며 결과 대기 중이다. 별도 Docker 데몬 시험·9-2 완료는 아직 아니다. [증거](day09/evidence/92-package-user-2026-10-03.txt).
+- Day 9의 9-2 시작: 사용자 요청으로 agent:0.2.0-offline의 save·gzip 압축·파일 SHA-256 생성을 안내했으며 사용자 출력 대기 중이다. 원본 이미지 제거·load·별도 Docker 데몬 시험은 아직 미진행이다. 9-1은 완료 상태를 유지하고 이번 범위는 9-2다. [SESSION](day09/SESSION.md).
+- **Day 9의 9-1 완료(2026-10-03 사용자 출력):** wheel 준비·오프라인 빌드·network=none 기동(UID=10001·PyYAML=6.0.2·healthz ok), 시험 컨테이너 제거 및 온라인용 pip 빌드의 이름 해석 실패·종료 코드 1을 확인했다. 이미지·wheels는 삭제하지 않았다. 다음은 사용자 요청 후 9-2이며 Day 9 전체 완료는 아니다. [마지막 증거](day09/evidence/91-cleanup-online-failure-user-2026-10-03.txt), [SESSION](day09/SESSION.md). 아래 대기 문구는 이전 이력이다.
+- Day 9의 9-1 네트워크 없는 기동 확인(2026-10-03 수신): 사용자 출력으로 day09-offline-test의 running·NETWORK=none, UID=10001·GID=0, PyYAML=6.0.2, healthz ok·version=0.2.0을 확인했다. 시험 컨테이너 정리와 같은 베이스의 온라인용 Dockerfile 실패 비교를 안내했으며 결과 대기 중이다. 9-1은 아직 미완료다. [증거](day09/evidence/91-runtime-user-2026-10-03.txt).
+- Day 9의 9-1 오프라인 빌드 확인: 사용자 출력으로 로컬 wheel의 PyYAML 6.0.2 설치와 agent:0.2.0-offline 생성(linux/amd64·USER=10001)을 확인했다. network=none 컨테이너의 실제 UID·패키지·healthz 검증을 안내했으며 결과 대기 중이다. 온라인 빌드 비교·9-1 완료 및 9-2 이후는 아직 아니다. [증거](day09/evidence/91-build-user-2026-10-02.txt).
+- Day 9의 9-1 wheel 준비 확인: 사용자 출력으로 PyYAML 6.0.2의 cp312·x86_64 wheel 다운로드, user:user 소유권·wheels 756K를 확인했다. default 빌더의 --network=none·--no-cache 빌드와 이미지 확인을 안내했으며 결과 대기 중이다. 앱 기동·온라인 빌드 비교 및 9-2 이후는 미진행이다. [증거](day09/evidence/91-wheels-user-2026-10-02.txt).
+- Day 9의 9-1 베이스 이미지 준비 확인: 사용자 pull·inspect 출력으로 python:3.12.14-slim 존재·linux/amd64를 확인했다. 같은 이미지의 임시 컨테이너에서 wheel 다운로드를 안내했으며 결과 대기 중이다. 오프라인 빌드·앱 기동 검증은 미진행이다. [증거](day09/evidence/91-base-image-user-2026-10-02.txt). 아래 대기 문구는 이전 단계 이력이다.
+- Day 9의 9-1 사전 점검 확인: 사용자 출력으로 Windows·Ubuntu 파일 해시 일치와 Docker Client/Engine 29.8.0·default 연결을 확인했다. python:3.12.14-slim 부재로 linux/amd64 베이스 이미지 pull·inspect를 안내했으며 결과 대기 중이다. wheel 다운로드·빌드·기동은 아직 미진행이다. [증거](day09/evidence/91-precheck-user-2026-10-02.txt).
+- Day 9의 9-1 시작(2026-10-02): 사용자 요청으로 오프라인 빌드 실습의 사전 점검을 안내했다. Ubuntu 파일 해시·Docker 연결·베이스 이미지 및 기존 산출물 확인 결과 대기 중이다. 다운로드·빌드·컨테이너 실행은 아직 미진행이며 9-2 이후는 범위 밖이다. [SESSION](day09/SESSION.md).
+- Day 8 [PR #10](https://github.com/shanis345/Deploy_Practice/pull/10) 병합 확인: GitHub 직접 조회로 main 병합 커밋 6801a098a0b4cd5b138e08aa707b7926a6f0c8bc, 병합 시각 2026-10-01 14:58:34 UTC를 확인했다. Windows main을 fast-forward 갱신하고 Day 8 커밋 f2b5df9 포함을 확인했다. Ubuntu 사본과 브랜치 삭제는 이번 작업에서 다루지 않았다. 이 병합 확인 메모는 로컬 변경이며 별도 커밋·push하지 않았다.
 - Day 8 GitHub 반영 요청: 사용자 요청으로 codex/day08-results 브랜치에서 main 대상 PR을 만든다. 병합은 사용자가 수행한다. origin fetch 후 시작점과 origin/main이 b2dd34d로 일치함을 직접 확인했다. 실습 재실행·Day 9 진행은 없다.
 - Day 8 체크포인트: 사용자 요청으로 실습 복습과 6문항 해설을 제공했다. Python 라이브러리별 신뢰 저장소, CA 파일 지정의 한계, 검증 오류와 TLS 검사 판별의 차이를 공식 문서로 보완했다. 해설 제공과 사용자 독립 평가를 구분하며 독립 평가는 미실시다.
 - **Day 8 종료(2026-10-01): 8-1~8-4 실습·지정 자원 정리 완료.** 사용자 출력으로 컨테이너 5개·네트워크 2개 제거와 Day 8 잔존 목록 부재를 확인했다. 공개 CA 파일 및 agent:0.2.0-ca 이미지 보존도 확인했다. 체크포인트 6문항 해설·독립 평가는 미실시다. [정리 증거](day08/evidence/cleanup-user-2026-10-01.txt), [SESSION](day08/SESSION.md). 아래 실행 중·대기 문구는 이전 단계 이력이다.
@@ -68,7 +115,7 @@
 | 06 | 망분리 재현: DMZ · 업무망 · DB존, 그리고 방화벽 신청서 | 종료 · 실습·신청서 초안·장애 5개 복구·정리 완료 · 별도 평가 미실시 | [SESSION](day06/SESSION.md) |
 | 07 | 포워드 프록시, 화이트리스트, HTTP_PROXY/NO_PROXY 함정 | 종료 · 7-1~7-5 학습·정리·체크포인트 해설 완료·독립 평가 미실시 | [SESSION](day07/SESSION.md) |
 | 08 | 사내 CA와 TLS 검사(SSL 인스펙션) | 종료 · 8-1~8-4 실습·정리·체크포인트 해설 완료 · 독립 평가 미실시 | [SESSION](day08/SESSION.md) |
-| 09 | 폐쇄망 이미지 반입: 오프라인 빌드 · save/load · 사내 레지스트리 · 스캔 · SBOM | 미시작 | [SESSION](day09/SESSION.md) |
+| 09 | 폐쇄망 이미지 반입: 오프라인 빌드 · save/load · 사내 레지스트리 · 스캔 · SBOM | 9-1~9-5·자원 정리 완료 · 누적 점검·평가 미진행 | [SESSION](day09/SESSION.md) |
 | 10 | Kubernetes 기초: Pod · Deployment · Service · probe | 미시작 | [SESSION](day10/SESSION.md) |
 | 11 | 설정 · 비밀 · 수신 · Helm: ConfigMap, Secret, Ingress, 차트 | 미시작 | [SESSION](day11/SESSION.md) |
 | 12 | NetworkPolicy로 존 분리, 그리고 OpenShift의 차이 | 미시작 | [SESSION](day12/SESSION.md) |
@@ -77,7 +124,9 @@
 
 ## 다음 실습을 시작할 때
 
-최신 시작 지점(2026-10-01): Day 8 종료. 8-1~8-4 실습·컨테이너 5개와 네트워크 2개 정리·프로젝트 잔존 목록 부재를 확인했다. 공개 CA 파일 및 agent:0.2.0-ca 이미지 보존 확인. 체크포인트 6문항 해설은 제공했으며 독립 평가는 미실시다. 사용자 요청으로 codex/day08-results에서 main 대상 PR을 만들며 병합은 사용자가 수행한다. Ubuntu 전체 동기화는 하지 않았다. 다음 학습은 사용자 요청 후 Day 9이며 아직 시작하지 않았다. 아래 2026-09-30 시작 지점은 이전 이력이다.
+최신 시작 지점(2026-10-05): Day 9의 9-1~9-5·실습 자원 정리 완료. registry·UI는 제거됐고 regdata·이미지·반입 산출물·캐시는 보존했다. 신청서는 Windows에 저장돼 있다. 다음 범위는 사용자 요청 후 정하며 누적 점검 2차·체크포인트 평가·고객사 제출은 미진행이다. Day 9 전체 통과로 판정하지 않는다. 아래 시작 지점들은 이전 이력이다.
+
+최신 시작 지점(2026-10-01): Day 8 종료·PR #10 main 병합 및 Windows main 갱신 완료(6801a09). 8-1~8-4 실습·지정 자원 정리·공개 CA와 CA 이미지 보존을 확인했다. 체크포인트 해설은 제공했으며 독립 평가는 미실시다. Ubuntu 전체 동기화는 하지 않았다. 다음 학습은 사용자 요청 후 Day 9이며 아직 시작하지 않았다. 병합 확인 메모는 로컬 미커밋 변경이다. 아래 2026-09-30 시작 지점은 이전 이력이다.
 
 최신 시작 지점(2026-09-30): Day 7은 7-1~7-5 학습·정리를 마치고 종료했다. 사용자 출력으로 컨테이너 4개·네트워크 2개 제거 및 프로젝트 잔존 목록 부재를 확인했다. 관찰용 mitm과 임시 빌드 이미지·폴더도 앞서 제거 확인했다. 이미지·볼륨·빌드 캐시 전역 정리는 수행하지 않았다. 체크포인트 6문항은 해설을 제공했으며 독립 답변 평가는 미실시다. 실제 빌드 프록시 통신 장애 재현 및 HTTPS/CA 시험도 미실시로 구분한다. 다음은 사용자 요청 후 Day 8 사내 CA와 TLS 검사이며 아직 시작하지 않았다. Day 7 기록은 Windows 사본에 갱신했다. 사용자가 완료·push를 요청해 codex/day07-results 브랜치에서 커밋·원격 반영을 진행한다. Ubuntu 동기화와 main 병합은 별도다.
 

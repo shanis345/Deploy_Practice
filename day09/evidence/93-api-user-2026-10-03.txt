@@ -1,0 +1,30 @@
+2026-10-03 사용자 제공 Ubuntu WSL2 실행 결과 주요 항목 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+명령: 앞서 안내한 catalog·태그 GET 3회 및 Accept 헤더를 지정한 manifest HEAD 2회
+
+GET /v2/_catalog
+{"repositories":["ax/agent","tools/netshoot"]}
+GET /v2/ax/agent/tags/list
+{"name":"ax/agent","tags":["0.2.0"]}
+GET /v2/tools/netshoot/tags/list
+{"name":"tools/netshoot","tags":["v0.13"]}
+
+HEAD /v2/ax/agent/manifests/0.2.0
+HTTP/1.1 200 OK
+Content-Length: 856
+Content-Type: application/vnd.oci.image.index.v1+json
+Docker-Content-Digest: sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812
+
+HEAD /v2/tools/netshoot/manifests/v0.13
+HTTP/1.1 200 OK
+Content-Length: 3156
+Content-Type: application/vnd.oci.image.manifest.v1+json
+Docker-Content-Digest: sha256:5a21d467fed653554bdc483ca5e7e866805c5b4c8f7ecb195a43f778c8d02fb8
+
+두 응답에 공통으로 포함된 헤더 주요 항목:
+Access-Control-Allow-Origin: http://localhost:8082
+Access-Control-Expose-Headers: Docker-Content-Digest
+Docker-Distribution-Api-Version: registry/2.0
+Date: Sat, 03 Oct 2026 08:42:11 GMT
+
+두 전체 digest는 앞선 push 출력과 일치한다. UI 관찰·pull 실행은 미확인.

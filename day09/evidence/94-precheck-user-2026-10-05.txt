@@ -1,0 +1,10 @@
+2026-10-05 사용자 Ubuntu WSL2 사전 점검 결과 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+Server=29.8.0
+["aquasec/trivy:0.56.2"] ID=sha256:26245f364b6f5d223003dc344ec1eb5eb8439052bfecb31d79aeba0c74344b3a linux/amd64
+["agent:0.2.0-offline","localhost:5000/ax/agent:0.2.0"] ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812 linux/amd64
+Filesystem Size Used Avail Use% Mounted on
+/dev/sde 1007G 3.9G 952G 1% /
+없음: trivy-cache
+없음: trivy-agent-0.2.0.txt
+없음: sbom-agent-0.2.0.cdx.json

@@ -1,0 +1,23 @@
+Day 9 / 9-3 사전 점검 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+
+7059c4fbd51eedfa6a349640aa7f3197078d1c9b8592c005a6f37c6e58a4025c  compose.yaml
+Compose 설정 정상
+["registry:2.8.3"] linux/amd64
+["joxit/docker-registry-ui:2.5.7"] linux/amd64
+["nicolaka/netshoot:v0.13"] linux/amd64
+["agent:0.2.0-offline"] linux/amd64
+
+NAMES                            STATUS                      PORTS
+pub2                             Exited (255) 43 hours ago   0.0.0.0:8081->80/tcp
+pub                              Exited (0) 4 days ago
+isolated                         Exited (0) 5 days ago
+client2                          Exited (0) 5 days ago
+web2                             Exited (255) 43 hours ago   80/tcp
+client                           Exited (0) 5 days ago
+web                              Exited (255) 43 hours ago   80/tcp
+koica-oda-local-test-oda-app-1      Exited (143) 3 weeks ago
+
+docker volume ls --filter 'name=^day09_regdata$':
+DRIVER    VOLUME NAME

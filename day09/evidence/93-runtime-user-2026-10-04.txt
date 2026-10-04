@@ -1,0 +1,14 @@
+2026-10-04 사용자 제공 Ubuntu WSL2 실행 결과 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+실행: localhost:5000/ax/agent:0.2.0을 --pull=never --platform linux/amd64 --network none --name from-reg로 기동
+컨테이너 ID: d629057921c98aa643aaf57c983ad91fd7b089eb261b61d0e6123eb63301e8ff
+STATUS=running IMAGE=localhost:5000/ax/agent:0.2.0 NETWORK=none
+UID= 10001 GID= 0
+PyYAML= 6.0.2
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "d629057921c9"
+}
+healthz는 docker exec로 컨테이너 내부 http://127.0.0.1:8000/healthz를 조회한 결과다.
+시험 컨테이너 정리와 agent:0.2.0-offline 태그 복원은 아직 미확인이다.

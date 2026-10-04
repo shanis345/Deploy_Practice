@@ -1,5 +1,94 @@
 # 실습 환경
 
+## Day 9 실습 자원 정리·보존 확인 (2026-10-05)
+- 사용자 Ubuntu 출력으로 day09-registry-ui-1·day09-registry-1·day09_default 제거 및 Compose 컨테이너 목록 부재를 확인했다. UI는 종료 상태다. 압축 전 agent-0.2.0-offline.tar 삭제 명령도 성공했다.
+- day09_regdata 볼륨과 agent:0.2.0-offline 이미지(ID 4c10e5ca...)를 보존했다. 압축 파일은 gzip 검사·체크섬 OK이며 tar.gz 42M·체크섬 93 bytes·보고서 54K·SBOM 197K·wheels 756K·trivy-cache 1.4G가 남아 있다. 크기는 사용자 ls/du 표시값이다.
+- Codex의 Ubuntu 직접 실행 결과가 아닌 사용자 출력 기준이다. [정리 증거](../day09/evidence/cleanup-user-2026-10-05.txt). 아래 서비스 실행 상태는 정리 전 이력이다.
+
+## Day 9의 9-5 첨부 식별·문서 보관 상태 (2026-10-05)
+- 사용자 Ubuntu 출력으로 agent-0.2.0-offline.tar.gz 체크섬 OK·43,776,190 bytes, trivy-agent-0.2.0.txt 55,261 bytes, sbom-agent-0.2.0.cdx.json 201,644 bytes와 각 보고서 해시를 확인했다. [식별 증거](../day09/evidence/95-artifacts-user-2026-10-05.txt).
+- [학습용 반입 신청서](../day09/IMPORT-PACKAGE.md)는 Windows 프로젝트에 새로 작성했다. 원본 3종은 Ubuntu /home/user/onprem-lab/day09에 있으며 Windows로 복사하지 않았다. 신청서도 Ubuntu로 복사하지 않았다.
+- 이번 작업은 식별 조회와 문서화이며 기존 컨테이너·이미지·볼륨·캐시 상태를 변경하지 않았다. 9-1~9-5 완료, 누적 점검·전체 정리·Day 전체 완료는 아직이다. 아래 항목의 다음 절 안내는 당시 이력이다.
+
+## Day 9의 9-4 완료·스캔 및 SBOM 보존 (2026-10-05)
+- 사용자 Ubuntu 출력으로 aquasec/trivy:0.56.2의 DB v2 준비·캐시 1.4G, network none 취약점 스캔 및 SBOM 생성을 확인했다. 대상은 localhost:5000/ax/agent:0.2.0이다.
+- /home/user/onprem-lab/day09/trivy-agent-0.2.0.txt는 user:user·54K, Debian 13.7·HIGH 51·CRITICAL 0이다. sbom-agent-0.2.0.cdx.json은 user:user·197K, CycloneDX 1.6·구성 요소 90개·pip 25.0.1·PyYAML 6.0.2가 확인됐다. 크기는 ls 표시값이다.
+- DB 파일은 trivy-cache/trivy/db/에 보존하며 UpdatedAt=2026-10-04T14:28:15.152965452Z·DownloadedAt=2026-10-04T15:36:41.35690486Z다. Docker 소켓의 로컬 이미지 조회를 이용한 스캐너 네트워크 차단 시험이며 Docker 호스트 전체 격리는 아니다.
+- 기존 레지스트리 자원·이미지·반입 파일도 유지한다. 다음은 사용자 요청 후 9-5다. [스캔 증거](../day09/evidence/94-scan-user-2026-10-05.txt), [SBOM 증거](../day09/evidence/94-sbom-user-2026-10-05.txt).
+
+## Day 9의 9-3 완료·보존 상태 (2026-10-05)
+- 사용자 출력으로 from-reg 제거·부재, agent:0.2.0-offline 및 localhost:5000/ax/agent:0.2.0 두 태그 복원·동일 ID 4c10e5ca...와 반입 tar.gz 해시 OK를 확인했다.
+- registry·registry-ui는 Up 4 hours이며 각각 127.0.0.1:5000·127.0.0.1:18082를 게시한다. regdata 볼륨은 삭제하지 않고 유지한다. 다음은 사용자 요청 후 9-4다. [정리 증거](../day09/evidence/93-cleanup-user-2026-10-05.txt). 아래 대기·복원 전 문구는 이전 이력이다.
+
+## Day 9 사내 레지스트리 pull 확인 (2026-10-04)
+- 사용자 출력으로 agent 로컬 태그 두 개 제거 후 localhost:5000/ax/agent:0.2.0 pull 성공·index digest 4c10e5ca... 일치·linux/amd64·USER=10001을 확인했다. 반입 파일 해시 OK이며 agent:0.2.0-offline 태그는 아직 복원 전이다.
+- from-reg 실행 결과 대기. Windows 8000도 제외 범위에 있어 호스트 게시 없이 내부 healthz를 조회하도록 안내했다. [pull 증거](../day09/evidence/93-pull-user-2026-10-04.txt).
+
+## Day 9 UI 18082 복구 확인 (2026-10-04)
+- 사용자 Ubuntu 출력으로 수정 Compose 해시가 Windows와 일치함을 확인했다. 두 서비스 Up, registry 127.0.0.1:5000·UI 127.0.0.1:18082 게시 및 HTTP 200, CORS http://localhost:18082, 저장소 목록 두 개 유지를 확인했다.
+- UI 주소는 http://localhost:18082다. 브라우저 관찰·pull 실행은 아직 미확인이다. [복구 증거](../day09/evidence/93-ui-recovery-user-2026-10-04.txt). 아래 적용 대기는 이전 이력이다.
+
+## Day 9 UI 대안 18082 적용 준비 (2026-10-04)
+- 사용자 Windows TCP 조회에서 18082 사용 항목 없음 확인. Codex는 Windows day09/compose.yaml의 UI 게시·registry CORS Origin을 18082로 수정했다. Ubuntu 사본 변경·서비스 재생성·HTTP 응답은 사용자 실행 결과 대기 중이다.
+- 적용 후 UI 주소는 http://localhost:18082, registry API는 http://localhost:5000이다. 실제 복구 완료로 기록하지 않는다.
+
+## Day 9 UI 포트의 Windows 제외 범위 포함 확인 (2026-10-04)
+- 사용자 Windows 조회에서 8082 TCP 사용 항목은 없으나 IPv4/IPv6 모두 7987–8086 제외 범위를 표시했다. 8082가 이 범위에 포함돼 UI 게시 실패의 유력한 원인으로 판단한다. 생성 주체·시점은 미확정이다.
+- 대안 18082는 제공된 제외 범위 밖이며 점유 조회 결과 대기 중이다. Compose 포트·CORS 변경은 아직 하지 않았다. [증거](../day09/evidence/93-windows-ports-user-2026-10-04.txt).
+
+## Day 9의 9-3 중단 후 재개 점검 (2026-10-04)
+- 사용자 출력: Docker default·29.8.0, registry 및 registry-ui Up 2 minutes, day09_regdata와 로컬 이미지 태그 존재. 레지스트리 catalog HTTP 200·저장소 두 개 확인.
+- UI는 ps에 80/tcp만 표시되며 localhost:8082 연결 실패·HTTP 000이다. 원인은 미확정이며 Compose 설정·포트 inspect·UI 로그 조회 결과 대기 중이다. [증거](../day09/evidence/93-resume-user-2026-10-04.txt).
+
+## Day 9의 9-3 push·API 검증 확인 (2026-10-03)
+- 사용자 출력으로 localhost:5000에 ax/agent:0.2.0·tools/netshoot:v0.13 등록과 API digest의 push 결과 일치를 확인했다. agent는 OCI index, netshoot는 단일 플랫폼 OCI manifest 응답이다. [API 증거](../day09/evidence/93-api-user-2026-10-03.txt).
+- 레지스트리 자원은 유지하며 UI 관찰·pull 실행은 아직 미확인이다. 아래 빈 catalog·push 대기는 이전 기동 시점의 기록이다.
+
+## Day 9의 9-3 레지스트리 기동 확인 (2026-10-03)
+- 사용자 출력으로 registry:2.8.3·joxit/docker-registry-ui:2.5.7을 사용하는 컨테이너 2개가 Up이며 호스트 127.0.0.1:5000·8082 게시를 확인했다. day09_default 네트워크·day09_regdata 볼륨이 새로 생성됐다.
+- /v2/는 {}·HTTP 200, catalog는 빈 repositories, UI는 HTTP 200이다. agent·netshoot push 결과 대기 중이며 모든 Day 9 레지스트리 자원을 유지한다. 사전 조회의 다른 컨테이너 8개는 모두 Exited였고 변경하지 않았다. [기동 증거](../day09/evidence/93-startup-user-2026-10-03.txt).
+
+## Day 9의 9-2 완료·시험 자원 제거 및 산출물 보존 확인 (2026-10-03)
+- 사용자 출력으로 내부 agent와 day09-airgap 제거를 확인했다. 호스트의 정확한 컨테이너 이름 및 익명 볼륨 ba9f80170ab1734fe7dee47dddf808470eb6e88a23b917896b374b42fed6b698 조회에는 헤더만 남았다.
+- 호스트 agent:0.2.0-offline ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812, tar 43M·tar.gz 42M·sha256 93바이트 존재 및 압축 파일 해시 OK를 확인했다. dind·베이스 이미지·wheels·캐시·다른 프로젝트 자원은 삭제하지 않았고 이번 최종 출력에서는 재조회하지 않았다.
+- 9-1·9-2 완료이며 9-3 이후는 미진행이다. 아래 실행 중·대기 기록은 이전 이력이다. Codex 직접 Ubuntu 실행·전체 동기화는 없다. [정리 증거](../day09/evidence/92-cleanup-user-2026-10-03.txt).
+
+## Day 9의 9-2 별도 엔진 앱 기동 성공·정리 대기 (2026-10-03)
+- 사용자 출력으로 내부 agent(4d55ca6f2f12)의 running·network=none, UID=10001·GID=0, PyYAML=6.0.2 및 healthz ok·version=0.2.0을 확인했다. 외부 pull 불가인 빈 엔진에 파일을 적재한 뒤의 실행 결과다.
+- 내부 agent·day09-airgap 및 연결된 익명 볼륨 제거, 호스트 이미지·반입 파일 보존 확인을 안내했으며 결과 대기 중이다. 현재 정리 완료로 기록하지 않는다. [기동 증거](../day09/evidence/92-airgap-runtime-user-2026-10-03.txt).
+
+## Day 9의 9-2 별도 엔진 파일 적재 성공 (2026-10-03)
+- 사용자 출력으로 내부 pull이 network is unreachable·종료 코드 1로 실패하고 images=0을 유지함을 확인했다. /tmp 반입 경로에서 해시 파일이 보이지 않았으나 mountinfo의 tmpfs 마운트를 확인하고 /day09-import로 바꿔 해시 OK·load 성공을 확인했다.
+- 내부 Docker 27.5.1의 이미지 ID=sha256:b7e1e28f346895634bd4c58e176bc9dc05c4c6b2522e65f1ec6044fc6b327db9는 원본 빌드의 config 해시와 일치한다. linux/amd64·USER=10001이다. 호스트 엔진의 ID=4c10e5...는 원본 빌드의 manifest list 해시와 일치했다.
+- day09-airgap은 실행 중이며 /var/lib/docker 익명 볼륨 ba9f80170ab1734fe7dee47dddf808470eb6e88a23b917896b374b42fed6b698을 사용한다. 내부 앱 기동 결과 대기 중이며 정리는 아직 미진행이다. [사용자 증거](../day09/evidence/92-airgap-load-user-2026-10-03.txt).
+
+## Day 9의 9-2 별도 Docker 엔진 기동 확인 (2026-10-03)
+- 사용자 출력으로 docker:27-dind의 linux/amd64 다운로드와 ID=sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce를 확인했다.
+- day09-airgap(a1a9a7d2713e)이 privileged·network=none으로 기동됐으며 STATUS=running, 내부 Docker Server=27.5.1 images=0을 확인했다. 컨테이너는 유지 중이며 내부 pull 실패 시험 결과 대기 중이다. 내부 적재·앱 기동·정리는 미진행이다. [기동 증거](../day09/evidence/92-dind-start-user-2026-10-03.txt).
+
+## Day 9의 9-2 이미지 복원 성공 (2026-10-03)
+- 사용자 출력으로 gzip 검사·sha256sum -c OK, agent:0.2.0-offline 제거·목록 부재 및 압축 파일 load 성공을 확인했다. 복원 ID는 sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812로 원본과 같으며 linux/amd64·USER=10001도 유지됐다.
+- 반입 파일·wheels는 유지한다. 별도 Docker 데몬 시험은 사전 점검 안내 후 결과 대기 중이며 컨테이너 생성은 아직 없다. [사용자 증거](../day09/evidence/92-load-user-2026-10-03.txt).
+
+## Day 9의 9-2 반입 파일 생성 확인 (2026-10-03)
+- 사용자 Ubuntu 출력으로 day09/agent-0.2.0-offline.tar 43M·tar.gz 42M·sha256 파일 93바이트 생성을 확인했다. 크기는 ls의 표시값이다. 압축 파일 해시는 cd08d49e729c690a20925ecedb1284745c826534ebfd241314b327cb107c52e6이며 save 당시 이미지 ID는 9-1 빌드 결과와 일치한다.
+- gzip·파일 SHA-256 검증 후 해당 이미지 제거·load 복원을 안내했으며 결과 대기 중이다. 파일은 Ubuntu 사본에 있고 Windows에는 사용자 증거만 기록했다. [증거](../day09/evidence/92-package-user-2026-10-03.txt).
+
+## Day 9의 9-1 완료·시험 컨테이너 정리 확인 (2026-10-03)
+- 사용자 첨부 출력으로 day09-offline-test 제거 및 정확한 이름 필터 목록에 컨테이너 행이 없음을 확인했다. 앞서 network=none 기동·UID=10001·GID=0·PyYAML=6.0.2·healthz ok를 확인했다.
+- 온라인용 agent/Dockerfile의 Windows·Ubuntu 해시가 일치하며 같은 베이스로 --network=none·--no-cache 빌드 시 pip 단계에서 이름 해석 실패·종료 코드 1을 확인했다. 앞선 로컬 wheel 설치 성공과 비교해 9-1을 완료했다.
+- agent:0.2.0-offline·베이스 이미지·wheels는 삭제하지 않았다. 비교 빌드는 export 이전에 실패했고 기존 비교 태그 유무·캐시·다른 자원은 별도 재조회하지 않았다. 9-2 이후는 미진행이며 아래 대기·실행 중 문구는 이전 이력이다. [사용자 증거](../day09/evidence/91-cleanup-online-failure-user-2026-10-03.txt).
+
+## Day 9의 9-1 네트워크 없는 기동 확인 (2026-10-03 수신)
+- 사용자 출력으로 day09-offline-test(21519ca2ac3f)의 running·NETWORK=none, UID=10001·GID=0, PyYAML=6.0.2 및 컨테이너 내부 loopback healthz의 ok·version=0.2.0을 확인했다. Docker health 상태 자체·외부 DB/LLM 통합은 미검증이다.
+- 해당 컨테이너 정리·잔존 목록 확인과 온라인용 Dockerfile 비교를 안내했으며 결과 대기 중이다. 이미지와 wheels는 보존한다. 현재 컨테이너 제거 완료로 처리하지 않는다. [사용자 증거](../day09/evidence/91-runtime-user-2026-10-03.txt).
+
+## Day 9의 9-1 오프라인 빌드 확인 (2026-10-02)
+- 사용자 Ubuntu 출력으로 Docker Client/Engine 29.8.0·Desktop 4.92.0(240144)·default 연결과 Windows/Ubuntu 실습 파일 해시 일치를 확인했다.
+- python:3.12.14-slim은 최초 조회 시 없었으며 이후 pull·linux/amd64 확인을 마쳤다. PyYAML 6.0.2 cp312·x86_64 wheel(user:user, wheels 756K)을 준비했다.
+- default 빌더에서 --network=none·--no-cache로 로컬 wheel 설치와 agent:0.2.0-offline 생성에 성공했다. inspect ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812, linux/amd64, USER=10001이다. 빌드 RUN의 네트워크 제한과 빌더 전체의 외부 통신 차단은 구분한다.
+- 앱의 network=none 기동·실제 UID·PyYAML·healthz 조회는 안내 후 사용자 결과 대기 중이다. 기존 자원은 재조회하지 않았다. Codex 직접 Ubuntu 실행·전체 동기화는 없다. [SESSION](../day09/SESSION.md), [빌드 증거](../day09/evidence/91-build-user-2026-10-02.txt).
+
 ## Day 8 종료 — 지정 자원 제거 확인 (2026-10-01)
 - 사용자 Ubuntu 출력으로 Day 8 컨테이너 5개·네트워크 2개 제거와 프로젝트 필터 잔존 목록 부재를 확인했다. probe 내부 임시 공개 CA 사본도 해당 컨테이너와 함께 제거됐다.
 - certs/mitmproxy-ca-cert.pem(1172바이트) 및 agent:0.2.0-ca 이미지(ID ebe1f3076bf2, DISK USAGE 182MB·CONTENT SIZE 44.3MB) 보존을 확인했다. 이미지·볼륨 삭제 옵션이나 전역 prune은 사용하지 않았다. certs 전체 목록·기존 백업·다른 프로젝트 자원·8082 리스너는 재조회하지 않았다.

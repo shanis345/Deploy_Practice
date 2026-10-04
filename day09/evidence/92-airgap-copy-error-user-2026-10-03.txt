@@ -1,0 +1,10 @@
+Day 9 / 9-2 내부 해시 파일 조회 오류 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+명령: SESSION의 tar.gz·sha256 복사 후 내부 검증·load를 &&로 연결한 명령.
+
+Successfully copied 43.8MB (transferred 43.8MB) to day09-airgap:/tmp/agent-0.2.0-offline.tar.gz
+Successfully copied 93B (transferred 2.05kB) to day09-airgap:/tmp/agent-0.2.0-offline.sha256
+sha256sum: agent-0.2.0-offline.sha256: No such file or directory
+
+내부 sha256sum 실패로 뒤의 load·image inspect는 실행되지 않음.
