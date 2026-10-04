@@ -1,0 +1,15 @@
+Day 9 / 9-3 레지스트리 기동 — 2026-10-03 사용자 출력 핵심 발췌
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+
+Network day09_default Created
+Volume day09_regdata Created
+Container day09-registry-1 Started
+Container day09-registry-ui-1 Started
+
+day09-registry-1 registry:2.8.3 Up 3 seconds 127.0.0.1:5000->5000/tcp
+day09-registry-ui-1 joxit/docker-registry-ui:2.5.7 Up 3 seconds 127.0.0.1:8082->80/tcp
+{}
+Registry HTTP=200
+{"repositories":[]}
+UI HTTP=200

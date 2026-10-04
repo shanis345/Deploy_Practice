@@ -1,0 +1,14 @@
+Day 9 / 9-2 시험 자원 정리 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+명령: SESSION의 내부 agent 제거·day09-airgap 제거·목록·이미지·해시·파일 확인 명령.
+
+agent
+day09-airgap
+NAMES     STATUS
+DRIVER    VOLUME NAME
+ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812
+agent-0.2.0-offline.tar.gz: OK
+-rw-r--r-- 1 user user  93 Oct  3 13:27 agent-0.2.0-offline.sha256
+-rw------- 1 user user 43M Oct  3 13:27 agent-0.2.0-offline.tar
+-rw------- 1 user user 42M Oct  3 13:27 agent-0.2.0-offline.tar.gz

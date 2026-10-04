@@ -1,0 +1,15 @@
+사용자 제공 UI 텍스트 관찰 기록 (Codex 브라우저 직접 조작 아님)
+기록일: 2026-10-04
+URL: http://localhost:18082/#!/taglist/ax/agent
+Tags of ax/agent
+Sourced from 사내 레지스트리 (실습)/ax/agent
+1 tags
+Creation date: a day ago
+Size: 43 MB
+Content Digest: sha256:0fc1da16c9e87eb64374d9df2afb60b17ebac802955e9238e6aeb441ac4323b4
+Tag: 0.2.0
+Arch: amd64
+
+표시된 digest는 9-1 빌드 로그의 exporting manifest 값과 일치한다.
+push/API에서 확인한 상위 index digest는 sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812다.
+이번 UI 텍스트에 전체 저장소 목록 화면은 포함되지 않았다.

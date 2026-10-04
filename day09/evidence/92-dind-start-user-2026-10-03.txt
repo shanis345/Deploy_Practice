@@ -1,0 +1,8 @@
+Day 9 / 9-2 별도 Docker 엔진 기동 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+명령: SESSION의 day09-airgap run·inspect·내부 docker info 명령.
+
+a1a9a7d2713ea3c22cbc29b6dad4c3a4c6e1f0f688d21ce9cc979d9add5079bc
+STATUS=running NETWORK=none
+Server=27.5.1 images=0

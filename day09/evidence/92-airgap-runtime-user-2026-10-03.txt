@@ -1,0 +1,14 @@
+Day 9 / 9-2 반입 이미지의 내부 앱 기동 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+명령: SESSION의 day09-airgap 내부 agent run·inspect·exec Python 명령.
+
+4d55ca6f2f1275b90a7a04c463766be0d33067d74ba321c61599ebfe00d32b2b
+STATUS=running NETWORK=none
+UID= 10001 GID= 0
+PyYAML= 6.0.2
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "4d55ca6f2f12"
+}

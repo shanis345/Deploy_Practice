@@ -1,0 +1,27 @@
+Day 9 / 9-1 사전 점검 — 2026-10-02
+출처: 사용자 제공 Ubuntu WSL2 출력의 핵심 발췌. Codex 직접 실행 아님.
+
+pwd:
+/home/user/onprem-lab/day09
+
+sha256sum:
+d972cd67249eab2a2d5870ce8daf32810f7c19b95133a33bdd906b555814d7f0  Dockerfile.offline
+8320562585358eff824b13356c837a7ffb3faf7d8700823fbc014a3a8c8ec71a  requirements.txt
+fdab9fd80709fe7a7ff99527cdf1ff68d3c80ecaab72d148bf4dc5d76b9b01b0  app.py
+8320562585358eff824b13356c837a7ffb3faf7d8700823fbc014a3a8c8ec71a  ../agent/requirements.txt
+fdab9fd80709fe7a7ff99527cdf1ff68d3c80ecaab72d148bf4dc5d76b9b01b0  ../agent/app.py
+
+Docker Client: 29.8.0, API 1.56, linux/amd64, Context default
+Server: Docker Desktop 4.92.0 (240144)
+Engine: 29.8.0, API 1.56 (minimum version 1.40), linux/amd64
+docker context show: default
+
+docker image inspect python:3.12.14-slim:
+Error response from daemon: No such image: python:3.12.14-slim
+
+docker image ls agent:0.2.0-offline:
+IMAGE   ID             DISK USAGE   CONTENT SIZE   EXTRA
+(이미지 행 없음)
+
+ls -ld wheels 2>/dev/null || true:
+(출력 없음. 오류 숨김 명령이므로 부재 원인을 단정하지 않음.)

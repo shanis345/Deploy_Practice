@@ -1,0 +1,11 @@
+Day 9 / 9-1 베이스 이미지 준비 — 2026-10-02
+출처: 사용자 제공 Ubuntu WSL2 출력. Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day09
+
+$ docker pull --platform linux/amd64 python:3.12.14-slim &&
+docker image inspect python:3.12.14-slim --format 'ID={{.Id}} OS={{.Os}} ARCH={{.Architecture}}'
+3.12.14-slim: Pulling from library/python
+Digest: sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+Status: Downloaded newer image for python:3.12.14-slim
+docker.io/library/python:3.12.14-slim
+ID=sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f OS=linux ARCH=amd64

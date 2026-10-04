@@ -1,0 +1,9 @@
+2026-10-04 사용자 제공 Ubuntu WSL2 출력 (핵심 오류)
+위치: /home/user/onprem-lab/day09
+docker compose -p day09 up -d --no-deps --force-recreate --pull never registry-ui
+[+] up 0/1
+Container day09-registry-ui-1 Starting
+Error response from daemon: ports are not available: exposing port TCP 127.0.0.1:8082 -> 127.0.0.1:0: /forwards/expose returned unexpected status: 500
+
+첫 명령 실패로 && 뒤 sleep·ps·inspect·UI 및 registry curl은 실행되지 않았다.
+UI 복구 실패. 현재 컨테이너 최종 상태와 Windows 포트 점유·제외 범위는 아직 미확인.

@@ -1,0 +1,14 @@
+Day 9 / 9-1 네트워크 없는 기동 확인 — 2026-10-03 수신
+출처: 사용자 제공 Ubuntu 출력. 실행 시각은 출력에 없음. Codex 직접 실행 아님.
+실행 위치: /home/user/onprem-lab/day09
+명령: SESSION의 network=none day09-offline-test 실행 및 inspect·Python 조회 명령.
+
+21519ca2ac3f0c0204bc29ff3e372d936189e56ce80311840624d8bbc041a2d0
+STATUS=running NETWORK=none
+UID= 10001 GID= 0
+PyYAML= 6.0.2
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "21519ca2ac3f"
+}

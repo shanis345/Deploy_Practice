@@ -1,0 +1,13 @@
+Day 9 / 9-2 내부 마운트 확인·경로 변경 후 적재 성공 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+
+$ docker exec day09-airgap sh -c 'grep " /tmp " /proc/self/mountinfo || true'
+990 1217 0:151 / /tmp rw,relatime shared:562 - tmpfs none rw
+
+(SESSION의 /day09-import 생성·파일 복사·해시 검증·load·inspect 명령 실행)
+Successfully copied 43.8MB (transferred 43.8MB) to day09-airgap:/day09-import/
+Successfully copied 93B (transferred 2.05kB) to day09-airgap:/day09-import/
+agent-0.2.0-offline.tar.gz: OK
+Loaded image: agent:0.2.0-offline
+ID=sha256:b7e1e28f346895634bd4c58e176bc9dc05c4c6b2522e65f1ec6044fc6b327db9 OS=linux ARCH=amd64 USER=10001

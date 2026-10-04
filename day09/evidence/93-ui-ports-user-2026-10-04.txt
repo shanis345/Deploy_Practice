@@ -1,0 +1,18 @@
+2026-10-04 사용자 제공 Ubuntu WSL2 진단 출력 요약 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+docker compose -p day09 config:
+registry-ui image=joxit/docker-registry-ui:2.5.7
+registry-ui ports: host_ip=127.0.0.1 target=80 published=8082 protocol=tcp
+registry ports: host_ip=127.0.0.1 target=5000 published=5000 protocol=tcp
+registry volume: day09_regdata -> /var/lib/registry
+
+docker inspect day09-registry-ui-1:
+STATUS=running ERROR="" CONFIG_PORTS={"80/tcp":[{"HostIp":"127.0.0.1","HostPort":"8082"}]} ACTUAL_PORTS={"80/tcp":[]}
+
+docker compose -p day09 logs --tail 30 registry-ui:
+2026/10/04 10:52:55 [notice] 1#1: start worker process 53
+[중간 28줄 생략]
+2026/10/04 10:52:55 [notice] 1#1: start worker process 82
+실제 제공된 30줄은 worker process 53부터 82까지의 notice였다. 전체 로그 검사는 아니다.
+
+설정에 포트 바인딩이 있으나 실제 게시 목록이 비어 있음을 확인했다. 발생 계기는 아직 미확정이다.

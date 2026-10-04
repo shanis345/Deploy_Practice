@@ -1,0 +1,23 @@
+2026-10-04 사용자 제공 Ubuntu WSL2 복구 결과 요약 (Codex 직접 실행 아님)
+위치: /home/user/onprem-lab/day09
+Compose의 UI 게시 포트·CORS Origin을 18082로 변경, config -q 성공 후 두 서비스 재생성.
+sha256sum compose.yaml:
+a9b2ef288660930816cc97d63b37eef06b828ac7ed653df8848d0cb3b59f8282  compose.yaml
+
+day09-registry-1 Started; Up 3 seconds; 127.0.0.1:5000->5000/tcp
+day09-registry-ui-1 Started; Up 3 seconds; 127.0.0.1:18082->80/tcp
+UI HTTP=200
+
+GET http://localhost:5000/v2/_catalog (Origin: http://localhost:18082)
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: http://localhost:18082
+Access-Control-Expose-Headers: Docker-Content-Digest
+Content-Type: application/json; charset=utf-8
+Docker-Distribution-Api-Version: registry/2.0
+Date: Sun, 04 Oct 2026 11:05:29 GMT
+Content-Length: 47
+{"repositories":["ax/agent","tools/netshoot"]}
+Registry HTTP=200
+
+Windows Compose 해시와 일치. UI HTTP 복구·새 CORS·저장소 목록 유지 확인.
+브라우저 UI 관찰 및 registry pull·앱 실행은 아직 미확인.

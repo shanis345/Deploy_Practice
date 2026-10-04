@@ -1,0 +1,11 @@
+Day 9 / 9-2 파일 검증·이미지 복원 — 2026-10-03 사용자 출력
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+명령: SESSION의 gzip -t·sha256sum -c·이미지 제거·목록·load·inspect 명령을 &&로 연결해 실행.
+
+agent-0.2.0-offline.tar.gz: OK
+Untagged: agent:0.2.0-offline
+Deleted: sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812
+IMAGE   ID             DISK USAGE   CONTENT SIZE   EXTRA
+Loaded image: agent:0.2.0-offline
+ID=sha256:4c10e5ca549f993cb5d5271e24bb4ff28ae6426f3fd91a5f52b7172796dcf812 OS=linux ARCH=amd64 USER=10001

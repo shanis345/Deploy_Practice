@@ -1,0 +1,20 @@
+사용자 제공 Ubuntu WSL2 API 출력 요약 (Codex 직접 실행 아님)
+GET http://localhost:5000/v2/ax/agent/manifests/0.2.0
+Accept: application/vnd.oci.image.index.v1+json
+schemaVersion: 2
+mediaType: application/vnd.oci.image.index.v1+json
+manifests[0]:
+  mediaType: application/vnd.oci.image.manifest.v1+json
+  digest: sha256:0fc1da16c9e87eb64374d9df2afb60b17ebac802955e9238e6aeb441ac4323b4
+  size: 1811
+  platform: linux/amd64
+manifests[1]:
+  mediaType: application/vnd.oci.image.manifest.v1+json
+  digest: sha256:e32ef14d0f9421791318a64936cc55699b84887a4b0fd16fed36b31d87c0313e
+  size: 837
+  annotations:
+    vnd.docker.reference.digest: sha256:0fc1da16c9e87eb64374d9df2afb60b17ebac802955e9238e6aeb441ac4323b4
+    vnd.docker.reference.type: attestation-manifest
+  platform: unknown/unknown
+
+linux/amd64 manifest digest는 앞선 UI 및 9-1 빌드 로그와 전체 값이 일치한다.

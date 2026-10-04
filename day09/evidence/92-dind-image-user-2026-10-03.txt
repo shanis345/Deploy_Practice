@@ -1,0 +1,11 @@
+Day 9 / 9-2 dind 이미지 준비 — 2026-10-03 사용자 출력 핵심 발췌
+실행 위치: /home/user/onprem-lab/day09
+확인 주체: 사용자 실행 결과. Codex 직접 실행 아님.
+
+$ docker pull --platform linux/amd64 docker:27-dind && docker image inspect docker:27-dind --format 'ID={{.Id}} OS={{.Os}} ARCH={{.Architecture}}'
+27-dind: Pulling from library/docker
+(레이어 Pull complete 출력 생략)
+Digest: sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce
+Status: Downloaded newer image for docker:27-dind
+docker.io/library/docker:27-dind
+ID=sha256:aa3df78ecf320f5fafdce71c659f1629e96e9de0968305fe1de670e0ca9176ce OS=linux ARCH=amd64
