@@ -1,0 +1,26 @@
+Date: 2026-10-05
+Source: User-provided Ubuntu WSL2 outputs, not Codex executions.
+
+Terminal 2: HTTP comparison
+$ sh -ec '
+  for i in 1 2 3 4; do
+    response=$(curl --noproxy "*" -fsS --max-time 5 http://127.0.0.1:39827/healthz)
+    printf "%s\n" "$response" | jq -er .host
+  done
+'
+agent-64c5d66bdf-d7qcb
+agent-64c5d66bdf-d7qcb
+agent-64c5d66bdf-d7qcb
+agent-64c5d66bdf-d7qcb
+
+Before shutdown:
+$ ss -ltn '( sport = :39827 )'
+State Recv-Q Send-Q Local Address:Port Peer Address:Port Process
+LISTEN 0 4096 127.0.0.1:39827 0.0.0.0:*
+
+Terminal 1: user pressed Ctrl+C, then ran:
+$ ss -ltn '( sport = :39827 )'
+State Recv-Q Send-Q Local Address:Port Peer Address:Port Process
+
+Observed: Four responses from the same Pod; listener absent after Ctrl+C.
+Whitespace in tabular output normalized for this evidence record.

@@ -1,0 +1,52 @@
+Date: 2026-10-05 (Asia/Seoul)
+Source: User-provided Ubuntu WSL2 output, k9s screenshots, and text confirmations.
+Format: Summaries, not a verbatim transcript. Not independently executed by Codex.
+Detailed commands and diagnostic qualifications are in ../SESSION.md.
+
+10-6 diagnostic observations:
+- b-imagepull: ImagePullBackOff for onprem-registry:5000/ax/agent:9.9.9.
+  Events showed an HTTPS client receiving HTTP. Follow-up evidence recorded in
+  SESSION.md showed an HTTP mirror and HTTP 404 / MANIFEST_UNKNOWN for 9.9.9.
+  The final HTTPS error is consistent with fallback; the first HTTP pull attempt
+  was not directly captured in the supplied containerd log.
+- b-crashloop: command explicitly prints a missing-config message then sys.exit(1).
+  Last State Error, Exit Code 1, Restart Count 6; previous log contains the message.
+  The command does not actually check the configuration file.
+- b-pending: requests cpu=64, memory=512Gi; PodScheduled=False, Node/IP absent.
+  FailedScheduling: 3 Insufficient cpu, 3 Insufficient memory.
+- b-configerror: CreateContainerConfigError, Restart Count 0;
+  required Secret agent-secret-typo not found (key name LLM_API_KEY, no secret value).
+- b-notready: Running, Ready=False, Restart Count 0;
+  readiness path /health repeatedly returns 404; expected path /healthz.
+- Five broken Deployments deleted with foreground cascading deletion;
+  subsequent listing contained no b-* Deployments, ReplicaSets, or Pods.
+
+k9s observations:
+- v0.32.5, context k3d-onprem, namespace ax-pilot.
+- Screenshots: Pod list, Describe, current logs, Deployment list.
+- agent Deployment READY 2/2, UP-TO-DATE 2, AVAILABLE 2.
+- Current logs showed repeated GET /healthz status=200 in the visible range.
+- Service values and k9s exit confirmed by user text, not a Service screenshot.
+- Original screenshots were not copied into the repository.
+
+Final cleanup command supplied and executed by the user:
+kubectl --context k3d-onprem -n ax-pilot \
+  delete pod probe --ignore-not-found=true --wait=true --timeout=120s &&
+kubectl --context k3d-onprem -n ax-pilot \
+  get deployment,pods,service -o wide
+
+Selected output:
+pod "probe" deleted
+
+Final listing summary:
+Deployment agent: READY 2/2, UP-TO-DATE 2, AVAILABLE 2.
+Image: onprem-registry:5000/ax/agent:0.2.0
+Pod agent-64c5d66bdf-pwrhg: 1/1 Running, RESTARTS 1 (71m ago),
+  10.42.0.7, k3d-onprem-agent-0.
+Pod agent-64c5d66bdf-rslwh: 1/1 Running, RESTARTS 0,
+  10.42.1.8, k3d-onprem-agent-1.
+Service agent: ClusterIP 10.43.162.127, 8000/TCP, selector app=agent.
+No probe in the final listing. No new HTTP test was part of this final command.
+Application, Service, Namespace, cluster, registry, and images were retained.
+
+Checkpoint status: six explanations provided; no independent assessment performed.

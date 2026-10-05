@@ -1,0 +1,15 @@
+Source: User-provided Ubuntu WSL2 terminal output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex.
+
+user@DESKTOP-6KJVBND:~/onprem-lab$ cd /home/user/onprem-lab
+docker version --format 'Client={{.Client.Version}} Server={{.Server.Version}}'
+k3d version
+kubectl version --client
+k3d cluster list
+Client=29.8.0 Server=29.8.0
+k3d version v5.7.4
+k3s version v1.30.4-k3s1 (default)
+Client Version: v1.36.1
+Kustomize Version: v5.8.1
+NAME   SERVERS   AGENTS   LOADBALANCER
+user@DESKTOP-6KJVBND:~/onprem-lab$

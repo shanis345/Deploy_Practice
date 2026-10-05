@@ -1,0 +1,36 @@
+Source: User-provided Ubuntu WSL2 output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex. Key log lines and tables retained; spacing normalized.
+Full creation command is in ../SESSION.md.
+
+INFO[0000] portmapping '127.0.0.1:8080:80' targets the loadbalancer: defaulting to [servers:*:proxy agents:*:proxy]
+INFO[0000] Created network 'k3d-onprem'
+INFO[0000] Created image volume k3d-onprem-images
+INFO[0000] Creating node 'onprem-registry'
+INFO[0002] Pulling image 'docker.io/library/registry:2'
+INFO[0002] Successfully created registry 'onprem-registry'
+INFO[0003] Creating node 'k3d-onprem-server-0'
+INFO[0004] Pulling image 'ghcr.io/k3d-io/k3d-tools:5.7.4'
+INFO[0005] Pulling image 'rancher/k3s:v1.30.4-k3s1'
+INFO[0015] Creating node 'k3d-onprem-agent-0'
+INFO[0015] Creating node 'k3d-onprem-agent-1'
+INFO[0015] Creating LoadBalancer 'k3d-onprem-serverlb'
+INFO[0017] Pulling image 'ghcr.io/k3d-io/k3d-proxy:5.7.4'
+INFO[0025] Starting cluster 'onprem'
+INFO[0025] Starting node 'k3d-onprem-server-0'
+INFO[0029] Starting node 'k3d-onprem-agent-0'
+INFO[0029] Starting node 'k3d-onprem-agent-1'
+INFO[0033] Starting node 'onprem-registry'
+INFO[0033] Starting node 'k3d-onprem-serverlb'
+INFO[0039] Injecting records for hostAliases (incl. host.k3d.internal) and for 6 network members into CoreDNS configmap...
+INFO[0043] Cluster 'onprem' created successfully!
+
+NAME STATUS ROLES AGE VERSION INTERNAL-IP EXTERNAL-IP OS-IMAGE KERNEL-VERSION CONTAINER-RUNTIME
+k3d-onprem-agent-0 Ready <none> 10s v1.30.4+k3s1 172.21.0.5 <none> K3s-v1.30.4+k3s1 5.15.167.4-microsoft-standard-WSL2 containerd://1.7.20-k3s1
+k3d-onprem-agent-1 Ready <none> 11s v1.30.4+k3s1 172.21.0.4 <none> K3s-v1.30.4+k3s1 5.15.167.4-microsoft-standard-WSL2 containerd://1.7.20-k3s1
+k3d-onprem-server-0 Ready control-plane,master 13s v1.30.4+k3s1 172.21.0.3 <none> K3s-v1.30.4+k3s1 5.15.167.4-microsoft-standard-WSL2 containerd://1.7.20-k3s1
+
+NAME READY STATUS RESTARTS AGE
+helm-install-traefik-crd-6tsl4 0/1 ContainerCreating 0 0s
+helm-install-traefik-r2zwv 0/1 ContainerCreating 0 0s
+
+k3d-onprem: 172.21.0.0/16

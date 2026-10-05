@@ -1,0 +1,13 @@
+Source: User-provided Ubuntu WSL2 terminal output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex. Download progress lines omitted.
+Command: Download v1.31.0 linux/amd64 kubectl and kubectl.sha256 from dl.k8s.io
+into a mktemp directory, verify SHA-256, install using install -D -m 0755,
+prepend the version-specific bin directory to this shell's PATH, hash -r,
+command -v kubectl, and kubectl version --client.
+Full command is recorded in ../SESSION.md.
+
+kubectl: OK
+/home/user/.local/share/onprem-lab/kubectl-v1.31.0/bin/kubectl
+Client Version: v1.31.0
+Kustomize Version: v5.4.2
+user@DESKTOP-6KJVBND:~/onprem-lab$

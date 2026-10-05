@@ -1,0 +1,40 @@
+Date: 2026-10-05
+Source: User-provided Ubuntu WSL2 outputs, not Codex executions.
+Location: /home/user/onprem-lab/day10
+Format: Selected output excerpts and labeled summaries from rollback and subsequent cleanup check.
+
+Rollback history output before undo:
+deployment.apps/agent
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+
+Selected rollback messages (progress lines omitted):
+deployment.apps/agent rolled back
+deployment "agent" successfully rolled out
+
+HTTP response after rollback:
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "agent-64c5d66bdf-rslwh"
+}
+HTTP 200
+
+Subsequent cleanup command:
+kubectl --context k3d-onprem -n ax-pilot wait --for=delete \
+  pod/agent-7f87967cf6-jlrdl \
+  pod/agent-7f87967cf6-wz225 --timeout=120s &&
+kubectl --context k3d-onprem -n ax-pilot \
+  get deployment,replicaset,pods -l app=agent -o wide
+
+Final resource summary from user output:
+Deployment agent: READY 2/2, UP-TO-DATE 2, AVAILABLE 2, AGE 128m.
+Image: onprem-registry:5000/ax/agent:0.2.0
+ReplicaSet agent-64c5d66bdf: DESIRED 2 CURRENT 2 READY 2, image 0.2.0.
+ReplicaSet agent-7f87967cf6: DESIRED 0 CURRENT 0 READY 0, image 0.3.0.
+Pod agent-64c5d66bdf-pwrhg: 1/1 Running, RESTARTS 0, AGE 6m1s, 10.42.0.7, k3d-onprem-agent-0.
+Pod agent-64c5d66bdf-rslwh: 1/1 Running, RESTARTS 0, AGE 5m56s, 10.42.1.8, k3d-onprem-agent-1.
+No other app Pods appeared in the final label-filtered listing.
+
+Scope: Rollback and post-rollback HTTP success verified from user output; no continuous HTTP measurement during rollback.
