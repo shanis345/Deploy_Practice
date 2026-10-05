@@ -3,7 +3,7 @@
 ## 진행 상태
 - 상태: 10-1~10-6·k9s·최종 정리 완료 · 체크포인트 6개 해설 제공·이해도 평가 미진행
 - 완료한 범위: 10-1 클러스터·이미지 준비, 10-2 첫 배포, 10-3 Service/port-forward 비교, 10-4 자가 치유·확장/축소·업데이트/롤백, 10-5 liveness 복구 확인, 10-6 고장 예제 5개 진단·정리, k9s 조회·종료, probe 삭제
-- 중단 지점: 실습 기록을 정리해 GitHub PR을 생성하는 단계. 체크포인트 해설은 제공했으나 독립 이해도 평가는 하지 않았다.
+- 중단 지점: [PR #12](https://github.com/shanis345/Deploy_Practice/pull/12) 생성·리뷰 대기. main 병합은 하지 않았다. 체크포인트 해설은 제공했으나 독립 이해도 평가는 하지 않았다.
 - Codex 작업: 아직 별도 작업을 만들지 않음
 - 실행 증거 기준: 사용자 제공 출력과 직접 검증 결과를 구분해 기록
 
@@ -940,3 +940,9 @@ kubectl --context k3d-onprem -n ax-pilot \
 - 문서 점검: 상대 링크 대상 272개 존재, `git diff --check` 통과, 지정 문서·증거의 일반적인 자격 증명 패턴 검색에서 일치 없음. 패턴 검사가 모든 비밀 노출을 보장해 탐지하는 것은 아니며 증거 내용도 검토했다.
 - 변경 범위는 Day 10 기록·증거와 공통 진행/환경 기록이다. 실습 소스·가이드·셸 스크립트는 변경하지 않았고 런타임 테스트·컨테이너 실행·Ubuntu 동기화·main 병합은 하지 않았다.
 - 커밋·push·PR 생성 결과는 성공을 확인한 뒤 별도로 기록한다. 다음 Day와 독립 이해도 평가는 미진행 상태를 유지한다.
+
+### 2026-10-05 — PR #12 생성 확인
+- Codex 직접 실행·확인: `9329b74`(Document Day 10 Kubernetes labs and checkpoint review) 커밋과 `git push -u origin codex/day10-results` 성공. 기존 커밋과 같은 작성자 정보를 명령별로 사용했으며 전역 Git 설정은 바꾸지 않았다.
+- [PR #12](https://github.com/shanis345/Deploy_Practice/pull/12): `codex/day10-results`에서 `main` 대상, OPEN, draft 아님, 조회 당시 MERGEABLE. 변경 21개 파일은 Day 10 문서·증거와 공통 진행/환경 기록이며 `day09/SESSION.md`는 포함되지 않았다.
+- 최종 문서 상대 링크 대상 273개 존재 및 staged diff 공백 검사 통과를 확인했다. GitHub 조회 당시 등록된 CI 체크는 없으므로 CI 통과라고 기록하지 않는다. PR을 현재 Codex 작업에 연결했다.
+- PR 생성 확인을 SESSION과 PROGRESS에 함께 반영한다. 기존 Day 9 로컬 변경은 그대로 보존했다. Ubuntu 실습 실행·동기화·main 병합은 하지 않았다. 다음은 PR 리뷰이며 이후 병합/Day 11 시작은 사용자 요청에 따른다.
