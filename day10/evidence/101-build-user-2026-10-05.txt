@@ -1,0 +1,31 @@
+Source: User-provided Ubuntu WSL2 output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex. Key build output and inspect data retained.
+
+Build command:
+docker build --build-arg BASE=python:3.12.14-slim --build-arg APP_VERSION=0.3.0 -t agent:0.3.0 .
+Working directory: /home/user/onprem-lab/agent
+[+] Building 1.5s (13/13) FINISHED docker:default
+Base: python:3.12.14-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+Builder steps WORKDIR, COPY requirements.txt, pip install: CACHED
+Exporting manifest sha256:e453bdc4fbd6b5cfce44116058ff25df0d9da4ec1387e22cb3c948fec37093eb
+Exporting config sha256:9e7d30ae3957ac6a0b0d3603e1e75b77dc2abaee4c50e0334c2843f1108a67ae
+Exporting attestation manifest sha256:7621aad71b7703703c1add2feb08810b655240e26ae458840856f1756469225c
+Exporting manifest list sha256:3b2b97652b5db89e15b8750375cef5d163bd2a72405902dcda882e6cde5c6ec6
+Naming to docker.io/library/agent:0.3.0
+Unpacking to docker.io/library/agent:0.3.0
+
+docker image inspect, selected fields:
+{
+  "tags": ["agent:0.2.0"],
+  "id": "sha256:a4ef49ae142efb1a03fe43c30d4a6f68ceee1c649578c33407827e8f6f4185a3",
+  "platform": "linux/amd64",
+  "user": "10001",
+  "app_version": ["APP_VERSION=0.2.0"]
+}
+{
+  "tags": ["agent:0.3.0"],
+  "id": "sha256:3b2b97652b5db89e15b8750375cef5d163bd2a72405902dcda882e6cde5c6ec6",
+  "platform": "linux/amd64",
+  "user": "10001",
+  "app_version": ["APP_VERSION=0.3.0"]
+}

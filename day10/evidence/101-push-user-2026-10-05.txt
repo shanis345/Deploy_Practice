@@ -1,0 +1,31 @@
+Source: User-provided Ubuntu WSL2 output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex. Upload output retained.
+Commands are recorded in ../SESSION.md.
+
+The push refers to repository [localhost:5001/ax/agent]
+85b930fe5482: Pushed
+44136fa355b3: Pushed
+3764a9a7d1e8: Pushed
+6b37362b3da7: Pushed
+b0dc7f87bef1: Pushed
+06ad939ed42b: Pushed
+4f4fb700ef54: Pushed
+4ddad3b547bb: Pushed
+2f94d38b45e3: Pushed
+2686dd327ffb: Pushed
+0.2.0: digest: sha256:a4ef49ae142efb1a03fe43c30d4a6f68ceee1c649578c33407827e8f6f4185a3 size: 856
+The push refers to repository [localhost:5001/ax/agent]
+e0fe3dfe3fef: Pushed
+44136fa355b3: Already exists
+3764a9a7d1e8: Layer already exists
+6b37362b3da7: Layer already exists
+b0dc7f87bef1: Layer already exists
+bc42f6bb4658: Pushed
+ab13f798e50b: Pushed
+06ad939ed42b: Layer already exists
+4f4fb700ef54: Layer already exists
+567e0f542efa: Pushed
+0.3.0: digest: sha256:3b2b97652b5db89e15b8750375cef5d163bd2a72405902dcda882e6cde5c6ec6 size: 856
+{"name":"ax/agent","tags":["0.3.0","0.2.0"]}
+
+HTTP 200

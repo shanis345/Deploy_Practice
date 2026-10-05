@@ -1,5 +1,188 @@
 # 실습 환경
 
+아래 Day 10 기록은 최신 결과부터 배치한 시점별 이력이다. 과거 항목의 “대기/미진행”은 당시 상태를 뜻한다. PR 정리 중 Ubuntu 환경을 재실행하거나 두 사본을 동기화하지 않았다.
+
+## Day 10 최종 정리 완료 (2026-10-05)
+- 사용자 출력에서 probe 삭제 및 부재를 확인했다. 정상 agent 0.2.0은 READY 2/2·UP-TO-DATE 2·AVAILABLE 2다. pwrhg(10.42.0.7/agent-0)와 rslwh(10.42.1.8/agent-1)는 모두 1/1 Running·재시작 각각 1/0이다.
+- Service agent는 ClusterIP 10.43.162.127:8000/TCP, selector app=agent다. 고장 예제와 probe는 정리됐고 앱·Namespace·클러스터·레지스트리·이미지는 유지한다. 이후 probe가 존재한다고 가정하지 않는다. 체크포인트 6개 해설은 제공했고 독립 이해도 평가는 미진행이다.
+
+## Day 10 k9s 종료 확인 (2026-10-05)
+- 사용자가 Service agent의 ClusterIP/10.43.162.127/8000 TCP 값 일치 및 k9s 종료를 텍스트로 확인했다. 종료 후 별도 리소스 조회는 하지 않았다. 앱/Service/클러스터/레지스트리 삭제는 하지 않았으며 probe 최종 정리는 아직이다.
+
+## Day 10 k9s Describe 확인 (2026-10-05)
+- 사용자 캡처: pwrhg는 0.2.0 이미지·Running/Ready=True·재시작 1이다. 직전 종료 Error/137은 과거 이력이며 앞서 확인한 liveness 재시작과 부합한다. /healthz readiness/liveness 설정 및 requests 100m/128Mi, limits 1 CPU/512Mi를 확인했다. 설정 변경은 하지 않았다.
+
+## Day 10 k9s Pod 화면 확인 (2026-10-05)
+- 사용자 캡처에서 Context/Cluster k3d-onprem, K9s v0.32.5, K8s v1.30.4+k3s1, Pods(ax-pilot)[3]을 확인했다. 앱 두 Pod는 1/1 Running·재시작 1/0, probe는 1/1 Running·AGE 59m다. UI 접속은 확인됐으며 리소스 변경은 하지 않았다.
+
+## Day 10 k9s 사전 확인 (2026-10-05)
+- 사용자 출력: /usr/local/bin/k9s v0.32.5, kubectl v1.31.0이다. 정상 agent 0.2.0은 2/2, pwrhg/rslwh는 1/1 Running·재시작 각각 1/0이다. probe는 1/1 Running·AGE 57m로 확인됐으며 이후 실행 시간 종료 가능성이 있다.
+- k3d-onprem/ax-pilot의 읽기 전용 k9s 첫 화면 실행을 안내했고 UI 접속 결과는 대기 중이다. 추가 설치·리소스 변경은 하지 않았다.
+
+## Day 10의 10-6 완료 상태 (2026-10-05)
+- 사용자 출력에서 고장 Deployment 5개 삭제 및 b-* Deployment/ReplicaSet/Pod 부재를 확인했다. 정상 agent 0.2.0은 2/2, 활성 ReplicaSet 64c5d66bdf는 2/2/2, 이전 0.3.0 ReplicaSet 7f87967cf6는 0/0/0이다.
+- pwrhg(10.42.0.7/agent-0)는 1/1 Running·재시작 1, rslwh(10.42.1.8/agent-1)는 1/1 Running·재시작 0이다. probe(10.42.2.9/server-0)는 1/1 Running·AGE 43m이며 Service agent는 10.43.162.127:8000/TCP를 유지한다.
+- 10-1~10-6 완료, Day 10 전체는 미완료다. 클러스터·레지스트리는 삭제하지 않았으며 k9s 확인·probe 최종 정리·체크포인트는 사용자 요청 후 진행한다. 아래 정리 대기 문구는 이전 이력이다.
+
+## Day 10의 10-6 NotReady 진단·정리 안내 (2026-10-05)
+- 사용자 출력: b-notready-5cd84bc7c4-zts4l은 server-0/10.42.2.12에서 컨테이너 Running·재시작 0·Ready=False다. readiness는 /health:8000을 검사하며 초기 connection refused 이후 반복 HTTP 404를 기록했다. 소스의 정상 경로는 /healthz다.
+- 다섯 고장 Deployment 및 종속 리소스만 삭제하도록 안내했고 실행 결과 대기 중이다. 아직 삭제 완료가 아니며 정상 앱·Service·probe·클러스터·레지스트리는 유지한다.
+
+## Day 10의 10-6 ConfigError 진단 (2026-10-05)
+- 사용자 출력: b-configerror-5d86b95c76-zxhmd는 agent-1/10.42.1.9에 배정됐고 이미지도 노드에 존재하지만 필수 Secret agent-secret-typo 부재로 Waiting/CreateContainerConfigError·재시작 0이다. PodScheduled=True이며 Events의 secret not found를 확인했다. Secret 값 조회·생성이나 설정 변경은 하지 않았다.
+
+## Day 10의 10-6 Pending 진단 (2026-10-05)
+- 사용자 출력: b-pending-7c74794f46-p2kgt는 cpu=64/memory=512Gi 요청으로 세 노드 모두 Insufficient cpu/memory다. Node/IP 없음·PodScheduled=False 및 FailedScheduling을 확인했다. 요청량이지 실제 사용량은 아니며 리소스 설정은 변경하지 않았다.
+
+## Day 10의 10-6 CrashLoop 진단 (2026-10-05)
+- 사용자 출력: b-crashloop-76f96fcdb-v9cp5는 server-0/10.42.2.11, Pod phase Running이나 컨테이너 Waiting/CrashLoopBackOff·Ready=False·재시작 6이다. 직전 종료는 Error/Exit Code 1이다.
+- 노드에 이미 있는 0.2.0 이미지로 시작한 뒤 실행 명령의 sys.exit(1)로 종료한다. 이전 로그의 설정 누락 문구는 실제 파일 검사 결과가 아닌 예제의 고정 출력이다. 리소스 변경 없이 다음 Pending 진단으로 진행한다.
+
+## Day 10의 10-6 레지스트리 추가 확인 (2026-10-05)
+- 사용자 첨부 출력: server-0의 mirrors에 onprem-registry:5000/5001 모두 HTTP endpoint http://onprem-registry:5000 설정이 있다. 호스트 127.0.0.1:5001의 ax/agent/manifests/9.9.9 조회는 MANIFEST_UNKNOWN 및 HTTP 404다.
+- containerd 발췌는 최종 HTTPS 요청/HTTP 응답 오류를 반복해서 보여 준다. HTTP mirror 설정 누락은 아니며 태그 부재 후 fallback 설명과 부합하지만 최초 HTTP 시도의 과정 자체는 발췌에 없다. 설정 변경 없이 다음 고장 예제 진단으로 진행한다. 아래 추가 진단 대기 문구는 이전 이력이다.
+
+## Day 10의 10-6 이미지 다운로드 오류 (2026-10-05)
+- 사용자 describe 출력: b-imagepull은 server-0에 배정됐으나 컨테이너 Waiting/ImagePullBackOff·재시작 0이다. Events의 9.9.9 manifest HTTPS 요청에 HTTP 응답 오류가 표시됐다. HTTP mirror 설정 및 태그 부재 후 fallback 여부는 추가 진단 대기 중이며 설정 변경은 하지 않았다.
+
+## Day 10의 10-6 고장 예제 실행 상태 (2026-10-05)
+- 사용자 출력에서 b-* Deployment 5개 생성 및 각각 READY 0/1을 확인했다. Pod는 b-imagepull=ErrImagePull, b-crashloop=CrashLoopBackOff(재시작 3), b-pending=Pending(Node/IP 없음), b-configerror=CreateContainerConfigError, b-notready=Running 0/1이다. 실제 원인은 Events/로그 진단 대기 중이다.
+- 정상 agent 0.2.0 Deployment 2/2, pwrhg/rslwh 1/1 Running·재시작 1/0, probe 1/1 Running·10.42.2.9/server-0을 유지한다. 고장 리소스는 아직 정리하지 않았다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-6 배포 전 상태 확인 (2026-10-05)
+- 사용자 출력에서 고장 예제 YAML 5개 해시 일치 및 기존 b-* Deployment/Pod 부재를 확인했다. 정상 agent 0.2.0 Deployment 2/2, pwrhg/rslwh 모두 1/1 Running이며 재시작은 각각 1/0이다.
+- probe는 1/1 Running·재시작 0·AGE 20m·10.42.2.9/server-0이다. 지정 고장 예제 5개 apply·상태 조회를 안내했고 결과 대기 중이며 생성 완료로 기록하지 않는다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-5 완료·liveness 복구 확인 (2026-10-05)
+- 사용자 출력에서 pwrhg UID=8a3bd410-edb6-4026-a2d6-affb4d3a8e1d 유지·RESTARTS 1 및 readiness/liveness timeout과 liveness에 따른 Killing·Created·Started 이벤트를 확인했다. 대상 10.42.0.7의 /healthz는 status ok/version 0.2.0/host pwrhg/HTTP 200이다. [증거](../day10/evidence/105-recovery-user-2026-10-05.txt).
+- 최종 agent 0.2.0 Deployment 2/2, pwrhg(10.42.0.7/agent-0) 1/1 Running·재시작 1, rslwh(10.42.1.8/agent-1) 1/1 Running·재시작 0이다. 앱·클러스터·probe를 유지하며 10-1~10-5 완료·10-6 이후 미진행이다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-5 무응답 후 재시작 관찰 (2026-10-05)
+- 사용자 출력으로 pwrhg의 hang=true/HTTP 200 이후 READY 1/1→0/1→1/1 및 RESTARTS 0→1을 확인했다. 주입 전 UID는 8a3bd410-edb6-4026-a2d6-affb4d3a8e1d다. [증거](../day10/evidence/105-hang-watch-user-2026-10-05.txt).
+- watch 종료 여부·사후 UID·liveness/Killing 이벤트·대상 HTTP 및 최종 Deployment/Pod 조회 결과 대기 중이다. liveness 원인/HTTP 복구 확정 및 10-5 완료는 아직이며 아래 상태는 이전 이력이다.
+
+## Day 10의 10-5 probe 재준비 확인 (2026-10-05)
+- 사용자 출력으로 probe 삭제·재생성·Ready 및 10.42.0.7의 /healthz 응답 status ok/version 0.2.0/host pwrhg/HTTP 200을 확인했다.
+- pwrhg UID/재시작 기준 조회와 hang 1회·watch를 재안내했고 결과 대기 중이다. 장애 주입 성공이나 자동 복구로 기록하지 않으며 아래 상태는 이전 이력이다.
+
+## Day 10의 10-5 probe 종료·무응답 미주입 (2026-10-05)
+- 사용자 출력으로 pwrhg UID=8a3bd410-edb6-4026-a2d6-affb4d3a8e1d/RESTARTS=0과 probe Succeeded에 따른 exec 거부를 확인했다. 원격 curl과 뒤의 watch는 실행되지 않았으므로 이번 명령으로 앱에 무응답을 주입하지 않았다.
+- probe 재생성·Ready 및 pwrhg의 /healthz 직접 조회를 안내했고 결과 대기 중이다. 앱 Pod 변경은 없으며 아래 상태는 이전 이력이다.
+
+## Day 10의 10-5 사전 상태·실제 헬스체크 확인 (2026-10-05)
+- 사용자 출력에서 agent 0.2.0 Deployment 2/2, pwrhg(10.42.0.7/agent-0)·rslwh(10.42.1.8/agent-1)·probe(10.42.2.7/server-0) 모두 1/1 Running·RESTARTS 0을 확인했다.
+- 실제 readiness는 /healthz·5초 간격·1초 제한·실패 임계 3회, liveness는 /healthz·10초 간격·3초 제한·실패 임계 3회다. pwrhg만 대상으로 hang 호출·watch를 안내했고 결과 대기 중이며 장애 주입 완료로 기록하지 않는다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 완료·최종 상태 (2026-10-05)
+- 사용자 최종 출력에서 agent 0.2.0 Deployment 2/2 및 pwrhg(10.42.0.7/agent-0), rslwh(10.42.1.8/agent-1)만 1/1 Running·RESTARTS 0을 확인했다. 교체된 jlrdl/wz225는 사라졌고 0.3.0 ReplicaSet은 0/0/0으로 보존됐다. [증거](../day10/evidence/104-rollback-user-2026-10-05.txt).
+- 10-1~10-4 완료. 앱·클러스터·probe는 종료/삭제하지 않았다. probe는 sleep 3600으로 재생성한 상태라 재개 시 현재 상태를 확인한다. 10-5 이후는 미진행이며 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 0.2.0 롤백 성공 (2026-10-05)
+- 사용자 출력으로 agent 0.2.0 Deployment 2/2, ReplicaSet agent-64c5d66bdf 2/2/2 및 agent-7f87967cf6 0/0/0을 확인했다. 새 0.2.0 Pod pwrhg(10.42.0.7/agent-0), rslwh(10.42.1.8/agent-1)는 1/1 Running·RESTARTS 0이다.
+- Service 응답은 status ok/version 0.2.0/host rslwh/HTTP 200이다. 교체된 jlrdl/wz225는 Terminating이며 종료 완료 대기·최종 리소스 조회 결과를 기다린다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 0.3.0 롤링 업데이트 성공 (2026-10-05)
+- 사용자 출력으로 agent 0.3.0 Deployment 2/2 및 새 ReplicaSet agent-7f87967cf6 2/2/2를 확인했다. 구 ReplicaSet agent-64c5d66bdf는 0/0/0이다.
+- 새 Pod jlrdl(10.42.2.8/server-0), wz225(10.42.1.7/agent-1)는 모두 1/1 Running·RESTARTS 0이다. 업데이트 전부터 완료 이후까지 관찰한 HTTP 60회 성공·실패 0 및 두 종료 코드 0을 확인했다. [증거](../day10/evidence/104-rollout-user-2026-10-05.txt).
+- 이력 조회·직전 0.2.0 배포 롤백·최종 상태/HTTP 조회를 안내했고 결과 대기 중이다. 아직 롤백 성공으로 기록하지 않으며 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 probe 재준비·업데이트 전 HTTP 확인 (2026-10-05)
+- 사용자 출력으로 기존 probe 삭제·재생성·Ready 및 Service /healthz의 status ok/version 0.2.0/host stfrr/HTTP 200을 확인했다.
+- HTTP 60회 관찰과 0.3.0 이미지 변경·rollout·최종 조회를 안내했고 결과 대기 중이다. 앱 업데이트 성공으로 기록하지 않는다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 축소 정리 완료 (2026-10-05)
+- 사용자 출력으로 7642s/kjbqb 삭제 완료 및 stfrr(10.42.2.5/server-0), zqnxs(10.42.0.6/agent-0)만 1/1 Running·RESTARTS 0임을 확인했다. agent 0.2.0 Deployment/ReplicaSet은 2개 준비다.
+- Completed 상태였던 probe 삭제·재생성 및 Ready·Service HTTP 조회를 안내했고 결과 대기 중이다. probe 재기동 성공이나 앱 이미지 변경으로 기록하지 않는다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 2개 복원·종료 중 Pod 확인 (2026-10-05)
+- 사용자 출력에서 agent 0.2.0 Deployment/ReplicaSet 2개 준비, stfrr/zqnxs 1/1 Running 및 7642s/kjbqb Terminating을 확인했다. 목표 복제본은 2로 복원됐고 초과 Pod의 삭제 완료는 아직 확인하지 않았다.
+- 두 Terminating Pod의 wait --for=delete 및 최종 목록 조회 결과 대기 중이다. probe의 마지막 확인 상태는 Completed이며 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 복제본 4개 확장 확인 (2026-10-05)
+- 사용자 출력에서 agent 0.2.0 Deployment/ReplicaSet 4개 준비 및 네 Pod 1/1 Running·RESTARTS 0을 확인했다. 기존 7642s·stfrr에 kjbqb(10.42.1.6/agent-1)·zqnxs(10.42.0.6/agent-0)가 추가됐다.
+- replicas=2 복원·rollout·리소스 조회를 안내했고 결과 대기 중이다. 아직 2개 복원으로 기록하지 않는다. probe의 마지막 확인 상태는 Completed이며 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 자가 치유 확인 (2026-10-05)
+- 사용자 출력에서 d7qcb 삭제, 새 Pod 7642s 생성(10.42.1.5/agent-1), 기존 stfrr 유지(10.42.2.5/server-0), 두 Pod 1/1 Running·RESTARTS 0 및 Deployment/ReplicaSet 2개 준비를 확인했다. 이미지는 0.2.0이다.
+- replicas=4 확장·rollout·리소스 조회를 안내했지만 결과는 아직 받지 않았다. probe의 마지막 확인 상태는 Completed다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-4 사전 상태 확인 (2026-10-05)
+- 사용자 출력으로 실습용 kubectl v1.31.0/Kustomize v5.4.2 및 agent 0.2.0 Deployment 2/2를 확인했다. 앱 Pod d7qcb와 stfrr는 모두 1/1 Running·RESTARTS 0이다.
+- probe는 0/1 Completed·RESTARTS 0·AGE 65m이며 sleep 3600으로 생성한 진단 Pod다. HTTP 관찰 전에 재준비가 필요하다.
+- d7qcb Pod 하나 삭제·rollout/리소스 조회를 안내했고 사용자 결과 대기 중이다. 이 안내를 삭제 실행 완료로 기록하지 않는다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-3 완료·포워딩 종료 (2026-10-05)
+- 사용자 출력으로 Ctrl+C 후 프롬프트 복귀 및 `ss -ltn '( sport = :39827 )'`의 헤더만 출력을 확인했다. 39827 리스너는 해제됐다. [증거](../day10/evidence/103-portforward-result-user-2026-10-05.txt).
+- 내부 Service DNS·HTTP 분산과 port-forward 단일 Pod 응답 비교를 마쳐 10-3 완료다. 앱·클러스터 종료나 probe 삭제는 하지 않았다. probe의 현재 상태는 재조회하지 않았으며 sleep 3600 종료 가능성이 있다. 10-4 이후는 미진행이고 아래 상태는 이전 이력이다.
+
+## Day 10의 10-3 포워딩 HTTP 성공·리스너 유지 (2026-10-05)
+- 사용자 출력에서 127.0.0.1:39827/healthz HTTP 4회 모두 agent-64c5d66bdf-d7qcb 응답을 확인했다. 이어진 ss에는 127.0.0.1:39827 LISTEN이 남아 있다.
+- 1번 포워딩 터미널에서 Ctrl+C 종료 후 ss 재확인 대기 중이다. 앱·클러스터 종료는 요청하지 않았다. 아래 대기 문구는 이전 이력이다.
+
+## Day 10의 10-3 현재 포워딩 포트 확인 (2026-10-05)
+- 사용자 제공 1번 Ubuntu 터미널의 최신 출력은 `Forwarding from 127.0.0.1:39827 -> 8000`이다. 앞선 curl은 이전 포트 45537을 호출했으며 현재 포트와 달랐다.
+- 2번 Ubuntu 터미널에서 39827 HTTP 4회 재검증 및 성공 후 Ctrl+C·리스너 해제 확인 대기 중이다. 앱·클러스터 변경은 없으며 아래 원인 미확인 문구는 이전 이력이다.
+
+## Day 10의 10-3 로컬 연결 실패 (2026-10-05)
+- 사용자 제공 새 Ubuntu 터미널 출력에서 첫 curl이 127.0.0.1:45537 연결 오류 7로 실패했다. 앞선 Forwarding 출력은 기동 시점의 증거이며 현재 리스너 존속을 증명하지 않는다.
+- 기존 포워딩 터미널 출력과 새 터미널의 ss·pgrep 결과 대기 중이다. 원인은 미확인이고 앱·클러스터 변경은 하지 않았다. 아래 상태는 이전 이력이다.
+
+## Day 10의 10-3 port-forward 기동 확인 (2026-10-05)
+- 사용자 Ubuntu 출력으로 `Forwarding from 127.0.0.1:45537 -> 8000`을 확인했다. 기존 터미널에서 전경 실행 중이며 HTTP 비교·종료·리스너 해제 확인은 아직이다. [증거](../day10/evidence/103-portforward-start-user-2026-10-05.txt).
+- 다른 Ubuntu 터미널의 127.0.0.1:45537 HTTP 4회 호출 및 이후 Ctrl+C·ss 확인을 안내했다. 앱·probe·클러스터는 유지한다. 아래 대기 문구는 이전 이력이다.
+
+## Day 10의 10-3 내부 Service 호출 확인 (2026-10-05)
+- 사용자 출력으로 ax-pilot/probe 생성·Ready를 확인했다. 이미지 nicolaka/netshoot:v0.13·sleep 3600이며 아직 삭제하지 않았다. [증거](../day10/evidence/103-service-user-2026-10-05.txt).
+- DNS 서버 10.43.0.10:53이 agent.ax-pilot.svc.cluster.local을 Service IP 10.43.162.127로 해석했다. probe에서 http://agent:8000/healthz 호출 8회가 stfrr Pod 5회·d7qcb Pod 3회로 분산됐다.
+- Ubuntu 루프백 자동 포트의 port-forward 전경 실행을 안내했고 실제 포트·기동 출력은 대기 중이다. 앱·probe·클러스터를 유지하며 10-3 전체는 아직 미완료다.
+
+## Day 10의 10-2 첫 배포 완료 (2026-10-05)
+- 사용자 Ubuntu 출력에서 YAML 3개 체크섬 OK, Namespace ax-pilot·Deployment/Service agent 생성, rollout 성공을 확인했다. Deployment는 2/2이며 이미지 참조는 onprem-registry:5000/ax/agent:0.2.0이다. [증거](../day10/evidence/102-deploy-user-2026-10-05.txt).
+- Pod agent-64c5d66bdf-d7qcb=10.42.0.5/agent-0, agent-64c5d66bdf-stfrr=10.42.2.5/server-0. 둘 다 1/1 Running·재시작 0이다. 관리 노드도 앱을 실행하며 배치 정책을 변경하지 않았다.
+- Service agent=ClusterIP 10.43.162.127:8000·selector app=agent. readiness 통과·앱 기동은 확인했지만 Service HTTP/분산, 실제 컨테이너 imageID·pull 이벤트, liveness 장애 복구는 아직 별도 검증하지 않았다.
+- 10-1·10-2 완료. 앱·클러스터·레지스트리·이미지는 유지한다. 다음은 사용자 요청 후 10-3이다. 아래 미배포 문구는 이전 이력이다.
+
+## Day 10의 10-1 완료·이미지 등록 확인 (2026-10-05)
+- 사용자 출력으로 localhost:5001/ax/agent:0.2.0·0.3.0 push 성공과 태그 목록 두 개·HTTP 200을 확인했다. digest는 각각 a4ef49ae142efb1a03fe43c30d4a6f68ceee1c649578c33407827e8f6f4185a3, 3b2b97652b5db89e15b8750375cef5d163bd2a72405902dcda882e6cde5c6ec6이며 앞서 확인한 로컬 ID와 일치한다. [증거](../day10/evidence/101-push-user-2026-10-05.txt).
+- 10-1 완료. onprem 클러스터·레지스트리·네트워크·볼륨·이미지와 기존 자원은 유지한다. 앱 Pod 배포·클러스터 노드의 이미지 pull·새 이미지 런타임 검증은 아직 없다. 다음은 사용자 요청 후 10-2다.
+- 현재 셸은 실습용 kubectl 1.31.0을 사용한다. 재개 시 PATH와 context를 확인한다. Day 10 YAML은 존재만 확인했으며 적용 전 Windows/Ubuntu 내용 일치 확인이 남아 있다.
+
+## Day 10 agent:0.3.0 빌드 확인 (2026-10-05)
+- 사용자 출력으로 python:3.12.14-slim 기반 agent:0.3.0 빌드 성공을 확인했다. 로컬 ID는 sha256:3b2b97652b5db89e15b8750375cef5d163bd2a72405902dcda882e6cde5c6ec6이며 빌드 manifest list digest와 일치한다. [증거](../day10/evidence/101-build-user-2026-10-05.txt).
+- agent:0.2.0(a4ef49ae...)·0.3.0 모두 linux/amd64·USER=10001·APP_VERSION 각 0.2.0/0.3.0을 확인했다. 설정 조회이며 새 앱 실행·스캔 결과와 구분한다.
+- 두 버전의 localhost:5001/ax/agent 태그 추가·push·태그 API 조회를 안내했고 결과를 기다린다. 클러스터는 유지하고 앱 Pod 배포는 아직 하지 않았다.
+
+## Day 10 시스템 준비·레지스트리 HTTP 확인 (2026-10-05)
+- 사용자 출력으로 coredns·local-path-provisioner·metrics-server·traefik Deployment 모두 1/1·AVAILABLE 1, svclb Pod 3개 2/2 Running, 설치 Pod 두 개 Completed를 확인했다. Traefik 설치 Pod의 재시작 1회 원인은 미조사다. [증거](../day10/evidence/101-system-registry-user-2026-10-05.txt).
+- Docker 컨테이너 6개가 Up이며 tools도 실행 중이다. serverlb 게시: 127.0.0.1:8080->80, 0.0.0.0:37327->6443(API). 레지스트리 게시: 127.0.0.1:5001->5000. /v2/는 {}·HTTP 200이다. 외부 PC 접근과 이미지 push/pull은 아직 미검증이다.
+- agent/Dockerfile·app.py·requirements.txt의 Windows/Ubuntu SHA-256이 일치한다. agent:0.3.0 빌드를 안내했으며 실제 빌드 결과는 대기 중이다. 클러스터를 유지하고 앱 배포는 아직 하지 않았다.
+
+## Day 10 클러스터 생성·노드 Ready 확인 (2026-10-05)
+- 사용자 출력으로 onprem 클러스터 생성과 서버 1·워커 2 모두 Ready를 확인했다. Kubernetes v1.30.4+k3s1·containerd 1.7.20-k3s1이며 k3d-onprem context의 API 조회가 성공했다. [증거](../day10/evidence/101-cluster-user-2026-10-05.txt).
+- 네트워크 k3d-onprem=172.21.0.0/16, server-0=172.21.0.3·agent-0=172.21.0.5·agent-1=172.21.0.4다. 앞서 조회한 대역과 새 대역은 겹치지 않지만 기존 WSL/koica 겹침은 유지된다.
+- 이미지 볼륨·레지스트리·노드·로드밸런서 생성/기동 로그를 확인했다. 생성 직후 kube-system 설치 Pod 2개는 AGE 0s·ContainerCreating이다. 시스템 초기화 완료·실제 게시 포트·레지스트리 HTTP 응답은 후속 조회 결과 대기 중이다. 클러스터를 유지하며 앱 이미지 등록·배포는 아직 없다.
+
+## Day 10 Ubuntu 자원·파일 확인 (2026-10-05)
+- 사용자 출력: Ubuntu 메모리 available 13Gi, /dev/sdc 가용 951G(WSL 가상 디스크 표시), Docker CPUs=32·MemoryBytes=16334528512. Ubuntu 8080·5001 리스너는 없고 기존 컨테이너 8개는 모두 Exited다. [증거](../day10/evidence/101-resources-user-2026-10-05.txt).
+- agent:0.2.0은 a4ef49ae142e·181MB이며 offline·ca·0.1.0 태그도 있다. agent:0.3.0은 없다. Day 10 YAML 3개 존재·0755는 확인했으나 Windows 사본과의 내용 일치는 미검증이다.
+- WSL 172.18.48.0/20·IP 172.18.60.227과 koica Docker 172.18.0.0/16의 겹침이 유지된다. 다른 Docker 대역은 bridge 172.17.0.0/16, lab-net 172.19.0.0/16, other-net 172.20.0.0/16이다. 기존 자원은 변경하지 않았다.
+- onprem 생성 명령을 안내했다. k3s v1.30.4-k3s1·서버 1/워커 2·레지스트리 127.0.0.1:5001·웹 127.0.0.1:8080을 지정하며 API 포트는 기본 자동 할당이다. 실제 기동·새 네트워크 대역·포트 바인딩 결과는 아직 대기 중이다.
+
+## Day 10 Windows 포트 점검 확인 (2026-10-05)
+- 사용자 Windows 출력에서 8080·5001·18080·15001 TCP 사용 행이 없고 네 포트 모두 IPv4/IPv6 제외 범위 밖임을 확인했다. 기본 8080·5001을 사용할 계획이다. [증거](../day10/evidence/101-windows-ports-user-2026-10-05.txt).
+- Day 9의 7987~8086 제외 범위는 이번 목록에 없다. 변경 원인·시점은 미확정이며 Windows 설정을 변경하지 않았다. 실제 포트 바인딩 성공·Ubuntu 리스너 상태는 아직 확인하지 않았다.
+- Ubuntu 자원·Docker 목록·네트워크 대역·Day 10 파일 존재 조회 결과를 기다린다. 클러스터는 아직 생성하지 않았다.
+
+## Day 10 실습용 kubectl 설치 확인 (2026-10-05)
+- 사용자 Ubuntu 출력으로 공식 파일 체크섬 OK, /home/user/.local/share/onprem-lab/kubectl-v1.31.0/bin/kubectl 선택, Client v1.31.0·Kustomize v5.4.2를 확인했다. [증거](../day10/evidence/101-kubectl-user-2026-10-05.txt).
+- PATH 선택은 현재 셸에만 적용했으며 시스템 kubectl·셸 설정 파일을 변경하지 않았다. 새 터미널에서는 export PATH="$HOME/.local/share/onprem-lab/kubectl-v1.31.0/bin:$PATH" 후 hash -r 및 버전 확인이 필요하다.
+- 기본 k3s 1.30과의 마이너 버전 차이 조건을 충족한다. 실제 클러스터 생성·통신은 아직 미검증이며 Windows 포트 점검 결과 대기 중이다. 아래 설치 대기 문구는 이전 이력이다.
+
+## Day 10의 10-1 첫 점검 (2026-10-05)
+- 사용자 Ubuntu 출력: Docker Client/Server 29.8.0 연결 정상, k3d v5.7.4·기본 k3s v1.30.4-k3s1, kubectl v1.36.1·Kustomize v5.8.1. k3d cluster list는 헤더만 표시됐다. [증거](../day10/evidence/101-precheck-user-2026-10-05.txt).
+- 기본 k3s 버전은 생성 예정 값이며 실행 중인 클러스터 버전이 아니다. 다른 방식의 클러스터 유무·포트·자원 상태는 미조회다.
+- kubectl/API 서버의 공식 지원 버전 차이는 마이너 1 이내이므로 1.36/1.30은 범위 밖이다. 가이드 kubectl v1.31.0을 ~/.local/share/onprem-lab/kubectl-v1.31.0/bin/kubectl에 별도 설치하고 현재 셸 PATH에서 선택하도록 안내했다. 설치·체크섬·선택 결과는 아직 대기 중이며 기존 시스템 kubectl은 변경하지 않는다.
+
 ## Day 9 실습 자원 정리·보존 확인 (2026-10-05)
 - 사용자 Ubuntu 출력으로 day09-registry-ui-1·day09-registry-1·day09_default 제거 및 Compose 컨테이너 목록 부재를 확인했다. UI는 종료 상태다. 압축 전 agent-0.2.0-offline.tar 삭제 명령도 성공했다.
 - day09_regdata 볼륨과 agent:0.2.0-offline 이미지(ID 4c10e5ca...)를 보존했다. 압축 파일은 gzip 검사·체크섬 OK이며 tar.gz 42M·체크섬 93 bytes·보고서 54K·SBOM 197K·wheels 756K·trivy-cache 1.4G가 남아 있다. 크기는 사용자 ls/du 표시값이다.

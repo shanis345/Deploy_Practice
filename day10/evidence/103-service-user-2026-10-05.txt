@@ -1,0 +1,19 @@
+Source: User-provided Ubuntu WSL2 output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex. Full command is recorded in ../SESSION.md.
+
+pod/probe created
+pod/probe condition met
+Server:         10.43.0.10
+Address:        10.43.0.10#53
+
+Name:   agent.ax-pilot.svc.cluster.local
+Address: 10.43.162.127
+
+agent-64c5d66bdf-stfrr
+agent-64c5d66bdf-d7qcb
+agent-64c5d66bdf-stfrr
+agent-64c5d66bdf-stfrr
+agent-64c5d66bdf-stfrr
+agent-64c5d66bdf-stfrr
+agent-64c5d66bdf-d7qcb
+agent-64c5d66bdf-d7qcb

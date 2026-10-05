@@ -1,0 +1,20 @@
+Date: 2026-10-05
+Source: User-provided Ubuntu WSL2 output, not a Codex execution.
+Location: /home/user/onprem-lab/day10
+Commands: Baseline UID/restart query, single probe curl to http://10.42.0.7:8000/_lab/hang, then app Pod watch; recorded in SESSION.md.
+Tabular whitespace normalized below.
+
+NAME UID RESTARTS
+agent-64c5d66bdf-pwrhg 8a3bd410-edb6-4026-a2d6-affb4d3a8e1d 0
+{
+  "hang": true
+}
+HTTP 200
+NAME READY STATUS RESTARTS AGE
+agent-64c5d66bdf-pwrhg 1/1 Running 0 5h26m
+agent-64c5d66bdf-rslwh 1/1 Running 0 5h26m
+agent-64c5d66bdf-pwrhg 0/1 Running 0 5h27m
+agent-64c5d66bdf-pwrhg 0/1 Running 1 (0s ago) 5h27m
+agent-64c5d66bdf-pwrhg 1/1 Running 1 (7s ago) 5h27m
+
+Pending: Watch shutdown, post-restart UID comparison, liveness-related events, direct healthz response, final resource status.

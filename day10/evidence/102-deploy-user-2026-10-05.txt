@@ -1,0 +1,28 @@
+Source: User-provided Ubuntu WSL2 output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex. Table spacing normalized; unused columns omitted.
+Commands: SHA-256 verification, kubectl --context k3d-onprem apply (three YAML files),
+rollout status deployment/agent --timeout=120s, and get all -o wide in ax-pilot.
+Full command is recorded in ../SESSION.md.
+
+00-namespace.yaml: OK
+10-deployment.yaml: OK
+20-service.yaml: OK
+namespace/ax-pilot created
+deployment.apps/agent created
+service/agent created
+Waiting for deployment "agent" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "agent" rollout to finish: 1 of 2 updated replicas are available...
+deployment "agent" successfully rolled out
+
+NAME READY STATUS RESTARTS AGE IP NODE
+pod/agent-64c5d66bdf-d7qcb 1/1 Running 0 6s 10.42.0.5 k3d-onprem-agent-0
+pod/agent-64c5d66bdf-stfrr 1/1 Running 0 6s 10.42.2.5 k3d-onprem-server-0
+
+NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE SELECTOR
+service/agent ClusterIP 10.43.162.127 <none> 8000/TCP 6s app=agent
+
+NAME READY UP-TO-DATE AVAILABLE AGE CONTAINERS IMAGES SELECTOR
+deployment.apps/agent 2/2 2 2 6s agent onprem-registry:5000/ax/agent:0.2.0 app=agent
+
+NAME DESIRED CURRENT READY AGE CONTAINERS IMAGES SELECTOR
+replicaset.apps/agent-64c5d66bdf 2 2 2 6s agent onprem-registry:5000/ax/agent:0.2.0 app=agent,pod-template-hash=64c5d66bdf

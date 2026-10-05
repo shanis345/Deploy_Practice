@@ -1,0 +1,32 @@
+Date: 2026-10-05
+Source: User-provided Ubuntu WSL2 output, not a Codex execution.
+Location: /home/user/onprem-lab/day10
+Format: Output excerpts with tabular whitespace normalized, plus labeled final resource summary.
+Commands: Post-watch UID/restart query, UID-filtered events, direct Pod healthz, final Deployment/Pod query; recorded in SESSION.md.
+
+NAME UID RESTARTS
+agent-64c5d66bdf-pwrhg 8a3bd410-edb6-4026-a2d6-affb4d3a8e1d 1
+
+LAST SEEN TYPE REASON OBJECT MESSAGE
+6m27s Warning Unhealthy pod/agent-64c5d66bdf-pwrhg Readiness probe failed: Get "http://10.42.0.7:8000/healthz": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+6m55s Warning Unhealthy pod/agent-64c5d66bdf-pwrhg Liveness probe failed: Get "http://10.42.0.7:8000/healthz": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+6m55s Normal Killing pod/agent-64c5d66bdf-pwrhg Container agent failed liveness probe, will be restarted
+6m25s Normal Pulled pod/agent-64c5d66bdf-pwrhg Container image "onprem-registry:5000/ax/agent:0.2.0" already present on machine
+6m25s Normal Created pod/agent-64c5d66bdf-pwrhg Created container agent
+6m25s Normal Started pod/agent-64c5d66bdf-pwrhg Started container agent
+
+{
+  "status": "ok",
+  "version": "0.2.0",
+  "host": "agent-64c5d66bdf-pwrhg"
+}
+HTTP 200
+
+Final resource summary from user output:
+Deployment agent: READY 2/2, UP-TO-DATE 2, AVAILABLE 2, AGE 7h36m.
+Image: onprem-registry:5000/ax/agent:0.2.0
+Pod agent-64c5d66bdf-pwrhg: 1/1 Running, RESTARTS 1 (6m25s ago), AGE 5h34m, 10.42.0.7, k3d-onprem-agent-0.
+Pod agent-64c5d66bdf-rslwh: 1/1 Running, RESTARTS 0, AGE 5h34m, 10.42.1.8, k3d-onprem-agent-1.
+
+Confirmed: Same Pod UID before/after; liveness-triggered container restart; target HTTP and Ready recovery.
+Not measured: Continuous Service traffic or endpoint membership during the failure.

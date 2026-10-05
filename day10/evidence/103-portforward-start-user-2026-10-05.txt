@@ -1,0 +1,10 @@
+Date: 2026-10-05
+Source: User-provided Ubuntu WSL2 terminal output, not a Codex execution.
+Location: /home/user/onprem-lab/day10
+
+$ kubectl --context k3d-onprem -n ax-pilot \
+  port-forward --address 127.0.0.1 svc/agent :8000
+Forwarding from 127.0.0.1:45537 -> 8000
+
+Observed: Local forwarding port assigned; command remains in foreground.
+Pending: HTTP response comparison, Ctrl+C shutdown, listener release check.

@@ -1,0 +1,37 @@
+Source: User-provided Windows PowerShell output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex. Formatting normalized.
+
+Get-NetTCPConnection |
+  Where-Object { $_.LocalPort -in 8080,5001,18080,15001 } |
+  Format-Table LocalAddress,LocalPort,State,OwningProcess -AutoSize
+[No output rows]
+
+netsh interface ipv4 show excludedportrange protocol=tcp
+Start port  End port
+1462        1462
+2245        2344
+5189        5288
+5313        5412
+7887        7986
+8203        8302
+10542       10641
+11391       11490
+11791       11890
+12564       12663
+50000       50059 *
+
+netsh interface ipv6 show excludedportrange protocol=tcp
+Start port  End port
+1462        1462
+2245        2344
+5189        5288
+5313        5412
+7887        7986
+8203        8302
+10542       10641
+11391       11490
+11791       11890
+12564       12663
+50000       50059 *
+
+* Administratively excluded port range.

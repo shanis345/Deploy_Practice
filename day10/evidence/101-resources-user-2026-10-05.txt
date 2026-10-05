@@ -1,0 +1,46 @@
+Source: User-provided Ubuntu WSL2 output, 2026-10-05 (Asia/Seoul).
+Not independently executed by Codex. Spacing normalized.
+Commands are recorded in ../SESSION.md.
+
+pwd: /home/user/onprem-lab
+free -h:
+Mem: total 15Gi, used 1.3Gi, free 12Gi, shared 49Mi, buff/cache 2.0Gi, available 13Gi
+Swap: total 4.0Gi, used 0B, free 4.0Gi
+df -h .:
+/dev/sdc 1007G 5.4G 951G 1% /
+docker info:
+CPUs=32 MemoryBytes=16334528512
+
+docker ps -a:
+pub2 Exited (255) 3 days ago 0.0.0.0:8081->80/tcp
+pub Exited (0) 6 days ago
+isolated Exited (0) 7 days ago
+client2 Exited (0) 7 days ago
+web2 Exited (255) 3 days ago 80/tcp
+client Exited (0) 7 days ago
+web Exited (255) 3 days ago 80/tcp
+koica-oda-local-test-oda-app-1 Exited (143) 3 weeks ago
+
+docker image ls --filter reference=agent:*:
+agent 0.2.0-offline 4c10e5ca549f 181MB
+agent 0.2.0-ca ebe1f3076bf2 182MB
+agent 0.2.0 a4ef49ae142e 181MB
+agent 0.1.0 ff0088b950ca 189MB
+
+ss -ltn '( sport = :8080 or sport = :5001 )': header only
+ip -4 route:
+default via 172.18.48.1 dev eth0 proto kernel
+172.18.48.0/20 dev eth0 proto kernel scope link src 172.18.60.227
+
+Docker network subnets:
+bridge: 172.17.0.0/16
+host:
+koica-oda-local-test_default: 172.18.0.0/16
+lab-net: 172.19.0.0/16
+none:
+other-net: 172.20.0.0/16
+
+ls -l:
+-rwxr-xr-x 1 user docker 182 Sep 22 16:43 day10/00-namespace.yaml
+-rwxr-xr-x 1 user docker 1684 Sep 22 16:43 day10/10-deployment.yaml
+-rwxr-xr-x 1 user docker 186 Sep 22 16:43 day10/20-service.yaml
